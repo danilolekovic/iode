@@ -1,0 +1,5 @@
+let range = [1..9];
+
+for (i:range)
+  console.log(i);
+end;

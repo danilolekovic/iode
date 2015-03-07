@@ -1,0 +1,6 @@
+let answer = "yes";
+
+case answer of
+  "yes" -> return(true); end,
+  "no" -> return(false); end,
+  default -> return(null); end;

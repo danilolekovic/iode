@@ -1,0 +1,5 @@
+try
+  console.log("try statement");
+end catch (e)
+  console.log(e);
+end;

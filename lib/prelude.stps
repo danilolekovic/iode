@@ -1,0 +1,70 @@
+let sum = fn()
+    let retval = 0;
+    let len = arguments.length;
+    for (let i = 0; i < len; i++)
+        retval += arguments[i];
+    end;
+    return(retval);
+end;
+
+let CelciusToFahrenheit = fn(c)
+  return(c * 1.8 + 32);
+end;
+
+let FahrenheitToCelcius = fn(f)
+  return((f-32) * 5/9);
+end;
+
+let KilogramsToPounds = fn(kg)
+  return(kg * 2.20462);
+end;
+
+let PoundsToKilograms = fn(pounds)
+  return(pounds / 2.20462);
+end;
+
+let LitresToGallons = fn(lit, type)
+  if (type?) return(lit * 0.26417); end;
+
+  case type of
+    "liquid" -> return(lit * 0.26417); end,
+    "dry" -> return(lit * 0.22702); end,
+    "uk" -> return(lit * 0.21997); end,
+    default -> return(lit * 0.26417); end;
+end;
+
+let LitresToGallons = fn(gal, type)
+  if (type?) return(gal / 0.26417); end;
+
+  case type of
+    "liquid" -> return(gal / 0.26417); end,
+    "dry" -> return(gal / 0.22702); end,
+    "uk" -> return(gal / 0.21997); end,
+    default -> return(gal * 0.26417); end;
+end;
+
+let Parallel = fn(func, callback)
+  setTimeout(fn()
+    func();
+    if (callback)
+      callback();
+    end;
+  end, 0);
+end;
+
+class Vector2D(x, y)
+  x -> x,
+  y -> y,
+  toString -> fn()
+    return("(#{x}, #{y})");
+  end
+end;
+
+class Vector3D(x, y, z)
+  x -> x,
+  y -> y,
+  z -> z,
+  toString -> fn()
+    return("(#{x}, #{y}, #{z})");
+  end
+end;

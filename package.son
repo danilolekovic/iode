@@ -1,0 +1,26 @@
+{
+  "name" -> "stripes",
+  "description" -> "Programming language that smoothly compiles to JavaScript.",
+  "version" -> "0.0.1",
+  "author" -> "Danilo Lekovic <danilo@lekovic.ca>",
+  "keywords" -> [
+    "stripes",
+    "altjs",
+    "programming",
+    "language",
+    "transcompiler"
+  ],
+  "dependencies" -> {
+    "js-beautify" -> "*"
+  },
+  "devDependencies" -> {
+    "jison" -> "*",
+		"grunt" -> "*",
+		"grunt-contrib-watch" -> "*",
+		"shelljs" -> "*"
+  },
+  "bin" -> {
+    "stripes" -> "./bin/stripes"
+  },
+  "preferGlobal" -> true
+};
