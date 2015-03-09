@@ -5,7 +5,7 @@ ToDo List:
   x String interpolation
   x Fix Arguments with more than one element (.. , ..)
   x Complete error handling
-  x Complete functional programming
+  - Complete functional programming
   x Finish standard library
   - Complete documentation
   x Website

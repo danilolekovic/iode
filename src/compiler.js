@@ -507,7 +507,7 @@ var Generate = function(ast) {
 			var a = Generate(ast[2]);
 
 			if (ast[1] == "throw" || ast[1] == "return" || ast[1] == "instanceof" ||
-				ast[1] == "typeof") {
+				ast[1] == "typeof" || ast[1] == "void") {
 				return ast[1] + " " + a.substring(1, a.length - 1);
 			}
 
@@ -714,8 +714,7 @@ var Generate = function(ast) {
 }
 
 var main = function(code) {
-	return "(function(){ " + Generate(parser.parse(code.replace("\n", ""))) +
-		" })();";
+	return Generate(parser.parse(code.replace("\n", "")));
 }
 
 var getAST = function(code) {

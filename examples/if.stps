@@ -1,2 +1,6 @@
 if (true)
+end; else
+  console.log("Cool");
+end; elsif (1)
+  console.log("Cooler");
 end;
