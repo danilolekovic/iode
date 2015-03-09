@@ -14,7 +14,7 @@ var reserved = ["abstract", "else", "instanceof", "super", "boolean", "enum",
 	"default", "if", "public", "void", "delete", "implements", "return",
 	"volatile", "do", "import", "short", "while", "double", "in", "static",
 	"with", "case", "of", "is", "not", "fn", "isnt", "class",
-	"unless", "repeat"
+	"unless", "repeat", "yes", "no", "nothing"
 ];
 
 var Generate = function(ast) {
@@ -30,6 +30,15 @@ var Generate = function(ast) {
 			break;
 		case "Number":
 			return ast[1].replace(/_/g, "");
+			break;
+		case "Yes":
+			return "true";
+			break;
+		case "No":
+			return "false";
+			break;
+		case "Nothing":
+			return "null";
 			break;
 		case "Percent":
 			return String(parseFloat(ast[1].replace(/_/g, "")) / 100.0);

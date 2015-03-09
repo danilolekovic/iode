@@ -29,6 +29,9 @@
 "and" { return 'AND_COND'; }
 "when"  { return 'WHEN'; }
 "to"  { return 'TO'; }
+"yes"  { return 'YES'; }
+"nothing"  { return 'NOTHING'; }
+"no"  { return 'NO'; }
 ".."  { return '..'; }
 ">>>" { return '>>>'; }
 "<<<" { return '<<<'; }
@@ -257,6 +260,12 @@ Expr
   : Index
   | NUMBER
     {{ $$ = ['Number', yytext]; }}
+  | YES
+    {{ $$ = ['Yes']; }}
+  | NO
+    {{ $$ = ['No']; }}
+  | NOTHING
+    {{ $$ = ['Nothing']; }}
   | PERCENT
     {{ $$ = ['Percent', yytext]; }}
   | STRING

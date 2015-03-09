@@ -82,6 +82,4 @@ function Vector3D(x, y, z) {
     return "(" + x + ", " + y + ", " + z + ")";
   }
 }
-var what = "be";
-var verse = "Let it " + what + ".";
-var version2 = "When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. " + verse;
+console.log(true);
