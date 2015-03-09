@@ -1,0 +1,11 @@
+["Stripes", {},
+  ["Try", [
+      ["CallArrayStmt", ["CallExpr", "console.log", ["ArgumentList", ["String", "\"try statement\""]]]]
+    ],
+    ["Catch", ["CallArray", ["CallExprNoArgs", "e"]],
+      [
+        ["CallArrayStmt", ["CallExpr", "console.log", ["ArgumentList", ["CallArray", ["CallExprNoArgs", "e"]]]]]
+      ]
+    ]
+  ]
+]

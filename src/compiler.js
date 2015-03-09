@@ -736,3 +736,4 @@ Array.prototype.contains = function(k) {
 
 exports.main = main;
 exports.getAST = getAST;
+exports.Generate = Generate;
