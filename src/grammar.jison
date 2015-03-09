@@ -62,6 +62,7 @@
 "}"    { return '}'; }
 "["    { return '['; }
 "]"    { return ']'; }
+"~="   { return '~='; }
 "=="   { return '=='; }
 ">="   { return '>='; }
 "<="   { return '<='; }
@@ -303,6 +304,8 @@ Expr
     {{ $$ = ['Condition', $1, '==', $3]; }}
   | Expr ISNT Expr
     {{ $$ = ['Condition', $1, '!==', $3]; }}
+  | Expr '~=' Expr
+    {{ $$ = ['InstanceCondition', $1, $3]; }}
   | Expr '==' Expr
     {{ $$ = ['Condition', $1, '===', $3]; }}
   | Expr '>' Expr

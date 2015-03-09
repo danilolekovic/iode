@@ -45,3 +45,4 @@ ToDo List:
   x Private functions
   x Easy creation of prototypes
   - Add literate stripes
+  - Fix final variables

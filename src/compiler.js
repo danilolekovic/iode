@@ -200,6 +200,9 @@ var Generate = function(ast) {
 
 			return "if " + Generate(ast[1]) + " {" + inside + "}";
 			break;
+		case "InstanceCondition":
+			return Generate(ast[1]) + " instanceof " + Generate(ast[2]);
+			break;
 		case "And":
 			return "&&";
 			break;
