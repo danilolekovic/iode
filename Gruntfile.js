@@ -22,6 +22,8 @@ module.exports = function(grunt) {
 		shell.exec('stripes -s examples/if.stps examples/js/if.js');
 		shell.exec('stripes -s examples/ranges.stps examples/js/ranges.js');
 		shell.exec('stripes -s examples/strings.stps examples/js/strings.js');
+		shell.exec('stripes -s examples/technicalranges.stps examples/js/technicalranges.js');
+		shell.exec('stripes -s examples/try.sast examples/js/try-ast.js');
 		shell.exec('stripes -s examples/try.stps examples/js/try.js');
 	});
 

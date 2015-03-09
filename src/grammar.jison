@@ -32,6 +32,7 @@
 "yes"  { return 'YES'; }
 "nothing"  { return 'NOTHING'; }
 "no"  { return 'NO'; }
+"..."  { return '...'; }
 ".."  { return '..'; }
 ">>>" { return '>>>'; }
 "<<<" { return '<<<'; }
@@ -83,6 +84,7 @@
 
 /lex
 
+%left '...'
 %left '..'
 %left '?'
 %left '<<<'
@@ -321,6 +323,8 @@ Expr
     {{ $$ = ['ConditionNot', $2]; }}
   | Expr '?'
     {{ $$ = ['ConditionCheck', $1]; }}
+  | NUMBER '...' NUMBER
+    {{ $$ = ['LessRange', $1, $3]; }}
   | NUMBER '..' NUMBER
     {{ $$ = ['Range', $1, $3]; }}
   | REGEX

@@ -614,6 +614,15 @@ var Generate = function(ast) {
 
 			return r;
 			break;
+		case "LessRange":
+			var r = [];
+
+			for (var i = Number(ast[1]) - 1; i <= Number(ast[2]) - 1; i++) {
+				r.push(i);
+			}
+
+			return r;
+			break;
 		case "Regex":
 			return ast[1];
 			break;
