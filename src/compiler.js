@@ -381,7 +381,7 @@ var Generate = function(ast) {
 				inside += Generate(entry);
 			});
 
-			return "while (" + Generate(ast[1]) + ") {" + inside + "}";
+			return "while " + Generate(ast[1]) + " {" + inside + "}";
 			break;
 		case "DoWhile":
 			var inside = "";
@@ -395,6 +395,32 @@ var Generate = function(ast) {
 			});
 
 			return "do {" + inside + "} while " + Generate(ast[2]) + ";";
+			break;
+		case "Until":
+			var inside = "";
+
+			if (ast[2] == "end") {
+				return "while (!(" + Generate(ast[1]) + ")) {}";
+			}
+
+			ast[2].forEach(function(entry) {
+				inside += Generate(entry);
+			});
+
+			return "until (!" + Generate(ast[1]) + ") {" + inside + "}";
+			break;
+		case "DoUntil":
+			var inside = "";
+
+			if (ast[1] == "end") {
+				return "do {} while (!(" + Generate(ast[2]) + "));";
+			}
+
+			ast[1].forEach(function(entry) {
+				inside += Generate(entry);
+			});
+
+			return "do {" + inside + "} until (!" + Generate(ast[2]) + ");";
 			break;
 		case "Repeat":
 			var inside = "";

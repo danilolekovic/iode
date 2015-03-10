@@ -32,6 +32,7 @@
 "yes"  { return 'YES'; }
 "nothing"  { return 'NOTHING'; }
 "no"  { return 'NO'; }
+"until"  { return 'UNTIL'; }
 "..."  { return '...'; }
 ".."  { return '..'; }
 ">>>" { return '>>>'; }
@@ -156,6 +157,8 @@ Statement
     {{ $$ = ['Unless', $2, $3]; }}
   | WHILE ConditionList Block
     {{ $$ = ['While', $2, $3]; }}
+  | UNTIL ConditionList Block
+    {{ $$ = ['Until', $2, $3]; }}
   | FOR '(' SetVar ';' Expr ';' Expr ')' Block
     {{ $$ = ['For', $3, $5, $7, $9]; }}
   | FOR '(' IDENT ':' Expr ')' Block
@@ -173,6 +176,8 @@ Statement
     {{ $$ = ['Repeat', $3, $5, $7]; }}
   | DO Block WHILE ConditionList
     {{ $$ = ['DoWhile', $2, $4]; }}
+  | DO Block UNTIL ConditionList
+    {{ $$ = ['DoUntil', $2, $4]; }}
   | DO Block
     {{ $$ = ['Do', $2]; }}
   | CallArrayStmt

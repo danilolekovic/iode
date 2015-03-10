@@ -1,7 +1,7 @@
 var generator = require("./compiler");
 
 var code =
-	'fn car >>> drive() console.log("Driving.."); end;';
+	'unless (false) console.log("Good."); end;';
 
 var start = new Date();
 
