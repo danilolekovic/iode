@@ -1,0 +1,7 @@
+This is some stuff that will not be detected. It's literal Stripes!
+
+<stps>
+console.log("This is cool");
+</stps>
+
+I know it is cool!

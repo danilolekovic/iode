@@ -20,6 +20,8 @@ module.exports = function(grunt) {
 		shell.exec('stripes -s examples/case.stps examples/js/case.js');
 		shell.exec('stripes -s examples/comments.stps examples/js/comments.js');
 		shell.exec('stripes -s examples/if.stps examples/js/if.js');
+		shell.exec('stripes -s -e examples/literal.litstps examples/js/literal.js');
+		shell.exec('stripes -s examples/pointers.stps examples/js/pointers.js');
 		shell.exec('stripes -s examples/ranges.stps examples/js/ranges.js');
 		shell.exec('stripes -s examples/strings.stps examples/js/strings.js');
 		shell.exec('stripes -s examples/technicalranges.stps examples/js/technicalranges.js');

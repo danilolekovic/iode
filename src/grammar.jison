@@ -41,6 +41,7 @@
 [_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
 [_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
+[A-Za-z_$][.A-Za-z0-9_$]*[\\*] { return 'POINT'; }
 [A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
 ([']([^\\']*)?[']) { return 'STRING'; }
 ([\"]([^\\"]*)?[\"]) { return 'STRING'; }
@@ -96,6 +97,7 @@
 %left '*'
 %left '/'
 %left '%'
+%left '~='
 %left '=='
 %left IS
 %left ISNT
@@ -180,6 +182,12 @@ Statement
     {{ $$ = ['MinusEq', $1, $3]; }}
   | IDENT '<-' Expr
     {{ $$ = ['PushArray', $1, $3]; }}
+  | Pointer '+=' Expr
+    {{ $$ = ['PointerPlusEq', $1, $3]; }}
+  | Pointer '-=' Expr
+    {{ $$ = ['PointerMinusEq', $1, $3]; }}
+  | Pointer '<-' Expr
+    {{ $$ = ['PointerPushArray', $1, $3]; }}
   | JSON
   | FN IDENT ArgumentList Block
     {{ $$ = ['PrivateFunction', $2, $3, $4]; }}
@@ -227,6 +235,8 @@ SetVar
     {{ $$ = ['FinalVar', $2, $4]; }}
   | IDENT '=' Expr
     {{ $$ = ['SetVar', $1, $3]; }}
+  | LET Pointer '=' Expr
+    {{ $$ = ['ReferableVar', $2, $4]; }}
   | Index '=' Expr
     {{ $$ = ['IndexSetVar', $1, $3]; }}
   | LET IDENT IS Expr
@@ -259,8 +269,14 @@ SetVar
     {{ $$ = ["SetOr", $2, $4, $7]; }}
   ;
 
+Pointer
+  : POINT
+    {{ $$ = ['Pointer', yytext]; }}
+  ;
+
 Expr
   : Index
+  | Pointer
   | NUMBER
     {{ $$ = ['Number', yytext]; }}
   | YES

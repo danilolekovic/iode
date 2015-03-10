@@ -44,5 +44,7 @@ ToDo List:
   x Mass object property setting
   x Private functions
   x Easy creation of prototypes
-  - Add literate stripes
+  x Add literate stripes
   - Fix final variables
+  - Figure something out for ++ and --
+  x Add pointers

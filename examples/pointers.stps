@@ -1,0 +1,12 @@
+let a* = 2;
+
+if (a* is 2)
+  console.log("Yayyy!!");
+end;
+
+let addTo = fn(num)
+  num* += 10;
+end;
+
+addTo(a);
+console.log(a*);

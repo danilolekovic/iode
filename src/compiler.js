@@ -31,6 +31,9 @@ var Generate = function(ast) {
 		case "Number":
 			return ast[1].replace(/_/g, "");
 			break;
+		case "Pointer":
+			return ast[1].substring(0, ast[1].length - 1) + ".val";
+			break;
 		case "Yes":
 			return "true";
 			break;
@@ -124,6 +127,23 @@ var Generate = function(ast) {
 
 			return "var " + ast[1] + " = " + Generate(ast[2]) + ";";
 			break;
+		case "ReferableVar":
+			if (finals.contains(Generate(ast[1]))) {
+				throw ("Variable '" + Generate(ast[1]) +
+					"' is final and already declared.");
+			}
+
+			return "var " + Generate(ast[1]).substring(0, Generate(ast[1]).length - 4) + " = { val:" + Generate(ast[2]) + " };";
+			break;
+		case "PointerPlusEq":
+			return Generate(ast[1]) + " += " + Generate(ast[2]) + ";";
+			break;
+		case "PointerMinusEq":
+			return Generate(ast[1]) + " -= " + Generate(ast[2]) + ";";
+			break;
+		case "PointerPushArray":
+			return Generate(ast[1]) + ".push(" + Generate(ast[2]) + ");";
+			break;
 		case "FinalVar":
 			if (finals.contains(ast[1]) || allVariables.contains(ast[1])) {
 				throw ("Variable '" + ast[1] + "' is declared twice.");
@@ -161,7 +181,7 @@ var Generate = function(ast) {
 			return ast[1] + "+=" + Generate(ast[2]) + ";";
 			break;
 		case "MinusEq":
-			return ast[1] + "+-" + Generate(ast[2]) + ";";
+			return ast[1] + "-=" + Generate(ast[2]) + ";";
 			break;
 		case "Add":
 			return Generate(ast[1]) + "+" + Generate(ast[2]);
