@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		watch: {
 			files: ['package.son', 'examples/*.stps'],
-			tasks: ['stripes']
+			tasks: ['stripes', 'stripes-examples']
 		}
 	});
 
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 		shell.exec('stripes -s examples/case.stps examples/js/case.js');
 		shell.exec('stripes -s examples/comments.stps examples/js/comments.js');
 		shell.exec('stripes -s examples/if.stps examples/js/if.js');
-		shell.exec('stripes -s -e examples/literal.litstps examples/js/literal.js');
+		shell.exec('stripes -s examples/literal.litstps examples/js/literal.js');
 		shell.exec('stripes -s examples/pointers.stps examples/js/pointers.js');
 		shell.exec('stripes -s examples/ranges.stps examples/js/ranges.js');
 		shell.exec('stripes -s examples/strings.stps examples/js/strings.js');
@@ -29,5 +29,9 @@ module.exports = function(grunt) {
 		shell.exec('stripes -s examples/try.stps examples/js/try.js');
 	});
 
-	grunt.registerTask('default', ['stripes', 'stripes-examples']);
+	grunt.registerTask('stripes-tests', "run unit tests", function() {
+		shell.exec('nodeunit src/tests.js');
+	});
+
+	grunt.registerTask('default', ['stripes', 'stripes-examples', 'stripes-tests']);
 };

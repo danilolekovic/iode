@@ -1,12 +1,54 @@
-var generator = require("./compiler");
+var generator = require("./compiler"),
+		nodeunit = require("nodeunit");
 
-var code =
-	'unless (false) console.log("Good."); end;';
+exports.IfStatement = function(test) {
+    test.equal("if (true) {console.log(\"cool\");}", generator.main("if (true) console.log('cool'); end;"));
+    test.done();
+};
 
-var start = new Date();
+exports.UnlessStatement = function(test) {
+    test.equal("if (!(true)) {console.log(\"cool\");}", generator.main("unless (true) console.log('cool'); end;"));
+    test.done();
+};
 
-setTimeout(function(argument) {
-	console.log(generator.main(code));
-	var end = new Date() - start;
-	console.log(1000 * (end / 1000) + "ms");
-}, 0);
+exports.ElseIfStatement = function(test) {
+    test.equal("if (true) {console.log(\"cool\");}else if (false) {console.log(\"yay\");}",
+							generator.main("if (true) console.log('cool'); end; elsif (false) console.log('yay'); end;"));
+    test.done();
+};
+
+exports.ElseStatement = function(test) {
+    test.equal("if (true) {console.log(\"cool\");}else {console.log(\"yay\");}",
+							generator.main("if (true) console.log('cool'); end; else console.log('yay'); end;"));
+    test.done();
+};
+
+exports.VariableDeclaration = function(test) {
+    test.equal("var a = 2;", generator.main("let a = 2;"));
+    test.done();
+};
+
+exports.VariableSetting = function(test) {
+    test.equal("a = 2;", generator.main("a = 2;"));
+    test.done();
+};
+
+exports.Range = function(test) {
+    test.equal("a = [1,2,3,4];", generator.main("a = [1..4];"));
+    test.done();
+};
+
+exports.LiteralRange = function(test) {
+    test.equal("a = [0,1,2,3];", generator.main("a = [1...4];"));
+    test.done();
+};
+
+exports.Comments = function(test) {
+    test.equal("/* Swag */", generator.main("# Swag #;"));
+    test.done();
+};
+
+exports.Repeat = function(test) {
+    test.equal("for (var i = 1; i <= 5; i++) {}", generator.main("repeat (5:i) end;"));
+    test.done();
+};

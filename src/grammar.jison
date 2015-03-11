@@ -172,7 +172,7 @@ Statement
   | IDENT '<<<' ArgumentList OF Expr
     {{ $$ = ['AssignFromObject', $1, $5, $3]; }}
   | Case
-  | REPEAT '(' Expr OF Expr ')' Block
+  | REPEAT '(' Expr ':' Expr ')' Block
     {{ $$ = ['Repeat', $3, $5, $7]; }}
   | DO Block WHILE ConditionList
     {{ $$ = ['DoWhile', $2, $4]; }}

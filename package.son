@@ -17,7 +17,8 @@
     "jison" -> "*",
 		"grunt" -> "*",
 		"grunt-contrib-watch" -> "*",
-		"shelljs" -> "*"
+		"shelljs" -> "*",
+    "nodeunit" -> "*"
   },
   "bin" -> {
     "stripes" -> "./bin/stripes"
