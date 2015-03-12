@@ -277,6 +277,10 @@ SetVar
     {{ $$ = ["SetOr", $2, $4, $7]; }}
   | '(' Expr OR Expr ')' IS Expr
     {{ $$ = ["SetOr", $2, $4, $7]; }}
+  | '++' Expr
+    {{ $$ = ['Plus', $2]; }}
+  | '--' Expr
+    {{ $$ = ['Minus', $2]; }}
   | SetVarType
   ;
 
