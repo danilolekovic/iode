@@ -128,6 +128,10 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "int" && ast[1] != "object") {
+				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
+			}
+
 			if (type(Generate(ast[3])) != ast[1]) {
 				console.log(Generate(ast[3]));
 				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
@@ -147,6 +151,10 @@ var Generate = function(ast) {
 					"' is final and already declared.");
 			}
 
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "int" && ast[1] != "object") {
+				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
+			}
+
 			if (type(Generate(ast[3])) != ast[1]) {
 				console.log(Generate(ast[3]));
 				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
@@ -164,6 +172,10 @@ var Generate = function(ast) {
 				finals.push(ast[2]);
 			}
 
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "int" && ast[1] != "object") {
+				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
+			}
+
 			if (type(Generate(ast[3])) != ast[1]) {
 				console.log(Generate(ast[3]));
 				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
@@ -179,8 +191,6 @@ var Generate = function(ast) {
 				throw ("Variable '" + ast[1] +
 					"' is final and cannot be modified.");
 			}
-
-			PushVariable(ast[1], typeof Generate(ast[2]));
 
 			return ast[1] + " = " + Generate(ast[2]) + ";";
 			break;
