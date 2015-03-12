@@ -30,7 +30,8 @@ var main = function() {
 		help: false,
 		version: false,
 		strict: false,
-		ast: false
+		ast: false,
+		repl: false
 	};
 
 	var args = [];
@@ -46,6 +47,8 @@ var main = function() {
 			options.std = false;
 		} else if (process.argv.slice(2)[arg] == "-s" || process.argv.slice(2)[arg] == "--strict") {
 			options.strict = true;
+		} else if (process.argv.slice(2)[arg] == "-r" || process.argv.slice(2)[arg] == "--repl") {
+			options.repl = true;
 		} else if (process.argv.slice(2)[arg] == "-ast" || process.argv.slice(2)[arg] == "--tokens") {
 			options.ast = true;
 			options.std = false;
@@ -59,6 +62,11 @@ var main = function() {
 
 	if (options.version) {
 		console.log("Stripes v" + JSON.version);
+		return;
+	}
+
+	if (options.repl) {
+		require("./repl.js");
 		return;
 	}
 
