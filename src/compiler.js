@@ -138,6 +138,9 @@ var Generate = function(ast) {
 
 			return ast[2] + " = " + Generate(ast[3]) + ";";
 			break;
+		case "ArrowFunction":
+			return "function" + Generate(ast[1]) + " { return " + Generate(ast[2]) + "; }";
+			break;
 		case "DecVarType":
 			if (finals.contains(ast[2])) {
 				throw ("Variable '" + ast[2] +
@@ -295,7 +298,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in if statement.");
+				}
+
+				inside += a;
 			});
 
 			return "if " + Generate(ast[1]) + " {" + inside + "}";
@@ -317,7 +326,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in elsif statement.");
+				}
+
+				inside += a;
 			});
 
 			return "else if " + Generate(ast[1]) + " {" + inside + "}";
@@ -330,7 +345,13 @@ var Generate = function(ast) {
 			}
 
 			ast[1].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in else statement.");
+				}
+
+				inside += a;
 			});
 
 			return "else {" + inside + "}";
@@ -343,7 +364,13 @@ var Generate = function(ast) {
 			}
 
 			ast[3].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in for each loop.");
+				}
+
+				inside += a;
 			});
 
 			return "for (var " + ast[1] + " in " + Generate(ast[2]) + ") {" +
@@ -358,7 +385,13 @@ var Generate = function(ast) {
 			}
 
 			ast[4].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in for array iteration loop.");
+				}
+
+				inside += a;
 			});
 
 			return "for (var " + ast[1] + " in " + Generate(ast[3]) + ") { var " +
@@ -374,7 +407,13 @@ var Generate = function(ast) {
 			}
 
 			ast[4].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in for loop.");
+				}
+
+				inside += a;
 			});
 
 			return "for (" + Generate(ast[1]) + " " + Generate(ast[2]) + "; " +
@@ -389,7 +428,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in unless statement.");
+				}
+
+				inside += a;
 			});
 
 			return "if (!" + Generate(ast[1]) + ") {" + inside + "}";
@@ -402,7 +447,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in function.");
+				}
+
+				inside += a;
 			});
 
 			if (!(Generate(ast[1]).substring(0, 1) == "(")) {
@@ -419,7 +470,13 @@ var Generate = function(ast) {
 			}
 
 			ast[3].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in private function.");
+				}
+
+				inside += a;
 			});
 
 			if (!(Generate(ast[2]).substring(0, 1) == "(")) {
@@ -437,7 +494,13 @@ var Generate = function(ast) {
 			}
 
 			ast[4].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in prototype.");
+				}
+
+				inside += a;
 			});
 
 			if (!(Generate(ast[3]).substring(0, 1) == "(")) {
@@ -458,7 +521,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in while loop.");
+				}
+
+				inside += a;
 			});
 
 			return "while " + Generate(ast[1]) + " {" + inside + "}";
@@ -471,7 +540,13 @@ var Generate = function(ast) {
 			}
 
 			ast[1].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in do while loop.");
+				}
+
+				inside += a;
 			});
 
 			return "do {" + inside + "} while " + Generate(ast[2]) + ";";
@@ -484,7 +559,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in until loop.");
+				}
+
+				inside += a;
 			});
 
 			return "until (!" + Generate(ast[1]) + ") {" + inside + "}";
@@ -497,7 +578,13 @@ var Generate = function(ast) {
 			}
 
 			ast[1].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in do until loop.");
+				}
+
+				inside += a;
 			});
 
 			return "do {" + inside + "} until (!" + Generate(ast[2]) + ");";
@@ -512,7 +599,13 @@ var Generate = function(ast) {
 			}
 
 			ast[3].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in repeat loop.");
+				}
+
+				inside += a;
 			});
 
 			return "for (var " + Generate(ast[2]) + " = 1; " + Generate(ast[2]) +
@@ -527,7 +620,13 @@ var Generate = function(ast) {
 			}
 
 			ast[1].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in try statement.");
+				}
+
+				inside += a;
 			});
 
 			return "try {" +
@@ -541,7 +640,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in catch statement.");
+				}
+
+				inside += a;
 			});
 
 			return "catch (" + Generate(ast[1]) + ") {" + inside + "}";
@@ -554,7 +659,13 @@ var Generate = function(ast) {
 			}
 
 			ast[1].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in do statement.");
+				}
+
+				inside += a;
 			});
 
 			return "(function() {" + inside + "})();";
@@ -670,6 +781,10 @@ var Generate = function(ast) {
 					"' is final and already declared.");
 			}
 
+			if (ast[3] == "end") {
+				return 'function ' + ast[1] + Generate(ast[2]) + ' {}';
+			}
+
 			return 'function ' + ast[1] + Generate(ast[2]) + ' {' + Generate(
 				ast[3]).substring(0,
 				Generate(ast[3]).length - 1) + '}';
@@ -698,7 +813,13 @@ var Generate = function(ast) {
 			}
 
 			ast[2].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in case.");
+				}
+
+				inside += a;
 			});
 
 			return "case " + Generate(ast[1]) + ":" + inside + "break;";
@@ -711,7 +832,13 @@ var Generate = function(ast) {
 			}
 
 			ast[1].forEach(function(entry) {
-				inside += Generate(entry);
+				var a = Generate(entry);
+
+				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
+					throw ("Final non-global variable declared in default within a case statement.");
+				}
+
+				inside += a;
 			});
 
 			return "default:" + inside;

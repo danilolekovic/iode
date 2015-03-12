@@ -42,12 +42,12 @@
 ".."  { return '..'; }
 ">>>" { return '>>>'; }
 "<<<" { return '<<<'; }
+"=>"    { return '=>'; }
 "->"    { return '->'; }
 "<-"    { return '<-'; }
 [_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
 [_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
-[A-Za-z_$][.A-Za-z0-9_$]*[\\*] { return 'POINT'; }
 [A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
 ([']([^\\']*)?[']) { return 'STRING'; }
 ([\"]([^\\"]*)?[\"]) { return 'STRING'; }
@@ -79,7 +79,7 @@
 "!="   { return '!='; }
 "+"    { return '+'; }
 "-"    { return '-'; }
-"*"    { return '*'; }
+'*'    { return '*'; }
 "/"    { return '/'; }
 "%"    { return '%'; }
 "="    { return '='; }
@@ -88,6 +88,7 @@
 "?"    { return '?'; }
 "@"    { return '@'; }
 "^"    { return '^'; }
+"@"    { return '@'; }
 <<EOF>> { return 'EOF'; }
 
 /lex
@@ -96,6 +97,7 @@
 %left '..'
 %left '?'
 %left '<<<'
+%left '=>'
 %left '->'
 %left '<-'
 %left '+'
@@ -172,6 +174,8 @@ Statement
     {{ $$ = ['ForKeyVal', $3, $5, $7, $9];}}
   | CLASS IDENT ArgumentList ClassElements END
     {{ $$ = ['Class', $2, $3, $4]; }}
+  | CLASS IDENT ArgumentList END
+    {{ $$ = ['Class', $2, $3, "end"]; }}
   | COMMENT
     {{ $$ = ['Comment', yytext]; }}
   | IDENT '<<<' ArgumentList OF Expr
@@ -294,8 +298,8 @@ SetVarType
   ;
 
 Pointer
-  : POINT
-    {{ $$ = ['Pointer', yytext]; }}
+  : '@' IDENT
+    {{ $$ = ['Pointer', $2]; }}
   ;
 
 Expr
@@ -379,6 +383,8 @@ Expr
   | '@' '?'
     {{ $$ = ['RandomGen']; }}
   | CallArray
+  | ArgumentList '=>' Expr
+    {{ $$ = ['ArrowFunction', $1, $3]; }}
   ;
 
 ArgumentList

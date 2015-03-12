@@ -51,20 +51,3 @@ let Parallel = fn(func, callback)
     end;
   end, 0);
 end;
-
-class Vector2D(x, y)
-  x -> x,
-  y -> y,
-  toString -> fn()
-    return("(#{x}, #{y})");
-  end
-end;
-
-class Vector3D(x, y, z)
-  x -> x,
-  y -> y,
-  z -> z,
-  toString -> fn()
-    return("(#{x}, #{y}, #{z})");
-  end
-end;
