@@ -872,22 +872,10 @@ var Generate = function(ast) {
 			return "()";
 			break;
 		case "Range":
-			var r = [];
-
-			for (var i = Number(ast[1]); i <= Number(ast[2]); i++) {
-				r.push(i);
-			}
-
-			return r;
+			return getNumbers(ast[1] + ".." + ast[2]);
 			break;
 		case "LessRange":
-			var r = [];
-
-			for (var i = Number(ast[1]) - 1; i <= Number(ast[2]) - 1; i++) {
-				r.push(i);
-			}
-
-			return r;
+			return getNumbers((Number(ast[1]) - 1) + ".." + (Number(ast[2]));
 			break;
 		case "Regex":
 			return ast[1];
@@ -995,6 +983,40 @@ var Generate = function(ast) {
 		default:
 			throw "Unknown statement has been located: " + ast[0];
 	}
+}
+
+var getNumbers = function(stringNumbers) {
+    var nums = [];
+    var entries = stringNumbers.split(',');
+    var length = entries.length;
+    var i, entry, low, high, range;
+
+    for (i = 0; i < length; i++) {
+        entry = entries[i];
+
+        if (!~entry.indexOf('..')) {
+            nums.push(+entry);
+        } else {
+            range = entry.split('..');
+
+            low = +range[0];
+            high = +range[1];
+
+            if(high < low){
+              low = low ^ high;
+              high = low ^ high;
+              low = low ^ high;
+            }
+
+            while (low <= high) {
+                nums.push(low++);
+            }
+        }
+    }
+
+    return nums.sort(function (a, b) {
+        return a - b;
+    });
 }
 
 var main = function(code) {

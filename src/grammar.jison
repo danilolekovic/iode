@@ -45,8 +45,8 @@
 "=>"    { return '=>'; }
 "->"    { return '->'; }
 "<-"    { return '<-'; }
-[_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
-[_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
+[-_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
+[-_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
 [A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
 ([']([^\\']*)?[']) { return 'STRING'; }
