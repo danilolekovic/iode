@@ -1,0 +1,1 @@
+If(true, fn() console.log("Swag"); end);

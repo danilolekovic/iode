@@ -60,6 +60,10 @@ var main = function() {
 		}
 	}
 
+	if (options.std) {
+		options.strict = true;
+	}
+
 	if (options.version) {
 		console.log("Stripes v" + JSON.version);
 		return;

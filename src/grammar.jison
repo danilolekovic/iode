@@ -45,8 +45,8 @@
 "=>"    { return '=>'; }
 "->"    { return '->'; }
 "<-"    { return '<-'; }
-[-_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
-[-_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
+[_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
+[_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
 [A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
 ([']([^\\']*)?[']) { return 'STRING'; }
@@ -307,6 +307,8 @@ Expr
   | Pointer
   | NUMBER
     {{ $$ = ['Number', yytext]; }}
+  | '-' NUMBER
+    {{ $$ = ['Number', "-" + yytext]; }}
   | YES
     {{ $$ = ['Yes']; }}
   | NO
@@ -372,9 +374,9 @@ Expr
     {{ $$ = ['ConditionNot', $2]; }}
   | Expr '?'
     {{ $$ = ['ConditionCheck', $1]; }}
-  | NUMBER '...' NUMBER
+  | Expr '...' Expr
     {{ $$ = ['LessRange', $1, $3]; }}
-  | NUMBER '..' NUMBER
+  | Expr '..' Expr
     {{ $$ = ['Range', $1, $3]; }}
   | REGEX
     {{ $$ = ['Regex', yytext]; }}

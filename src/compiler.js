@@ -872,10 +872,10 @@ var Generate = function(ast) {
 			return "()";
 			break;
 		case "Range":
-			return getNumbers(ast[1] + ".." + ast[2]);
+			return getNumbers(Generate(ast[1]) + ".." + Generate(ast[2]));
 			break;
 		case "LessRange":
-			return getNumbers((Number(ast[1]) - 1) + ".." + (Number(ast[2]));
+			return getNumbers((Number(Generate(ast[1])) - 1) + ".." + (Number(Generate(ast[2])) - 1));
 			break;
 		case "Regex":
 			return ast[1];

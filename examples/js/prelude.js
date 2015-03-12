@@ -84,8 +84,6 @@ var Every = function(arr, func) {
     func(a);
   }
 };
-try {
-  console.log("try statement");
-} catch (e) {
-  console.log(e);
-}
+If(true, function() {
+  console.log("Swag");
+});

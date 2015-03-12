@@ -1,12 +1,3 @@
-let sum = fn()
-    let retval = 0;
-    let len = arguments.length;
-    for (let i = 0; i < len; i++)
-        retval += arguments[i];
-    end;
-    return(retval);
-end;
-
 let CelciusToFahrenheit = fn(c)
   return(c * 1.8 + 32);
 end;
@@ -43,11 +34,38 @@ let LitresToGallons = fn(gal, type)
     default -> return(gal * 0.26417); end;
 end;
 
-let Parallel = fn(func, callback)
-  setTimeout(fn()
+let While = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  while (cond)
     func();
-    if (callback)
-      callback();
+  end;
+end;
+
+let If = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  if (cond)
+    func();
+  end;
+end;
+
+let Repeat = fn(times, func)
+  if (times?) times = 1; end;
+
+  if (func.length == 0)
+    repeat (times:i)
+      func();
     end;
-  end, 0);
+  end; else
+    repeat (time:i)
+      func(i);
+    end;
+  end;
+end;
+
+let Every = fn(arr, func)
+  for (a:arr)
+    func(a);
+  end;
 end;
