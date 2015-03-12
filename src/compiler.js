@@ -4,6 +4,7 @@ var parser = require("./grammar"),
 
 var finals = [];
 var allVariables = [];
+var variablesWithTypes = [];
 
 var reserved = ["abstract", "else", "instanceof", "super", "boolean", "enum",
 	"int", "switch", "break", "export", "interface", "synchronized", "byte",
@@ -17,6 +18,39 @@ var reserved = ["abstract", "else", "instanceof", "super", "boolean", "enum",
 	"unless", "repeat", "yes", "no", "nothing"
 ];
 
+var PushVariable = function(n, t) {
+	for (a in variablesWithTypes) {
+		if (variablesWithTypes[a].name == n) {
+			variablesWithTypes[a].type = t;
+			return;
+		}
+	}
+
+	variablesWithTypes.push({ name: n, type: t});
+};
+
+var TYPES = {
+    'number'           : 'number',
+    'boolean'          : 'boolean',
+    'string'           : 'string',
+    'function'				 : 'function',
+    'function'				 : 'fn',
+    '[object RegExp]'  : 'regexp',
+    '[object RegExp]'  : 'pattern',
+    '[object Array]'   : 'array',
+    '[object Date]'    : 'date',
+    '[object Error]'   : 'error',
+		'number'					 : 'int',
+		'object'					 : 'date',
+		'object'					 : 'object'
+},
+TOSTRING = Object.prototype.toString;
+
+var type = function(o) {
+    return TYPES[typeof o] || TYPES[TOSTRING.call(o)] || (o ? 'object' : 'null');
+};
+
+
 var Generate = function(ast) {
 	switch (ast[0]) {
 		case "Stripes":
@@ -29,22 +63,22 @@ var Generate = function(ast) {
 			return "";
 			break;
 		case "Number":
-			return ast[1].replace(/_/g, "");
+			return parseFloat(ast[1].replace(/_/g, ""));
 			break;
 		case "Pointer":
 			return ast[1].substring(0, ast[1].length - 1) + ".val";
 			break;
 		case "Yes":
-			return "true";
+			return true;
 			break;
 		case "No":
-			return "false";
+			return false;
 			break;
 		case "Nothing":
 			return "null";
 			break;
 		case "Percent":
-			return String(parseFloat(ast[1].replace(/_/g, "")) / 100.0);
+			return parseFloat(ast[1].replace(/_/g, "")) / 100.0;
 			break;
 		case "Ident":
 			if (reserved.contains(ast[1])) {
@@ -98,6 +132,8 @@ var Generate = function(ast) {
 				throw ("Variable '" + ast[1] +
 					"' is final and cannot be modified.");
 			}
+
+			PushVariable(ast[1], typeof Generate(ast[2]));
 
 			return ast[1] + " = " + Generate(ast[2]) + ";";
 			break;

@@ -1,6 +1,12 @@
 %lex
 %%
 
+"yes"  { return 'YES'; }
+"no"  { return 'NO'; }
+"nothing"  { return 'NOTHING'; }
+"null"  { return 'NOTHING'; }
+"true"  { return 'YES'; }
+"false"  { return 'NO'; }
 "if"   { return 'IF'; }
 "else" { return 'ELSE'; }
 "elsif" { return 'ELSIF'; }
@@ -29,9 +35,6 @@
 "and" { return 'AND_COND'; }
 "when"  { return 'WHEN'; }
 "to"  { return 'TO'; }
-"yes"  { return 'YES'; }
-"nothing"  { return 'NOTHING'; }
-"no"  { return 'NO'; }
 "until"  { return 'UNTIL'; }
 "..."  { return '...'; }
 ".."  { return '..'; }
