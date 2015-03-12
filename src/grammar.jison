@@ -5,6 +5,8 @@
 "no"  { return 'NO'; }
 "nothing"  { return 'NOTHING'; }
 "null"  { return 'NOTHING'; }
+"unknown"  { return 'UNKNOWN'; }
+"undefined"  { return 'UNKNOWN'; }
 "true"  { return 'YES'; }
 "false"  { return 'NO'; }
 "if"   { return 'IF'; }
@@ -275,6 +277,16 @@ SetVar
     {{ $$ = ["SetOr", $2, $4, $7]; }}
   | '(' Expr OR Expr ')' IS Expr
     {{ $$ = ["SetOr", $2, $4, $7]; }}
+  | SetVarType
+  ;
+
+SetVarType
+  : IDENT IDENT '=' Expr
+    {{ $$ = ['SetVarType', $1, $2, $4]; }}
+  | LET IDENT IDENT '=' Expr
+    {{ $$ = ['DecVarType', $2, $3, $5]; }}
+  | FINAL IDENT IDENT '=' Expr
+    {{ $$ = ['FinalVar', $2, $3, $5]; }}
   ;
 
 Pointer
@@ -293,6 +305,8 @@ Expr
     {{ $$ = ['No']; }}
   | NOTHING
     {{ $$ = ['Nothing']; }}
+  | UNKNOWN
+    {{ $$ = ['Unknown']; }}
   | PERCENT
     {{ $$ = ['Percent', yytext]; }}
   | STRING

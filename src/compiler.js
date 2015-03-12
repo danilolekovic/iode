@@ -33,16 +33,8 @@ var TYPES = {
     'number'           : 'number',
     'boolean'          : 'boolean',
     'string'           : 'string',
-    'function'				 : 'function',
-    'function'				 : 'fn',
-    '[object RegExp]'  : 'regexp',
-    '[object RegExp]'  : 'pattern',
-    '[object Array]'   : 'array',
-    '[object Date]'    : 'date',
-    '[object Error]'   : 'error',
-		'number'					 : 'int',
-		'object'					 : 'date',
-		'object'					 : 'object'
+    'object'				   : 'object',
+		'number'					 : 'int'
 },
 TOSTRING = Object.prototype.toString;
 
@@ -75,7 +67,10 @@ var Generate = function(ast) {
 			return false;
 			break;
 		case "Nothing":
-			return "null";
+			return null;
+			break;
+		case "Unknown":
+			return undefined;
 			break;
 		case "Percent":
 			return parseFloat(ast[1].replace(/_/g, "")) / 100.0;
@@ -126,6 +121,55 @@ var Generate = function(ast) {
 			}
 
 			return final;
+			break;
+		case "SetVarType":
+			if (finals.contains(ast[2])) {
+				throw ("Variable '" + ast[2] +
+					"' is final and cannot be modified.");
+			}
+
+			if (type(Generate(ast[3])) != ast[1]) {
+				console.log(Generate(ast[3]));
+				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
+							", but got a type of " + type(Generate(ast[3])) + ".");
+			}
+
+			PushVariable(ast[2], ast[1]);
+
+			return ast[2] + " = " + Generate(ast[3]) + ";";
+			break;
+		case "DecVarType":
+			if (finals.contains(ast[2])) {
+				throw ("Variable '" + ast[2] +
+					"' is final and already declared.");
+			}
+
+			if (type(Generate(ast[3])) != ast[1]) {
+				console.log(Generate(ast[3]));
+				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
+							", but got a type of " + type(Generate(ast[3])) + ".");
+			}
+
+			PushVariable(ast[2], ast[1]);
+
+			return "var " + ast[2] + " = " + Generate(ast[3]) + ";";
+			break;
+		case "FinalVarType":
+			if (finals.contains(ast[2]) || allVariables.contains(ast[2])) {
+				throw ("Variable '" + ast[2] + "' is declared twice.");
+			} else {
+				finals.push(ast[2]);
+			}
+
+			if (type(Generate(ast[3])) != ast[1]) {
+				console.log(Generate(ast[3]));
+				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
+							", but got a type of " + type(Generate(ast[3])) + ".");
+			}
+
+			PushVariable(ast[2], ast[1]);
+
+			return "var " + ast[2] + " = " + Generate(ast[3]) + ";";
 			break;
 		case "SetVar":
 			if (finals.contains(ast[1])) {
