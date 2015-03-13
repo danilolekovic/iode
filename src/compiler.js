@@ -103,6 +103,25 @@ var Generate = function(ast) {
 		case "RandomGen":
 			return "Math.random()";
 			break;
+		case "CallAssignFromObject":
+			var a = [];
+
+			Generate(ast[3]).substring(1, Generate(ast[3]).length - 1).split(', ').forEach(
+				function(entry) {
+					a.push(entry);
+				});
+
+			var final = "";
+
+			for (var i = 0; i <= a.length; i++) {
+				if (a[i] != undefined) {
+					final += Generate(ast[1]) + "." + a[i] + " = " + Generate(ast[2]) + "." + a[i] +
+						";";
+				}
+			}
+
+			return final;
+			break;
 		case "AssignFromObject":
 			var a = [];
 
@@ -195,6 +214,14 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
+			for (a in variablesWithTypes) {
+				if (variablesWithTypes[a].name == ast[1]) {
+					if (type(Generate(ast[2])) != variablesWithTypes[a].type) {
+						throw ("Variable '" + ast[1] + "' expects a value that is a " + variablesWithTypes[a].type + ".");
+					}
+				}
+			}
+
 			return ast[1] + " = " + Generate(ast[2]) + ";";
 			break;
 		case "SetOr":
@@ -208,6 +235,20 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
+			for (a in variablesWithTypes) {
+				if (variablesWithTypes[a].name == Generate(ast[1])) {
+					if (type(Generate(ast[3])) != variablesWithTypes[a].type) {
+						throw ("Variable '" + Generate(ast[1]) + "' expects a value that is a " + variablesWithTypes[a].type + ".");
+					}
+				}
+
+				if (variablesWithTypes[a].name == Generate(ast[2])) {
+					if (type(Generate(ast[3])) != variablesWithTypes[a].type) {
+						throw ("Variable '" + Generate(ast[2]) + "' expects a value that is a " + variablesWithTypes[a].type + ".");
+					}
+				}
+			}
+
 			return "if (typeof " + Generate(ast[1]) + " !== 'undefined') { " +
 				Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
 				Generate(ast[2]) + " = " + Generate(ast[3]) + "; }";
@@ -219,6 +260,14 @@ var Generate = function(ast) {
 			if (finals.contains(ast[1])) {
 				throw ("Variable '" + ast[1] +
 					"' is final and already declared.");
+			}
+
+			for (a in variablesWithTypes) {
+				if (variablesWithTypes[a].name == ast[1]) {
+					if (type(Generate(ast[2])) != variablesWithTypes[a].type) {
+						throw ("Variable '" + ast[1] + "' already exists and expects a value that is a " + variablesWithTypes[a].type + ".");
+					}
+				}
 			}
 
 			return "var " + ast[1] + " = " + Generate(ast[2]) + ";";
@@ -245,6 +294,14 @@ var Generate = function(ast) {
 				throw ("Variable '" + ast[1] + "' is declared twice.");
 			} else {
 				finals.push(ast[1]);
+			}
+
+			for (a in variablesWithTypes) {
+				if (variablesWithTypes[a].name == ast[1]) {
+					if (type(Generate(ast[2])) != variablesWithTypes[a].type) {
+						throw ("Variable '" + ast[1] + "' expects a value that is a " + variablesWithTypes[a].type + " before being made final.");
+					}
+				}
 			}
 
 
@@ -279,6 +336,12 @@ var Generate = function(ast) {
 		case "MinusEq":
 			return ast[1] + "-=" + Generate(ast[2]) + ";";
 			break;
+		case "CallPlusEq":
+			return Generate(ast[1]) + "+=" + Generate(ast[2]) + ";";
+			break;
+		case "CallMinusEq":
+			return Generate(ast[1]) + "-=" + Generate(ast[2]) + ";";
+			break;
 		case "Add":
 			return Generate(ast[1]) + "+" + Generate(ast[2]);
 			break;
@@ -302,6 +365,9 @@ var Generate = function(ast) {
 			break;
 		case "PushArray":
 			return ast[1] + ".push(" + Generate(ast[2]) + ");";
+			break;
+		case "CallPushArray":
+			return Generate(ast[1]) + ".push(" + Generate(ast[2]) + ");";
 			break;
 		case "If":
 			var inside = "";
