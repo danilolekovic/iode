@@ -215,6 +215,10 @@ Statement
     {{ $$ = ["CallWhile", $1, $3]; }}
   | CallArrayStmt UNTIL ArgumentList
     {{ $$ = ["CallUntil", $1, $3]; }}
+  | SetVar IF ArgumentList
+    {{ $$ = ["SetIf", $1, $3]; }}
+  | SetVar UNLESS ArgumentList
+    {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
   ;

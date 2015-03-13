@@ -995,6 +995,12 @@ var Generate = function(ast) {
 		case "CallUntil":
 			return "while !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
+		case "SetIf":
+			return "if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
+			break;
+		case "SetUnless":
+			return "if !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
+			break;
 		case "RunExpr":
 			return Generate(ast[1]) + ";";
 			break;
