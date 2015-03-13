@@ -209,6 +209,12 @@ Statement
     {{ $$ = ['Prototype', $2, $4, $5, $6]; }}
   | CallArrayStmt IF ArgumentList
     {{ $$ = ["CallIf", $1, $3]; }}
+  | CallArrayStmt UNLESS ArgumentList
+    {{ $$ = ["CallUnless", $1, $3]; }}
+  | CallArrayStmt WHILE ArgumentList
+    {{ $$ = ["CallWhile", $1, $3]; }}
+  | CallArrayStmt UNTIL ArgumentList
+    {{ $$ = ["CallUntil", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
   ;
