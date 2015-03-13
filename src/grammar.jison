@@ -207,6 +207,10 @@ Statement
     {{ $$ = ['PrivateFunction', $2, $3, $4]; }}
   | FN IDENT '>>>' IDENT ArgumentList Block
     {{ $$ = ['Prototype', $2, $4, $5, $6]; }}
+  | CallArrayStmt IF ArgumentList
+    {{ $$ = ["CallIf", $1, $3]; }}
+  | ':' Expr
+    {{ $$ = ["RunExpr", $2]; }}
   ;
 
 Case
@@ -387,6 +391,8 @@ Expr
   | CallArray
   | ArgumentList '=>' Expr
     {{ $$ = ['ArrowFunction', $1, $3]; }}
+  | '=>' Expr
+    {{ $$ = ['EmptyArrowFunction', $2]; }}
   ;
 
 ArgumentList

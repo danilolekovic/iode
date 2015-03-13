@@ -145,6 +145,9 @@ var Generate = function(ast) {
 		case "ArrowFunction":
 			return "function" + Generate(ast[1]) + " { return " + Generate(ast[2]) + "; }";
 			break;
+		case "EmptyArrowFunction":
+			return "function() { return " + Generate(ast[1]) + "; }";
+			break;
 		case "DecVarType":
 			if (finals.contains(ast[2])) {
 				throw ("Variable '" + ast[2] +
@@ -979,6 +982,12 @@ var Generate = function(ast) {
 			}
 
 			return f;
+			break;
+		case "CallIf":
+			return "if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
+			break;
+		case "RunExpr":
+			return Generate(ast[1]) + ";";
 			break;
 		default:
 			throw "Unknown statement has been located: " + ast[0];
