@@ -49,8 +49,8 @@
 [_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
 [A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
-([']([^\\']*)?[']) { return 'STRING'; }
-([\"]([^\\"]*)?[\"]) { return 'STRING'; }
+\"((?:\\.|[^"\\])*)\" { return 'STRING'; }
+\'((?:\\.|[^'\\])*)\' { return 'STRING'; }
 ([\#]([^\\#]*)?[\#]) { return 'COMMENT'; }
 \/((?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+)\/((?:g(?:im?|m)?|i(?:gm?|m)?|m(?:gi?|i)?)?) { return 'REGEX'; }
 \s+    { /* whitespace-insignificant */ }
