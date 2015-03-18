@@ -339,10 +339,10 @@ var Generate = function(ast) {
 			return Generate(ast[1]) + "^" + Generate(ast[2]);
 			break;
 		case "PlusEq":
-			return ast[1] + "+=" + Generate(ast[2]) + ";";
+			return Generate(ast[1]).substring(0, Generate(ast[1]).length - 1) + "+=" + Generate(ast[2]) + ";";
 			break;
 		case "MinusEq":
-			return ast[1] + "-=" + Generate(ast[2]) + ";";
+			return Generate(ast[1]).substring(0, Generate(ast[1]).length - 1) + "-=" + Generate(ast[2]) + ";";
 			break;
 		case "CallPlusEq":
 			return Generate(ast[1]) + "+=" + Generate(ast[2]) + ";";
@@ -372,10 +372,7 @@ var Generate = function(ast) {
 				"\") !== -1";
 			break;
 		case "PushArray":
-			return ast[1] + ".push(" + Generate(ast[2]) + ");";
-			break;
-		case "CallPushArray":
-			return Generate(ast[1]) + ".push(" + Generate(ast[2]) + ");";
+			return Generate(ast[1]).substring(0, Generate(ast[1]).length - 1) + ".push(" + Generate(ast[2]) + ");";
 			break;
 		case "If":
 			var inside = "";

@@ -45,6 +45,6 @@ ToDo List:
   x Private functions
   x Easy creation of prototypes
   x Add literate stripes
-  - Fix final variables
-  - Figure something out for ++ and --
+  x Fix final variables
+  x Figure something out for ++ and --
   x Add pointers

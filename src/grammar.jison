@@ -190,11 +190,11 @@ Statement
   | DO Block
     {{ $$ = ['Do', $2]; }}
   | CallArrayStmt
-  | IDENT '+=' Expr
+  | CallArrayStmt '+=' Expr
     {{ $$ = ['PlusEq', $1, $3]; }}
-  | IDENT '-=' Expr
+  | CallArrayStmt '-=' Expr
     {{ $$ = ['MinusEq', $1, $3]; }}
-  | IDENT '<-' Expr
+  | CallArrayStmt '<-' Expr
     {{ $$ = ['PushArray', $1, $3]; }}
   | Pointer '+=' Expr
     {{ $$ = ['PointerPlusEq', $1, $3]; }}
