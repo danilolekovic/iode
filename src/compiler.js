@@ -83,9 +83,9 @@ var Generate = function(ast) {
 			var string = ast[1];
 			string = string.substring(1, string.length - 1);
 
-			string = string.replace(/\\\(.*\)/g,
-				function(a) {
-					return "\" + " + a.substring(2, a.length - 1) + " + \""
+			string = string.replace(/\\\((.*)\)/g,
+				function(a, b) {
+					return "\" + " + b + " + \""
 				}
 			);
 
@@ -95,9 +95,9 @@ var Generate = function(ast) {
 			var string = ast[1];
 			string = string.substring(1, string.length - 1);
 
-			string = string.replace(/\\\(.*\)/g,
-				function(a) {
-					return "' + " + a.substring(2, a.length - 1) + " + '"
+			string = string.replace(/\\\((.*)\)/g,
+				function(a, b) {
+					return "' + " + b + " + '"
 				}
 			);
 

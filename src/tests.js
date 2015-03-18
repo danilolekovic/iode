@@ -2,23 +2,23 @@ var generator = require("./compiler"),
 		nodeunit = require("nodeunit");
 
 exports.IfStatement = function(test) {
-    test.equal("if (true) {console.log(\"cool\");}", generator.main("if (true) console.log('cool'); end;"));
+    test.equal("if (true) {console.log('cool');}", generator.main("if (true) console.log('cool'); end;"));
     test.done();
 };
 
 exports.UnlessStatement = function(test) {
-    test.equal("if (!(true)) {console.log(\"cool\");}", generator.main("unless (true) console.log('cool'); end;"));
+    test.equal("if (!(true)) {console.log('cool');}", generator.main("unless (true) console.log('cool'); end;"));
     test.done();
 };
 
 exports.ElseIfStatement = function(test) {
-    test.equal("if (true) {console.log(\"cool\");}else if (false) {console.log(\"yay\");}",
+    test.equal("if (true) {console.log('cool');}else if (false) {console.log('yay');}",
 							generator.main("if (true) console.log('cool'); end; elsif (false) console.log('yay'); end;"));
     test.done();
 };
 
 exports.ElseStatement = function(test) {
-    test.equal("if (true) {console.log(\"cool\");}else {console.log(\"yay\");}",
+    test.equal("if (true) {console.log('cool');}else {console.log('yay');}",
 							generator.main("if (true) console.log('cool'); end; else console.log('yay'); end;"));
     test.done();
 };
