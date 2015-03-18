@@ -1,3 +1,4 @@
 let what = "be";
 let verse = "Let it \(what).";
-let version2 = "When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. \(verse)";
+let version = "When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. \(verse)";
+console.log(version);

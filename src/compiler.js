@@ -1138,6 +1138,6 @@ Array.prototype.contains = function(k) {
 	return false;
 }
 
-exports.main = main;
+exports.GenerateStripes = GenerateStripes;
 exports.getAST = getAST;
 exports.Generate = Generate;

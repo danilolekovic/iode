@@ -86,4 +86,5 @@ var Every = function(arr, func) {
 };
 var what = "be";
 var verse = "Let it " + what + ".";
-var version2 = "When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. " + verse + "";
+var version = "When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. " + verse + "";
+console.log(version);

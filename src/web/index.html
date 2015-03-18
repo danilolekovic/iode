@@ -3,9 +3,13 @@
     <title>Stripes DOM Test</title>
   </head>
   <body>
-    <script type="text/stripes">
-      let int test = 2;
-      document.write(test);
+    <script type="text/sast">
+    ["Stripes", {},
+      ["DecVar", "what", ["String", "\"be\""]],
+      ["DecVar", "verse", ["String", "\"Let it \\(what).\""]],
+      ["DecVar", "version", ["String", "\"When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. \\(verse)\""]],
+      ["CallArrayStmt", ["CallExpr", "console.log", ["ArgumentList", ["CallArray", ["CallExprNoArgs", "version"]]]]]
+    ]
     </script>
     <script src="stripes.js"></script>
   </body>
