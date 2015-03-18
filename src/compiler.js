@@ -1,6 +1,5 @@
 var parser = require("./grammar"),
-	fs = require("fs"),
-	version = require("../package.json").version;
+	  version = "0.0.4";
 
 var finals = [];
 var allVariables = [];
@@ -1118,7 +1117,7 @@ var getNumbers = function(stringNumbers) {
     });
 }
 
-var main = function(code) {
+var GenerateStripes = function(code) {
 	return Generate(parser.parse(code.replace("\n", "")));
 }
 

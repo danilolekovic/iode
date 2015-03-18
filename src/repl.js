@@ -26,7 +26,7 @@ rl.on('line', function(line) {
     code = "";
   } else if (line.endsWith("code;;") || line.trim() == "code;;") {
     console.log("stps> " + code);
-    console.log("js> " + generator.main(code));
+    console.log("js> " + generator.GenerateStripes(code));
   } else {
     code = code + line;
   }
@@ -37,7 +37,7 @@ rl.on('line', function(line) {
 });
 
 var repl = function() {
-  var js = generator.main(std + code);
+  var js = generator.GenerateStripes(std + code);
   console.log("> " + eval(js));
 };
 
