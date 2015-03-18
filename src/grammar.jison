@@ -50,7 +50,7 @@
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
 [A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
 \"((?:\\.|[^"\\])*)\" { return 'STRING'; }
-\'((?:\\.|[^'\\])*)\' { return 'STRING'; }
+\'((?:\\.|[^'\\])*)\' { return 'SINGLESTRING'; }
 ([\#]([^\\#]*)?[\#]) { return 'COMMENT'; }
 \/((?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+)\/((?:g(?:im?|m)?|i(?:gm?|m)?|m(?:gi?|i)?)?) { return 'REGEX'; }
 \s+    { /* whitespace-insignificant */ }
@@ -335,6 +335,8 @@ Expr
     {{ $$ = ['Percent', yytext]; }}
   | STRING
     {{ $$ = ['String', yytext]; }}
+  | SINGLESTRING
+    {{ $$ = ['SingleString', yytext]; }}
   | Array
   | ArgumentList
   | JSON

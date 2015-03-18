@@ -46,10 +46,7 @@ var type = function(o) {
 var Generate = function(ast) {
 	switch (ast[0]) {
 		case "Stripes":
-			return ast.slice(
-				2).reduce(function(b, f) {
-				return b + Generate(f);
-			}, "");
+			return ast.slice(2).reduce(function(prev, now) { return prev + Generate(now); }, "");
 			break;
 		case "EOF":
 			return "";
@@ -86,13 +83,25 @@ var Generate = function(ast) {
 			var string = ast[1];
 			string = string.substring(1, string.length - 1);
 
-			string = string.replace(/#{([^\\}]*)}/g,
-				function(a, b) {
-					return "\" + " + b + " + \""
+			string = string.replace(/\\\(.*\)/g,
+				function(a) {
+					return "\" + " + a.substring(2, a.length - 1) + " + \""
 				}
 			);
 
 			return "\"" + string + "\"";
+			break;
+		case "SingleString":
+			var string = ast[1];
+			string = string.substring(1, string.length - 1);
+
+			string = string.replace(/\\\(.*\)/g,
+				function(a) {
+					return "' + " + a.substring(2, a.length - 1) + " + '"
+				}
+			);
+
+			return "'" + string + "'";
 			break;
 		case "RandomOp":
 			var min = Generate(ast[1]);
