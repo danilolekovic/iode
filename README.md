@@ -23,8 +23,7 @@ Stripes contains a lot of brand-new, modern technologies.
 Stripes also has a simple syntax. For those who come from programming backgrounds, there is also a more familiar way to code.
 
 
-```
-#!ruby
+```rb
 let a;
 
 # Sets a to 2 #;
