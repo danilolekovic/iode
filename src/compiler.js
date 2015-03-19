@@ -1067,9 +1067,19 @@ var Generate = function(ast) {
 			return "while !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
 		case "SetIf":
+			if (ast[1][0] == "DecVar") {
+				ast[1][0] = "SetVar";
+				return "var " + ast[1][1] + ";if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
+			}
+
 			return "if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
 			break;
 		case "SetUnless":
+			if (ast[1][0] == "DecVar") {
+				ast[1][0] = "SetVar";
+				return "var " + ast[1][1] + ";if !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
+			}
+
 			return "if !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
 		case "RunExpr":

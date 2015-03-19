@@ -160,6 +160,12 @@ Statement
     {{ $$ = ['Elsif', $2, $3]; }}
   | ELSE Block
     {{ $$ = ['Else', $2]; }}
+  | DO Block WHILE ConditionList
+    {{ $$ = ['DoWhile', $2, $4]; }}
+  | DO Block UNTIL ConditionList
+    {{ $$ = ['DoUntil', $2, $4]; }}
+  | DO Block
+    {{ $$ = ['Do', $2]; }}
   | UNLESS ConditionList Block
     {{ $$ = ['Unless', $2, $3]; }}
   | WHILE ConditionList Block
@@ -183,12 +189,6 @@ Statement
   | Case
   | REPEAT '(' Expr ':' Expr ')' Block
     {{ $$ = ['Repeat', $3, $5, $7]; }}
-  | DO Block WHILE ConditionList
-    {{ $$ = ['DoWhile', $2, $4]; }}
-  | DO Block UNTIL ConditionList
-    {{ $$ = ['DoUntil', $2, $4]; }}
-  | DO Block
-    {{ $$ = ['Do', $2]; }}
   | CallArrayStmt
   | CallArrayStmt '+=' Expr
     {{ $$ = ['PlusEq', $1, $3]; }}
