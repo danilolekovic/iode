@@ -346,6 +346,8 @@ Expr
     {{ $$ = ['New', $2, $3]; }}
   | FN ArgumentList Block
     {{ $$ = ['Function', $2, $3]; }}
+  | FN Block
+    {{ $$ = ['Function', ['EmptyArgs'], $2]; }}
   | Expr WHEN Expr OR_COND Expr
     {{ $$ = ['ConditionCheckOr', $1, $3, $5]; }}
   | Expr '++'
