@@ -943,6 +943,13 @@ var Generate = function(ast) {
 			return "()";
 			break;
 		case "Range":
+			if (ast[1][0] == "String") {
+				if (ast[2][0] != "String") {
+					throw ("Attempted to make a range from a letter to a number.");
+				}
+
+				return getLetters(Generate(ast[1]), Generate(ast[2]));
+			}
 			return getNumbers(Generate(ast[1]) + ".." + Generate(ast[2]));
 			break;
 		case "LessRange":
@@ -1119,6 +1126,13 @@ var getNumbers = function(stringNumbers) {
     return nums.sort(function (a, b) {
         return a - b;
     });
+}
+
+var getLetters = function(a, b) {
+	var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	var alphaArray = alphabet.split("");
+	var letters = alphabet.match(new RegExp("[" + a + "](.*)[" + b + "]"));
+	return ["\"" + letters[0].split("").join("\",\"") + "\""];
 }
 
 var GenerateStripes = function(code) {
