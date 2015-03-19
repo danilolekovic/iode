@@ -172,9 +172,6 @@ var Generate = function(ast) {
 		case "ArrowFunction":
 			return "function" + Generate(ast[1]) + " { return " + Generate(ast[2]) + "; }";
 			break;
-		case "EmptyArrowFunction":
-			return "function() { return " + Generate(ast[1]) + "; }";
-			break;
 		case "DecVarType":
 			if (finals.contains(ast[2])) {
 				throw ("Variable '" + ast[2] +

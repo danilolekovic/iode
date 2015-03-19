@@ -342,6 +342,8 @@ Expr
   | JSON
   | EXTENDS IDENT
     {{ $$ = ['Extends', $2]; }}
+  | NEW IDENT
+    {{ $$ = ['New', $2, ['EmptyArgs']]; }}
   | NEW IDENT ArgumentList
     {{ $$ = ['New', $2, $3]; }}
   | FN ArgumentList Block
@@ -406,7 +408,7 @@ Expr
   | ArgumentList '=>' Expr
     {{ $$ = ['ArrowFunction', $1, $3]; }}
   | '=>' Expr
-    {{ $$ = ['EmptyArrowFunction', $2]; }}
+    {{ $$ = ['ArrowFunction', ['EmptyArgs'], $2]; }}
   ;
 
 ArgumentList
