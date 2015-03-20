@@ -766,6 +766,9 @@ var Generate = function(ast) {
 		case "ArgumentList":
 			return "(" + Generate(ast[1]) + ")";
 			break;
+		case "ExprList":
+			return Generate(ast[1]) + ", " + Generate(ast[2]);
+			break;
 		case "CommaElement":
 			return Generate(ast[1]) + ": case " + Generate(ast[2]);
 			break;

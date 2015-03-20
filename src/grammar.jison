@@ -412,17 +412,17 @@ Expr
     {{ $$ = ["Index", $1, $2]; }}
   ;
 
+ExprList
+  : Expr
+  | ExprList ',' Expr
+    {{ $$ = ["ExprList", $1, $3]; }}
+  ;
+
 ArgumentList
-  : '(' ArgElement ')'
+  : '(' ExprList ')'
      {{ $$  = ['ArgumentList', $2]; }}
   | '(' ')'
     {{ $$ = ['EmptyArgs']; }}
-  ;
-
-ArgElement
-  : ArgElement "," Expr
-     {{ $$ = ['ArgElement', $1, $3]; }}
-  | Expr
   ;
 
 ConditionList
@@ -455,27 +455,15 @@ OR
   ;
 
 Array
-  : '[' ArrayElement ']'
+  : '[' ExprList ']'
      {{ $$  = ['Array', $2]; }}
   | '[' ']'
      {{ $$ = ['EmptyArray']; }}
   ;
 
-ArrayElement
-  : ArrayElement "," Expr
-     {{ $$ = ['ArrayElement', $1, $3]; }}
-  | Expr
-  ;
-
 Commas
-  : CommaElement
+  : ExprList
      {{ $$  = ['Commas', $1]; }}
-  ;
-
-CommaElement
-  : CommaElement "," Expr
-     {{ $$ = ['CommaElement', $1, $3]; }}
-  | Expr
   ;
 
 Call
