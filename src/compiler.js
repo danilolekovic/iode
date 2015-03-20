@@ -799,10 +799,38 @@ var Generate = function(ast) {
 			return "";
 			break;
 		case "IndexStmt":
-			return Generate(ast[1]).substring(0, Generate(ast[1]).length - 1) + Generate(ast[2]) + ";";
+			var ret = [];
+
+			if (Generate(ast[2]).indexOf(',') != -1) {
+				var all = Generate(ast[2]).substring(1, Generate(ast[2]).length - 1).split(', ');
+
+				for (a in all) {
+					ret.push("[" + all[a] + "]");
+				}
+
+				ret.pop();
+			} else {
+				ret.push(Generate(ast[2]));
+			}
+
+			return Generate(ast[1]).substring(0, Generate(ast[1]).length - 1) + ret.join("") + ";";
 			break;
 		case "Index":
-			return Generate(ast[1]) + Generate(ast[2]);
+			var ret = [];
+
+			if (Generate(ast[2]).indexOf(',') != -1) {
+				var all = Generate(ast[2]).substring(1, Generate(ast[2]).length - 1).split(', ');
+
+				for (a in all) {
+					ret.push("[" + all[a] + "]");
+				}
+
+				ret.pop();
+			} else {
+				ret.push(Generate(ast[2]));
+			}
+
+			return Generate(ast[1]) + ret.join("");
 			break;
 		case "Plus":
 			return Generate(ast[1]) + "++";
