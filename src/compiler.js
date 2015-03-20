@@ -943,17 +943,18 @@ var Generate = function(ast) {
 			return "()";
 			break;
 		case "Range":
-			if (ast[1][0] == "String") {
-				if (ast[2][0] != "String") {
-					throw ("Attempted to make a range from a letter to a number.");
-				}
+			// todo: letters
 
-				return getLetters(Generate(ast[1]), Generate(ast[2]));
-			}
-			return getNumbers(Generate(ast[1]) + ".." + Generate(ast[2]));
+			var first = Generate(ast[1]);
+			var second = Generate(ast[2]);
+
+			return "(function() { var results = []; for (var _k = " + first + "; " + first + " <= " + second + " ? _k <= " + second + " : _k >= " + second + "; " + first + " <= " + second + " ? _k++ : _k--){ results.push(_k); } return results; }).apply(this)";
 			break;
 		case "LessRange":
-			return getNumbers((Number(Generate(ast[1])) - 1) + ".." + (Number(Generate(ast[2])) - 1));
+			var first = Generate(ast[1]);
+			var second = Generate(ast[2]);
+
+			return "(function() { var results = []; for (var _k = " + first + " - 1; " + first + " <= " + second + " ? _k <= " + second + " : _k >= " + second + "; " + first + " <= " + second + " ? _k++ : _k--){ results.push(_k); } return results; }).apply(this)";
 			break;
 		case "Regex":
 			return ast[1];

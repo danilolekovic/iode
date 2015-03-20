@@ -45,10 +45,11 @@
 "=>"    { return '=>'; }
 "->"    { return '->'; }
 "<-"    { return '<-'; }
-[_0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
-[_0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
+[0-9]+('.'[_0-9]+)?('%') { return 'PERCENT'; }
+[0-9]+('.'[_0-9]+)? { return 'NUMBER'; }
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
-[A-Za-z_$][.A-Za-z0-9_$]* { return 'IDENT'; }
+[A-Za-z_$][A-Za-z0-9_$]* { return 'IDENT'; }
+[A-Za-z_$] { return 'IDENT'; }
 \"((?:\\.|[^"\\])*)\" { return 'STRING'; }
 \'((?:\\.|[^'\\])*)\' { return 'SINGLESTRING'; }
 ([\#]([^\\#]*)?[\#]) { return 'COMMENT'; }
@@ -350,6 +351,17 @@ Expr
     {{ $$ = ['Function', $2, $3]; }}
   | FN Block
     {{ $$ = ['Function', ['EmptyArgs'], $2]; }}
+  | REGEX
+    {{ $$ = ['Regex', yytext]; }}
+  | '@' '?' Expr TO Expr
+    {{ $$ = ['RandomOp', $3, $5]; }}
+  | '@' '?'
+    {{ $$ = ['RandomGen']; }}
+  | CallArray
+  | ArgumentList '=>' Expr
+    {{ $$ = ['ArrowFunction', $1, $3]; }}
+  | '=>' Expr
+    {{ $$ = ['ArrowFunction', ['EmptyArgs'], $2]; }}
   | Expr WHEN Expr OR_COND Expr
     {{ $$ = ['ConditionCheckOr', $1, $3, $5]; }}
   | Expr '++'
@@ -398,17 +410,6 @@ Expr
     {{ $$ = ['LessRange', $1, $3]; }}
   | Expr '..' Expr
     {{ $$ = ['Range', $1, $3]; }}
-  | REGEX
-    {{ $$ = ['Regex', yytext]; }}
-  | '@' '?' Expr TO Expr
-    {{ $$ = ['RandomOp', $3, $5]; }}
-  | '@' '?'
-    {{ $$ = ['RandomGen']; }}
-  | CallArray
-  | ArgumentList '=>' Expr
-    {{ $$ = ['ArrowFunction', $1, $3]; }}
-  | '=>' Expr
-    {{ $$ = ['ArrowFunction', ['EmptyArgs'], $2]; }}
   ;
 
 ArgumentList
@@ -487,12 +488,12 @@ Call
 CallArray
   : CallElement
     {{ $$  = ['CallArray', $1]; }}
-    ;
+  ;
 
 CallArrayStmt
   : CallElement
     {{ $$  = ['CallArrayStmt', $1]; }}
-    ;
+  ;
 
 CallElement
   : CallElement "." Call
