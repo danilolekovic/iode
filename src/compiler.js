@@ -977,11 +977,19 @@ var Generate = function(ast) {
 			var first = Generate(ast[1]);
 			var second = Generate(ast[2]);
 
+			if (ast[1][0] == "Number" && ast[2][0] == "Number") {
+				return getNumbers(first + ".." + second);
+			}
+
 			return "(function() { var results = []; for (var _k = " + first + "; " + first + " <= " + second + " ? _k <= " + second + " : _k >= " + second + "; " + first + " <= " + second + " ? _k++ : _k--){ results.push(_k); } return results; }).apply(this)";
 			break;
 		case "LessRange":
 			var first = Generate(ast[1]);
 			var second = Generate(ast[2]);
+
+			if (ast[1][0] == "Number" && ast[2][0] == "Number") {
+				return getNumbers((Number(first) - 1) + ".." + second);
+			}
 
 			return "(function() { var results = []; for (var _k = " + first + " - 1; " + first + " <= " + second + " ? _k <= " + second + " : _k >= " + second + "; " + first + " <= " + second + " ? _k++ : _k--){ results.push(_k); } return results; }).apply(this)";
 			break;
@@ -1156,13 +1164,6 @@ var getNumbers = function(stringNumbers) {
     return nums.sort(function (a, b) {
         return a - b;
     });
-}
-
-var getLetters = function(a, b) {
-	var alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	var alphaArray = alphabet.split("");
-	var letters = alphabet.match(new RegExp("[" + a + "](.*)[" + b + "]"));
-	return ["\"" + letters[0].split("").join("\",\"") + "\""];
 }
 
 var GenerateStripes = function(code) {
