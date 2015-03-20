@@ -16,7 +16,6 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('stripes-examples', "compile examples", function() {
 		shell.exec('stripes -s examples/booleans.stps examples/js/booleans.js');
-		shell.exec('stripes -s examples/call.stps examples/js/call.js');
 		shell.exec('stripes -s examples/case.stps examples/js/case.js');
 		shell.exec('stripes -s examples/comments.stps examples/js/comments.js');
 		shell.exec('stripes -s examples/if.stps examples/js/if.js');

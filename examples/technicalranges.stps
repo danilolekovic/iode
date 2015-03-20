@@ -1,5 +1,5 @@
 let range = [1...9];
 
-for (i:range)
+for (i in range)
   console.log(i);
 end;

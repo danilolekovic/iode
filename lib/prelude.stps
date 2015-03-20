@@ -65,7 +65,7 @@ let Repeat = fn(times, func)
 end;
 
 let Every = fn(arr, func)
-  for (a:arr)
+  for (a in arr)
     func(a);
   end;
 end;

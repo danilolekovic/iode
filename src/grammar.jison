@@ -31,6 +31,7 @@
 "do" { return 'DO'; }
 "is" { return 'IS'; }
 "in" { return 'IN'; }
+"has" { return 'HAS'; }
 "isnt" { return 'ISNT'; }
 "not" { return 'NOT'; }
 "or" { return 'OR_COND'; }
@@ -115,6 +116,7 @@
 %left NOT
 %left WHEN
 %left IN
+%left HAS
 %left TO
 %left OF
 %left '!'
@@ -176,7 +178,7 @@ Statement
     {{ $$ = ['Until', $2, $3]; }}
   | FOR '(' SetVar ';' Expr ';' Expr ')' Block
     {{ $$ = ['For', $3, $5, $7, $9]; }}
-  | FOR '(' IDENT ':' Expr ')' Block
+  | FOR '(' IDENT IN Expr ')' Block
     {{ $$ = ['ForEach', $3, $5, $7]}}
   | FOR '(' IDENT ',' IDENT ':' Expr ')' Block
     {{ $$ = ['ForKeyVal', $3, $5, $7, $9];}}
@@ -396,8 +398,8 @@ Expr
     {{ $$ = ['Condition', $1, $2, $3]; }}
   | Expr '!=' Expr
     {{ $$ = ['Condition', $1, '!==', $3]; }}
-  | Expr IN Expr
-    {{ $$ = ['InArray', $1, $3]; }}
+  | Expr HAS Expr
+    {{ $$ = ['HasArray', $3, $1]; }}
   | '!' Expr
     {{ $$ = ['ConditionNot', $2]; }}
   | NOT Expr

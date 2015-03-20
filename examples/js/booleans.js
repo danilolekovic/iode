@@ -84,4 +84,7 @@ var Every = function(arr, func) {
     func(a);
   }
 };
-console.log(true);
+var alive = true;
+if (alive) {
+  console.log("We're alive!");
+}

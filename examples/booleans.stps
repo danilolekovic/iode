@@ -1,1 +1,3 @@
-console.log(yes);
+let boolean alive = yes;
+
+console.log("We're alive!") if (alive);

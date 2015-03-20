@@ -364,7 +364,7 @@ var Generate = function(ast) {
 				ast[
 					2]) + ")%" + Generate(ast[2]);
 			break;
-		case "InArray":
+		case "HasArray":
 			return Generate(ast[2]) + ".indexOf(\"" + Generate(ast[1]) +
 				"\") !== -1";
 			break;

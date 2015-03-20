@@ -38,11 +38,6 @@ exports.Range = function(test) {
     test.done();
 };
 
-exports.LiteralRange = function(test) {
-    test.equal("a = [0,1,2,3];", generator.GenerateStripes("a = [1...4];"));
-    test.done();
-};
-
 exports.Comments = function(test) {
     test.equal("/* Swag */", generator.GenerateStripes("# Swag #;"));
     test.done();
