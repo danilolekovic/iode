@@ -130,6 +130,7 @@
 %left ':'
 %left '^'
 %left '@'
+%left '['
 
 %%
 
@@ -216,6 +217,8 @@ Statement
     {{ $$ = ["CallWhile", $1, $3]; }}
   | CallArrayStmt UNTIL ArgumentList
     {{ $$ = ["CallUntil", $1, $3]; }}
+  | CallArrayStmt Array
+    {{ $$ = ["IndexStmt", $1, $2]; }}
   | SetVar IF ArgumentList
     {{ $$ = ["SetIf", $1, $3]; }}
   | SetVar UNLESS ArgumentList
@@ -266,16 +269,12 @@ SetVar
     {{ $$ = ['SetVar', $1, $3]; }}
   | LET Pointer '=' Expr
     {{ $$ = ['ReferableVar', $2, $4]; }}
-  | Index '=' Expr
-    {{ $$ = ['IndexSetVar', $1, $3]; }}
   | LET IDENT IS Expr
     {{ $$ = ['DecVar', $2, $4]; }}
   | FINAL IDENT IS Expr
     {{ $$ = ['FinalVar', $2, $4]; }}
   | IDENT IS Expr
     {{ $$ = ['SetVar', $1, $3]; }}
-  | Index IS Expr
-    {{ $$ = ['IndexSetVar', $1, $3]; }}
   | LET IDENT
     {{ $$ = ['DecVarEmpty', $2]; }}
   | FINAL IDENT
@@ -318,8 +317,7 @@ Pointer
   ;
 
 Expr
-  : Index
-  | Pointer
+  : Pointer
   | NUMBER
     {{ $$ = ['Number', yytext]; }}
   | '-' NUMBER
@@ -410,6 +408,8 @@ Expr
     {{ $$ = ['LessRange', $1, $3]; }}
   | Expr '..' Expr
     {{ $$ = ['Range', $1, $3]; }}
+  | Expr Array
+    {{ $$ = ["Index", $1, $2]; }}
   ;
 
 ArgumentList
@@ -499,11 +499,6 @@ CallElement
   : CallElement "." Call
      {{ $$ = ['CallElement', $1, $3]; }}
   | Call
-  ;
-
-Index
-  : IDENT Array
-    {{ $$ = ['IndexExpr', $1, $2]; }}
   ;
 
 JSON

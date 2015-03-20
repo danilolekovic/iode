@@ -795,13 +795,11 @@ var Generate = function(ast) {
 		case "Empty":
 			return "";
 			break;
-		case "IndexExpr":
-			var a = Generate(ast[2]);
-			if (ast[1] == "return") {
-				return "return " + a.substring(1, a.length - 1);
-			}
-
-			return ast[1] + "[" + a.substring(1, a.length - 1) + "]";
+		case "IndexStmt":
+			return Generate(ast[1]).substring(0, Generate(ast[1]).length - 1) + Generate(ast[2]) + ";";
+			break;
+		case "Index":
+			return Generate(ast[1]) + Generate(ast[2]);
 			break;
 		case "Plus":
 			return Generate(ast[1]) + "++";
