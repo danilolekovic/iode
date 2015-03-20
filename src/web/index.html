@@ -3,13 +3,9 @@
     <title>Stripes DOM Test</title>
   </head>
   <body>
-    <script type="text/sast">
-    ["Stripes", {},
-      ["DecVar", "what", ["String", "\"be\""]],
-      ["DecVar", "verse", ["String", "\"Let it \\(what).\""]],
-      ["DecVar", "version", ["String", "\"When I find myself in times of trouble, mother Mary comes to me, speaking words of wisdom. \\(verse)\""]],
-      ["CallArrayStmt", ["CallExpr", "console.log", ["ArgumentList", ["CallArray", ["CallExprNoArgs", "version"]]]]]
-    ]
+    <script type="text/stripes">
+    let range = [1..10];
+    alert(range) if (true);
     </script>
     <script src="stripes.js"></script>
   </body>
