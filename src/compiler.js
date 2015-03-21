@@ -253,9 +253,7 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					if (type(Generate(ast[2])) != variablesWithTypes[a].type) {
-						throw ("Variable '" + ast[1] + "' already exists and expects a value that is a " + variablesWithTypes[a].type + ".");
-					}
+					throw ("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
 				}
 			}
 
@@ -265,6 +263,12 @@ var Generate = function(ast) {
 			if (finals.contains(Generate(ast[1]))) {
 				throw ("Variable '" + Generate(ast[1]) +
 					"' is final and already declared.");
+			}
+
+			for (a in variablesWithTypes) {
+				if (variablesWithTypes[a].name == ast[1]) {
+					throw ("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
+				}
 			}
 
 			return "var " + Generate(ast[1]).substring(0, Generate(ast[1]).length - 4) + " = { val:" + Generate(ast[2]) + " };";
@@ -287,12 +291,9 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					if (type(Generate(ast[2])) != variablesWithTypes[a].type) {
-						throw ("Variable '" + ast[1] + "' expects a value that is a " + variablesWithTypes[a].type + " before being made final.");
-					}
+					throw ("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
 				}
 			}
-
 
 			return "var " + ast[1] + " = " + Generate(ast[2]) + ";";
 			break;
@@ -1039,6 +1040,13 @@ var Generate = function(ast) {
 						throw ("Variable '" + entry +
 							"' is final and already declared.");
 					}
+
+					for (z in variablesWithTypes) {
+						if (variablesWithTypes[z].name == entry) {
+							throw ("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
+						}
+					}
+
 					a.push(entry);
 				});
 
@@ -1071,6 +1079,11 @@ var Generate = function(ast) {
 						throw ("Variable '" + entry +
 							"' is final and already declared.");
 					}
+					for (z in variablesWithTypes) {
+						if (variablesWithTypes[z].name == entry) {
+							throw ("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
+						}
+					}
 					a.push(entry);
 				});
 
@@ -1094,6 +1107,11 @@ var Generate = function(ast) {
 						throw ("Variable '" + entry + "' is declared twice.");
 					} else {
 						finals.push(entry);
+					}
+					for (z in variablesWithTypes) {
+						if (variablesWithTypes[z].name == entry) {
+							throw ("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
+						}
 					}
 					a.push(entry);
 				});
