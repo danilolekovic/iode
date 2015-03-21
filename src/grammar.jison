@@ -116,9 +116,9 @@
 %left NOT
 %left WHEN
 %left IN
-%left HAS
 %left TO
 %left OF
+%left HAS
 %left '!'
 %left '!='
 %left '>='
@@ -132,7 +132,6 @@
 %left ':'
 %left '^'
 %left '@'
-%left '['
 
 %%
 
@@ -219,8 +218,6 @@ Statement
     {{ $$ = ["CallWhile", $1, $3]; }}
   | CallArrayStmt UNTIL ArgumentList
     {{ $$ = ["CallUntil", $1, $3]; }}
-  | CallArrayStmt Array
-    {{ $$ = ["IndexStmt", $1, $2]; }}
   | SetVar IF ArgumentList
     {{ $$ = ["SetIf", $1, $3]; }}
   | SetVar UNLESS ArgumentList
@@ -271,12 +268,16 @@ SetVar
     {{ $$ = ['SetVar', $1, $3]; }}
   | LET Pointer '=' Expr
     {{ $$ = ['ReferableVar', $2, $4]; }}
+  | Index '=' Expr
+    {{ $$ = ['IndexSetVar', $1, $3]; }}
   | LET IDENT IS Expr
     {{ $$ = ['DecVar', $2, $4]; }}
   | FINAL IDENT IS Expr
     {{ $$ = ['FinalVar', $2, $4]; }}
   | IDENT IS Expr
     {{ $$ = ['SetVar', $1, $3]; }}
+  | Index IS Expr
+    {{ $$ = ['IndexSetVar', $1, $3]; }}
   | LET IDENT
     {{ $$ = ['DecVarEmpty', $2]; }}
   | FINAL IDENT
@@ -318,8 +319,16 @@ Pointer
     {{ $$ = ['Pointer', $2]; }}
   ;
 
+String
+  : STRING
+    {{ $$ = ['String', yytext]; }}
+  | SINGLESTRING
+    {{ $$ = ['SingleString', yytext]; }}
+  ;
+
 Expr
-  : Pointer
+  : Index
+  | Pointer
   | NUMBER
     {{ $$ = ['Number', yytext]; }}
   | '-' NUMBER
@@ -334,10 +343,7 @@ Expr
     {{ $$ = ['Unknown']; }}
   | PERCENT
     {{ $$ = ['Percent', yytext]; }}
-  | STRING
-    {{ $$ = ['String', yytext]; }}
-  | SINGLESTRING
-    {{ $$ = ['SingleString', yytext]; }}
+  | String
   | Array
   | ArgumentList
   | JSON
@@ -400,6 +406,8 @@ Expr
     {{ $$ = ['Condition', $1, '!==', $3]; }}
   | Expr HAS Expr
     {{ $$ = ['HasArray', $3, $1]; }}
+  | Expr IN Expr
+    {{ $$ = ['InArray', $1, $3]; }}
   | '!' Expr
     {{ $$ = ['ConditionNot', $2]; }}
   | NOT Expr
@@ -410,21 +418,19 @@ Expr
     {{ $$ = ['LessRange', $1, $3]; }}
   | Expr '..' Expr
     {{ $$ = ['Range', $1, $3]; }}
-  | Expr Array
-    {{ $$ = ["Index", $1, $2]; }}
-  ;
-
-ExprList
-  : Expr
-  | ExprList ',' Expr
-    {{ $$ = ["ExprList", $1, $3]; }}
   ;
 
 ArgumentList
-  : '(' ExprList ')'
+  : '(' ArgElement ')'
      {{ $$  = ['ArgumentList', $2]; }}
   | '(' ')'
     {{ $$ = ['EmptyArgs']; }}
+  ;
+
+ArgElement
+  : ArgElement "," Expr
+     {{ $$ = ['ArgElement', $1, $3]; }}
+  | Expr
   ;
 
 ConditionList
@@ -457,15 +463,27 @@ OR
   ;
 
 Array
-  : '[' ExprList ']'
+  : '[' ArrayElement ']'
      {{ $$  = ['Array', $2]; }}
   | '[' ']'
      {{ $$ = ['EmptyArray']; }}
   ;
 
+ArrayElement
+  : ArrayElement "," Expr
+     {{ $$ = ['ArrayElement', $1, $3]; }}
+  | Expr
+  ;
+
 Commas
-  : ExprList
+  : CommaElement
      {{ $$  = ['Commas', $1]; }}
+  ;
+
+CommaElement
+  : CommaElement "," Expr
+     {{ $$ = ['CommaElement', $1, $3]; }}
+  | Expr
   ;
 
 Call
@@ -489,6 +507,11 @@ CallElement
   : CallElement "." Call
      {{ $$ = ['CallElement', $1, $3]; }}
   | Call
+  ;
+
+Index
+  : CallElement Array
+    {{ $$ = ['Index', $1, $2]; }}
   ;
 
 JSON

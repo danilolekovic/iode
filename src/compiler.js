@@ -155,19 +155,14 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "int" && ast[1] != "object") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
-			}
-
-			if (type(Generate(ast[3])) != ast[1]) {
-				console.log(Generate(ast[3]));
-				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
-							", but got a type of " + type(Generate(ast[3])) + ".");
 			}
 
 			PushVariable(ast[2], ast[1]);
 
-			return ast[2] + " = " + Generate(ast[3]) + ";";
+			return "if (typeof (" + Generate(ast[3]) + ") == " + ast[1] + ") { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "ArrowFunction":
 			return "function" + Generate(ast[1]) + " { return " + Generate(ast[2]) + "; }";
@@ -178,19 +173,14 @@ var Generate = function(ast) {
 					"' is final and already declared.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "int" && ast[1] != "object") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
-			}
-
-			if (type(Generate(ast[3])) != ast[1]) {
-				console.log(Generate(ast[3]));
-				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
-							", but got a type of " + type(Generate(ast[3])) + ".");
 			}
 
 			PushVariable(ast[2], ast[1]);
 
-			return "var " + ast[2] + " = " + Generate(ast[3]) + ";";
+			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") == '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "FinalVarType":
 			if (finals.contains(ast[2]) || allVariables.contains(ast[2])) {
@@ -199,19 +189,14 @@ var Generate = function(ast) {
 				finals.push(ast[2]);
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "int" && ast[1] != "object") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
-			}
-
-			if (type(Generate(ast[3])) != ast[1]) {
-				console.log(Generate(ast[3]));
-				throw ("Variable '" + ast[2] + "' expects a type of " + ast[1] +
-							", but got a type of " + type(Generate(ast[3])) + ".");
 			}
 
 			PushVariable(ast[2], ast[1]);
 
-			return "var " + ast[2] + " = " + Generate(ast[3]) + ";";
+			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") == '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "SetVar":
 			if (finals.contains(ast[1])) {
@@ -221,9 +206,8 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					if (type(Generate(ast[2])) != variablesWithTypes[a].type) {
-						throw ("Variable '" + ast[1] + "' expects a value that is a " + variablesWithTypes[a].type + ".");
-					}
+					return "if (typeof " + Generate(ast[2]) + " == '" + variablesWithTypes[a].type + "') { " + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
+						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 			}
 
@@ -884,6 +868,9 @@ var Generate = function(ast) {
 			}
 
 			return ast[1];
+			break;
+		case "CallExprLiteral":
+			return Generate(ast[1]);
 			break;
 		case "Class":
 			if (finals.contains(ast[1])) {
