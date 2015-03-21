@@ -33,7 +33,7 @@ var TYPES = {
     'boolean'          : 'boolean',
     'string'           : 'string',
     'object'				   : 'object',
-		'number'					 : 'int'
+		'function'					 : 'function'
 },
 TOSTRING = Object.prototype.toString;
 
@@ -155,7 +155,7 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
@@ -173,7 +173,7 @@ var Generate = function(ast) {
 					"' is final and already declared.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
@@ -189,7 +189,7 @@ var Generate = function(ast) {
 				finals.push(ast[2]);
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
