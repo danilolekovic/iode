@@ -1097,6 +1097,24 @@ var Generate = function(ast) {
 
 			return final;
 			break;
+		case "Export":
+			var a = [];
+
+			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
+				function(entry) {
+					a.push(entry);
+			});
+
+			var final = "";
+
+			for (var i = 0; i <= a.length; i++) {
+				if (a[i] != undefined) {
+					final += "exports." + a[i] + " = " + a[i] + ";";
+				}
+			}
+
+			return final;
+			break;
 		case "ArrayFinal":
 			var a = [];
 			var b = [];

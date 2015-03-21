@@ -28,6 +28,7 @@
 "of" { return 'OF'; }
 "default" { return 'DEFAULT'; }
 "repeat" { return 'REPEAT'; }
+"export" { return 'EXPORT'; }
 "do" { return 'DO'; }
 "is" { return 'IS'; }
 "in" { return 'IN'; }
@@ -296,6 +297,8 @@ SetVar
     {{ $$ = ['ArrayLet', $2, $4]; }}
   | FINAL ArgumentList IS ArgumentList
     {{ $$ = ['ArrayFinal', $2, $4]; }}
+  | EXPORT ArgumentList
+    {{ $$ = ['Export', $2]; }}
   | '(' Expr OR Expr ')' '=' Expr
     {{ $$ = ["SetOr", $2, $4, $7]; }}
   | '(' Expr OR Expr ')' IS Expr
