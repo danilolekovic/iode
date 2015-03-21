@@ -155,7 +155,7 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
@@ -173,7 +173,7 @@ var Generate = function(ast) {
 					"' is final and already declared.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
@@ -189,7 +189,7 @@ var Generate = function(ast) {
 				finals.push(ast[2]);
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
@@ -1010,7 +1010,20 @@ var Generate = function(ast) {
 
 			for (var i = 0; i <= a.length; i++) {
 				if (a[i] != undefined) {
-					final += a[i] + " = " + b[i] + ";";
+					var found = false;
+					for (z in variablesWithTypes) {
+						if (variablesWithTypes[z].name == a[i]) {
+							found = true;
+							final += "if (typeof (" + b[i] + ") == '" + variablesWithTypes[z].type + "') { " + a[i] + " = " + b[i] + "; }"
+								+ "else { throw ('Expecting a type of " + variablesWithTypes[z].type + ".'); }";
+						}
+					}
+
+					if (!found) {
+						final += a[i] + " = " + b[i] + ";";
+					} else {
+						found = false;
+					}
 				}
 			}
 
@@ -1044,6 +1057,28 @@ var Generate = function(ast) {
 			for (var i = 0; i <= a.length; i++) {
 				if (a[i] != undefined) {
 					final += "var " + a[i] + " = " + b[i] + ";";
+				}
+			}
+
+			return final;
+			break;
+		case "ArrayLetEmpty":
+			var a = [];
+
+			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
+				function(entry) {
+					if (finals.contains(entry)) {
+						throw ("Variable '" + entry +
+							"' is final and already declared.");
+					}
+					a.push(entry);
+				});
+
+			var final = "";
+
+			for (var i = 0; i <= a.length; i++) {
+				if (a[i] != undefined) {
+					final += "var " + a[i] + ";";
 				}
 			}
 

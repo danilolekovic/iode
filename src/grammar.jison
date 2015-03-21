@@ -286,6 +286,8 @@ SetVar
     {{ $$ = ['ArraySet', $1, $3]; }}
   | LET ArgumentList '=' ArgumentList
     {{ $$ = ['ArrayLet', $2, $4]; }}
+  | LET ArgumentList
+    {{ $$ = ['ArrayLetEmpty', $2]; }}
   | FINAL ArgumentList '=' ArgumentList
     {{ $$ = ['ArrayFinal', $2, $4]; }}
   | ArgumentList IS ArgumentList
