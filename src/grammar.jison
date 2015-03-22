@@ -77,6 +77,8 @@
 ">="   { return '>='; }
 "<="   { return '<='; }
 ">"   { return '>'; }
+"greater"   { return '>'; }
+"less"   { return '<'; }
 "<"   { return '<'; }
 "!"   { return '!'; }
 "!="   { return '!='; }

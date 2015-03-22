@@ -1,0 +1,52 @@
+let (generator, nodeunit) = (require("./compiler"),
+                            require("nodeunit"));
+
+let IfStatement = fn(test)
+  test.equal("if (true) {console.log('cool');}", generator.GenerateStripes("if (true) console.log('cool'); end;"));
+  test.done();
+end;
+
+let UnlessStatement = fn(test)
+    test.equal("if (!(true)) {console.log('cool');}", generator.GenerateStripes("unless (true) console.log('cool'); end;"));
+    test.done();
+end;
+
+let ElseIfStatement = fn(test)
+    test.equal("if (true) {console.log('cool');}else if (false) {console.log('yay');}",
+							generator.GenerateStripes("if (true) console.log('cool'); end; elsif (false) console.log('yay'); end;"));
+    test.done();
+end;
+
+let ElseStatement = fn(test)
+    test.equal("if (true) {console.log('cool');}else {console.log('yay');}",
+							generator.GenerateStripes("if (true) console.log('cool'); end; else console.log('yay'); end;"));
+    test.done();
+end;
+
+let VariableDeclaration = fn(test)
+    test.equal("var a = 2;", generator.GenerateStripes("let a = 2;"));
+    test.done();
+end;
+
+let VariableSetting = fn(test)
+    test.equal("a = 2;", generator.GenerateStripes("a = 2;"));
+    test.done();
+end;
+
+let Range = fn(test)
+    test.equal("a = [1,2,3,4];", generator.GenerateStripes("a = [1..4];"));
+    test.done();
+end;
+
+let Comments = fn(test)
+    test.equal("/* Swag */", generator.GenerateStripes("# Swag #;"));
+    test.done();
+end;
+
+let Repeat = fn(test)
+    test.equal("for (var i = 1; i <= 5; i++) {}", generator.GenerateStripes("repeat (5:i) end;"));
+    test.done();
+end;
+
+export(IfStatement, UnlessStatement, ElseIfStatement, ElseStatement, VariableDeclaration,
+    VariableSetting, Range, Comments, Repeat);
