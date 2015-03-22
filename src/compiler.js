@@ -817,6 +817,23 @@ var Generate = function(ast) {
 
 			return Generate(ast[1]) + ret.join("");
 			break;
+		case "IndexCall":
+			var ret = [];
+
+			if (Generate(ast[2]).indexOf(',') != -1) {
+				var all = Generate(ast[2]).substring(1, Generate(ast[2]).length - 1).split(', ');
+
+				for (a in all) {
+					ret.push("[" + all[a] + "]");
+				}
+
+				ret.pop();
+			} else {
+				ret.push(Generate(ast[2]));
+			}
+
+			return Generate(ast[1]) + ret.join("") + "." + Generate(ast[3]);
+			break;
 		case "Plus":
 			return Generate(ast[1]) + "++";
 			break;

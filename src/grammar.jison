@@ -518,7 +518,9 @@ CallElement
   ;
 
 Index
-  : CallElement Array
+  : CallElement Array '.' CallElement
+    {{ $$ = ['IndexCall', $1, $2, $4]; }}
+  | CallElement Array
     {{ $$ = ['Index', $1, $2]; }}
   ;
 
