@@ -14,21 +14,24 @@ rl.setPrompt('stripes> ');
 rl.prompt();
 
 rl.on('line', function(line) {
-  if (line.trim() == "close;;") rl.close();
-  if (line.trim() == "clear;;") code = "";
+  code += line.trim();
 
-  if (line.trim() == "run;;") {
-    repl();
+  if (code.trim().endsWith("clear;;")) {
     code = "";
-  } else if (line.endsWith("run;;")) {
-    code += line.substring(0, line.length - "run;;".length);
-    repl();
+  } else if (code.trim().endsWith("close;;")) {
+    rl.close();
+  } else if (code.trim().endsWith("run;;")) {
+    code = code.substring(0, code.length - 5);
+    repl(true);
     code = "";
-  } else if (line.endsWith("code;;") || line.trim() == "code;;") {
-    console.log("stps> " + code);
+  } else if (code.trim().endsWith("run-no-lib;;")) {
+    code = code.substring(0, code.length - 12);
+    repl(false);
+    code = "";
+  } else if (code.trim().endsWith("code;;")) {
+    code = code.substring(0, code.length - 6);
+    console.log("\nstps> " + code);
     console.log("js> " + generator.GenerateStripes(code));
-  } else {
-    code = code + line;
   }
 
   rl.prompt();
@@ -36,9 +39,14 @@ rl.on('line', function(line) {
   process.exit(0);
 });
 
-var repl = function() {
-  var js = generator.GenerateStripes(std + code);
-  console.log("> " + eval(js));
+var repl = function(lib) {
+  if (lib) {
+    var js = generator.GenerateStripes(std + code);
+    console.log("\n-> " + eval(js));
+  } else {
+    var js = generator.GenerateStripes(code);
+    console.log("\-n> " + eval(js));
+  }
 };
 
 String.prototype.endsWith = function(suffix) {
