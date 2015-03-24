@@ -228,6 +228,8 @@ Statement
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
+  | DEFAULT Expr '=' Expr
+    {{ $$ = ["DefaultVar", $2, $4]; }}
   ;
 
 Case

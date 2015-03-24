@@ -505,6 +505,9 @@ var Generate = function(ast) {
 
 			return "if (!" + Generate(ast[1]) + ") {" + inside + "}";
 			break;
+		case "DefaultVar":
+			return "if (!(" + Generate(ast[1]) + " !== null && " + Generate(ast[1]) + " !== undefined)) { " + Generate(ast[1]) + " = " + Generate(ast[2]) + "; }";
+			break;
 		case "Function":
 			var inside = "";
 
