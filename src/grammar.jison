@@ -228,8 +228,6 @@ Statement
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
-  | DEFAULT Expr '=' Expr
-    {{ $$ = ["DefaultVar", $2, $4]; }}
   ;
 
 Case
@@ -313,6 +311,10 @@ SetVar
   | '--' Expr
     {{ $$ = ['Minus', $2]; }}
   | SetVarType
+  | DEFAULT Expr '=' Expr
+    {{ $$ = ["DefaultVar", $2, $4]; }}
+  | DEFAULT Expr IS Expr
+    {{ $$ = ["DefaultVar", $2, $4]; }}
   ;
 
 SetVarType
