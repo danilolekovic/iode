@@ -323,7 +323,7 @@ SetVarType
   | LET IDENT IDENT '=' Expr
     {{ $$ = ['DecVarType', $2, $3, $5]; }}
   | FINAL IDENT IDENT '=' Expr
-    {{ $$ = ['FinalVar', $2, $3, $5]; }}
+    {{ $$ = ['FinalVarType', $2, $3, $5]; }}
   ;
 
 Pointer

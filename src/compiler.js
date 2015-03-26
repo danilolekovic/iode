@@ -33,7 +33,7 @@ var TYPES = {
     'boolean'          : 'boolean',
     'string'           : 'string',
     'object'				   : 'object',
-		'function'					 : 'function'
+		'function'				 : 'function'
 },
 TOSTRING = Object.prototype.toString;
 
@@ -927,7 +927,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (ast[2] == "end") {
-				return "case: break;";
+				return "case " + Generate(ast[1]) + ": break;";
 			}
 
 			ast[2].forEach(function(entry) {
