@@ -161,7 +161,7 @@ var Generate = function(ast) {
 
 			PushVariable(ast[2], ast[1]);
 
-			return "if (typeof (" + Generate(ast[3]) + ") == " + ast[1] + ") { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+			return "if (typeof (" + Generate(ast[3]) + ") === " + ast[1] + ") { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
 				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "ArrowFunction":
@@ -179,7 +179,7 @@ var Generate = function(ast) {
 
 			PushVariable(ast[2], ast[1]);
 
-			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") == '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") === '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
 				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "FinalVarType":
@@ -195,7 +195,7 @@ var Generate = function(ast) {
 
 			PushVariable(ast[2], ast[1]);
 
-			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") == '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") === '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
 				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "SetVar":
@@ -206,7 +206,7 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					return "if (typeof " + Generate(ast[2]) + " == '" + variablesWithTypes[a].type + "') { " + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
+					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') { " + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
 						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 			}
