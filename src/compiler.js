@@ -378,6 +378,9 @@ var Generate = function(ast) {
 		case "InstanceCondition":
 			return Generate(ast[1]) + " instanceof " + Generate(ast[2]);
 			break;
+		case "TypeCondition":
+			return "typeof (" + Generate(ast[1]) + ") === \"" + Generate(ast[2]) + "\"";
+			break;
 		case "And":
 			return "&&";
 			break;
