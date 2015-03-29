@@ -1,6 +1,6 @@
 # Welcome to Stripes
 
-Stripes is a featured, whitespace-insignificant programming language that contains optional functional programming and loose variable type checking. It compiles to JavaScript and therefore, can run any where.
+Stripes is a featured, whitespace-insignificant programming language that contains optional functional programming and loose variable type checking. It compiles to JavaScript and therefore, can run any where. If you are looking to learn Stripes or just want some quick documentation, [this free book is highly recommended](https://www.gitbook.com/book/danilolekovic/stripes/details).
 
 # Innovation
 
