@@ -32,6 +32,9 @@ rl.on('line', function(line) {
     code = code.substring(0, code.length - 6);
     console.log("\nstps> " + code);
     console.log("js> " + generator.GenerateStripes(code));
+  } else if (code.trim().endsWith("ast;;")) {
+    code = code.substring(0, code.length - 5);
+    console.log("> " + generator.getAST(code));
   }
 
   rl.prompt();
