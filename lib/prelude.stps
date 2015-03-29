@@ -50,6 +50,22 @@ let If = fn(cond, func)
   end;
 end;
 
+let Until = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  until (cond)
+    func();
+  end;
+end;
+
+let Unless = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  unless (cond)
+    func();
+  end;
+end;
+
 let Repeat = fn(times, func)
   if (times?) times = 1; end;
 
