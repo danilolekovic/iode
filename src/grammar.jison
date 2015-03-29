@@ -184,9 +184,9 @@ Statement
   | FOR '(' SetVar ';' Expr ';' Expr ')' Block
     {{ $$ = ['For', $3, $5, $7, $9]; }}
   | FOR '(' IDENT IN Expr ')' Block
-    {{ $$ = ['ForEach', $3, $5, $7]}}
+    {{ $$ = ['ForEach', $3, $5, $7]; }}
   | FOR '(' IDENT ',' IDENT ':' Expr ')' Block
-    {{ $$ = ['ForKeyVal', $3, $5, $7, $9];}}
+    {{ $$ = ['ForKeyVal', $3, $5, $7, $9]; }}
   | CLASS IDENT ArgumentList ClassElements END
     {{ $$ = ['Class', $2, $3, $4]; }}
   | CLASS IDENT ArgumentList END

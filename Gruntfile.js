@@ -1,3 +1,6 @@
+/* Copyright (c) 2015 Danilo Lekovic */
+/* Stripes is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. */
+/* http://creativecommons.org/licenses/by-nc-nd/4.0/ */
 var shell = require("shelljs");
 
 module.exports = function(grunt) {

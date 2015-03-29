@@ -1,5 +1,5 @@
 var parser = require("./grammar"),
-	  version = "0.0.6";
+	  version = "0.0.5";
 
 var finals = [];
 var allVariables = [];
@@ -640,7 +640,7 @@ var Generate = function(ast) {
 				inside += a;
 			});
 
-			return "until (!" + Generate(ast[1]) + ") {" + inside + "}";
+			return "while (!" + Generate(ast[1]) + ") {" + inside + "}";
 			break;
 		case "DoUntil":
 			var inside = "";
@@ -659,7 +659,7 @@ var Generate = function(ast) {
 				inside += a;
 			});
 
-			return "do {" + inside + "} until (!" + Generate(ast[2]) + ");";
+			return "do {" + inside + "} while (!" + Generate(ast[2]) + ");";
 			break;
 		case "Repeat":
 			var inside = "";
