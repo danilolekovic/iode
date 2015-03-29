@@ -1,5 +1,5 @@
 var parser = require("./grammar"),
-	  version = "0.0.5";
+	  version = "0.0.6";
 
 var finals = [];
 var allVariables = [];
