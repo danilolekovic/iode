@@ -50,7 +50,7 @@ $ npm install stripes -g
 Alternatively, you can use Stripes in your HTML by adding the following script:
 
 ```html
-<script type="text/javascript" src="https://raw.githubusercontent.com/danilolekovic/stripes/master/releases/stripes-0.0.4-bumblebee.js"></script>
+<script type="text/javascript" src="http://danilo.lekoits.com/stripes-cdn/stripes-latest.js"></script>
 ```
 
 To use Stripes in HTML:
