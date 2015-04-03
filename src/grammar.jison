@@ -235,6 +235,10 @@ Statement
     {{ $$ = ["Where", $2, $4]; }}
   | WHERE CallArray '=' Expr
     {{ $$ = ["Where", $2, $4]; }}
+  | WHERE CallArray ISNT Expr
+    {{ $$ = ["WhereNot", $2, $4]; }}
+  | WHERE CallArray '!=' Expr
+    {{ $$ = ["WhereNot", $2, $4]; }}
   ;
 
 Case
