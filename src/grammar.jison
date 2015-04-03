@@ -231,14 +231,8 @@ Statement
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
-  | WHERE CallArray IS Expr
-    {{ $$ = ["Where", $2, $4]; }}
-  | WHERE CallArray '=' Expr
-    {{ $$ = ["Where", $2, $4]; }}
-  | WHERE CallArray ISNT Expr
-    {{ $$ = ["WhereNot", $2, $4]; }}
-  | WHERE CallArray '!=' Expr
-    {{ $$ = ["WhereNot", $2, $4]; }}
+  | WHERE ConditionList
+    {{ $$ = ["Where", $2]; }}
   ;
 
 Case
@@ -416,7 +410,7 @@ Expr
   | Expr '^' Expr
     {{ $$ = ['Expo', $1, $3]; }}
   | Expr IS Expr
-    {{ $$ = ['Condition', $1, '==', $3]; }}
+    {{ $$ = ['Condition', $1, '===', $3]; }}
   | Expr ISNT Expr
     {{ $$ = ['Condition', $1, '!==', $3]; }}
   | Expr '~=' Expr
