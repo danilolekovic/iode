@@ -41,6 +41,7 @@ var type = function(o) {
     return TYPES[typeof o] || TYPES[TOSTRING.call(o)] || (o ? 'object' : 'null');
 };
 
+var testQuantity = 0;
 
 var Generate = function(ast) {
 	switch (ast[0]) {
@@ -1207,6 +1208,10 @@ var Generate = function(ast) {
 			break;
 		case "RunExpr":
 			return Generate(ast[1]) + ";";
+			break;
+		case "Where":
+			testQuantity++;
+			return "if (" + Generate(ast[1]) + " === " + Generate(ast[2]) + ") { console.log('Unit Test #" + testQuantity + " Passed.'); } else { throw ('Unit Test #" + testQuantity + " Failed.'); }";
 			break;
 		default:
 			throw "Unknown statement has been located: " + ast[0];

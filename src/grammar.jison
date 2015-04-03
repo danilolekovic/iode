@@ -41,6 +41,7 @@
 "when"  { return 'WHEN'; }
 "to"  { return 'TO'; }
 "until"  { return 'UNTIL'; }
+"where"  { return 'WHERE'; }
 "..."  { return '...'; }
 ".."  { return '..'; }
 ">>>" { return '>>>'; }
@@ -231,6 +232,10 @@ Statement
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
+  | WHERE CallArray IS Expr
+    {{ $$ = ["Where", $2, $4]; }}
+  | WHERE CallArray '=' Expr
+    {{ $$ = ["Where", $2, $4]; }}
   ;
 
 Case
