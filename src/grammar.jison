@@ -36,12 +36,13 @@
 "has" { return 'HAS'; }
 "isnt" { return 'ISNT'; }
 "not" { return 'NOT'; }
-"or" { return 'OR_COND'; }
-"and" { return 'AND_COND'; }
+"or" { return '||'; }
+"and" { return '&&'; }
 "when"  { return 'WHEN'; }
 "to"  { return 'TO'; }
 "until"  { return 'UNTIL'; }
 "where"  { return 'WHERE'; }
+"instanceof"  { return '~='; }
 "..."  { return '...'; }
 ".."  { return '..'; }
 ">>>" { return '>>>'; }
@@ -80,8 +81,6 @@
 ">="   { return '>='; }
 "<="   { return '<='; }
 ">"   { return '>'; }
-"greater"   { return '>'; }
-"less"   { return '<'; }
 "<"   { return '<'; }
 "!"   { return '!'; }
 "!="   { return '!='; }
@@ -119,8 +118,6 @@
 %left '=='
 %left IS
 %left ISNT
-%left AND_COND
-%left OR_COND
 %left NOT
 %left WHEN
 %left IN
@@ -140,6 +137,8 @@
 %left ':'
 %left '^'
 %left '@'
+%left '||'
+%left '&&'
 
 %%
 
@@ -316,9 +315,9 @@ SetVar
     {{ $$ = ['ArrayFinal', $2, $4]; }}
   | EXPORT ArgumentList
     {{ $$ = ['Export', $2]; }}
-  | '(' Expr OR Expr ')' '=' Expr
+  | '(' Expr '||' Expr ')' '=' Expr
     {{ $$ = ["SetOr", $2, $4, $7]; }}
-  | '(' Expr OR Expr ')' IS Expr
+  | '(' Expr '||' Expr ')' IS Expr
     {{ $$ = ["SetOr", $2, $4, $7]; }}
   | '++' Expr
     {{ $$ = ['Plus', $2]; }}
@@ -394,7 +393,7 @@ Expr
     {{ $$ = ['ArrowFunction', $1, $3]; }}
   | '=>' Expr
     {{ $$ = ['ArrowFunction', ['EmptyArgs'], $2]; }}
-  | Expr WHEN Expr OR_COND Expr
+  | Expr WHEN Expr '||' Expr
     {{ $$ = ['ConditionCheckOr', $1, $3, $5]; }}
   | Expr '++'
     {{ $$ = ['Plus', $1]; }}
@@ -469,25 +468,11 @@ ConditionList
   ;
 
 CondElement
-  : CondElement AND Expr
+  : CondElement '&&' Expr
      {{ $$ = ['CondAndElement', $1, $3]; }}
-  | CondElement OR Expr
+  | CondElement '||' Expr
      {{ $$ = ['CondOrElement', $1, $3]; }}
   | Expr
-  ;
-
-AND
-  : "&&"
-    {{ $$ = ['And']; }}
-  | AND_COND
-    {{ $$ = ['And']; }}
-  ;
-
-OR
-  : "||"
-    {{ $$ = ['Or']; }}
-  | OR_COND
-    {{ $$ = ['Or']; }}
   ;
 
 Array
