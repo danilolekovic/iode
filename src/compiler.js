@@ -842,10 +842,10 @@ var Generate = function(ast) {
 			return Generate(ast[1]) + ret.join("") + "." + Generate(ast[3]);
 			break;
 		case "Plus":
-			return Generate(ast[1]) + "++";
+			return Generate(ast[1]) + " += 1";
 			break;
 		case "Minus":
-			return Generate(ast[1]) + "--";
+			return Generate(ast[1]) + " -= 1";
 			break;
 		case "Return":
 			return "return " + Generate(ast[1]);
