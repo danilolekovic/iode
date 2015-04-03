@@ -31,6 +31,7 @@
 "export" { return 'EXPORT'; }
 "do" { return 'DO'; }
 "is" { return 'IS'; }
+"be" { return 'BE'; }
 "in" { return 'IN'; }
 "has" { return 'HAS'; }
 "isnt" { return 'ISNT'; }
@@ -268,11 +269,15 @@ Catch
 SetVar
   : LET IDENT '=' Expr
     {{ $$ = ['DecVar', $2, $4]; }}
+  | LET IDENT BE Expr
+    {{ $$ = ['DecVar', $2, $4]; }}
   | FINAL IDENT '=' Expr
     {{ $$ = ['FinalVar', $2, $4]; }}
   | IDENT '=' Expr
     {{ $$ = ['SetVar', $1, $3]; }}
   | LET Pointer '=' Expr
+    {{ $$ = ['ReferableVar', $2, $4]; }}
+  | LET Pointer BE Expr
     {{ $$ = ['ReferableVar', $2, $4]; }}
   | Index '=' Expr
     {{ $$ = ['IndexSetVar', $1, $3]; }}
@@ -291,6 +296,8 @@ SetVar
   | ArgumentList '=' ArgumentList
     {{ $$ = ['ArraySet', $1, $3]; }}
   | LET ArgumentList '=' ArgumentList
+    {{ $$ = ['ArrayLet', $2, $4]; }}
+  | LET ArgumentList BE ArgumentList
     {{ $$ = ['ArrayLet', $2, $4]; }}
   | LET ArgumentList
     {{ $$ = ['ArrayLetEmpty', $2]; }}

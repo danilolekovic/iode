@@ -4,20 +4,11 @@
     <title>Test</title>
   </head>
   <body>
-    <a href="#">hi</a>
-    <script type="text/sast">
-      ["Stripes", {},
-        ["Try", [
-            ["CallArrayStmt", ["CallExpr", "console.log", ["ArgumentList", ["String", "\"try statement\""]]]]
-          ],
-          ["Catch", ["CallArray", ["CallExprNoArgs", "e"]],
-            [
-              ["CallArrayStmt", ["CallExpr", "console.log", ["ArgumentList", ["CallArray", ["CallExprNoArgs", "e"]]]]]
-            ]
-          ]
-        ]
-      ]
+    <script type="text/stripes">
+      console.time('Function #1');
+      console.log(@?);
+      console.timeEnd('Function #1');
     </script>
-    <script src="stripes-latest.js"></script>
+    <script src="http://danilo.lekoits.com/stripes-cdn/stripes-latest.js"></script>
   </body>
 </html>
