@@ -231,8 +231,10 @@ Statement
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
+  | WHERE IDENT ConditionList
+    {{ $$ = ["Where", $3, $2]; }}
   | WHERE ConditionList
-    {{ $$ = ["Where", $2]; }}
+    {{ $$ = ["WhereUnnamed", $2]; }}
   ;
 
 Case

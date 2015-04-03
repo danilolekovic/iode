@@ -1208,6 +1208,9 @@ var Generate = function(ast) {
 			return Generate(ast[1]) + ";";
 			break;
 		case "Where":
+			return "if " + Generate(ast[1]) + " { console.log('Unit Test (" + ast[2] + ") Passed.'); } else { throw ('Unit Test (" + ast[2] + ") Failed.'); }";
+			break;
+		case "WhereUnnamed":
 			return "if " + Generate(ast[1]) + " { console.log('Unit Test Passed.'); } else { throw ('Unit Test Failed.'); }";
 			break;
 		default:
