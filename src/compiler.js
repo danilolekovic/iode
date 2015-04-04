@@ -212,6 +212,21 @@ var Generate = function(ast) {
 
 			return ast[1] + " = " + Generate(ast[2]) + ";";
 			break;
+		case "SetVarCall":
+			if (finals.contains(Generate(ast[1]))) {
+				throw ("Variable '" + Generate(ast[1]) +
+					"' is final and cannot be modified.");
+			}
+
+			for (a in variablesWithTypes) {
+				if (variablesWithTypes[a].name == Generate(ast[1])) {
+					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') { " + Generate(ast[1]) + " = " + Generate(ast[2]) + ";" + "}"
+						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+				}
+			}
+
+			return Generate(ast[1]) + " = " + Generate(ast[2]) + ";";
+			break;
 		case "SetOr":
 			if (finals.contains(Generate(ast[1]))) {
 				throw ("Variable '" + Generate(ast[1]) +

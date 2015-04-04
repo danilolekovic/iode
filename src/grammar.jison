@@ -277,8 +277,8 @@ SetVar
     {{ $$ = ['DecVar', $2, $4]; }}
   | FINAL IDENT '=' Expr
     {{ $$ = ['FinalVar', $2, $4]; }}
-  | IDENT '=' Expr
-    {{ $$ = ['SetVar', $1, $3]; }}
+  | CallArrayVar Expr
+    {{ $$ = ['SetVarCall', $1, $2]; }}
   | LET Pointer '=' Expr
     {{ $$ = ['ReferableVar', $2, $4]; }}
   | LET Pointer BE Expr
@@ -508,6 +508,11 @@ Call
 
 CallArray
   : CallElement
+    {{ $$  = ['CallArray', $1]; }}
+  ;
+
+CallArrayVar
+  : CallElement '='
     {{ $$  = ['CallArray', $1]; }}
   ;
 
