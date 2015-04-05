@@ -154,11 +154,17 @@ var Generate = function(ast) {
 					"' is final and cannot be modified.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined"
+					&& ast[1] != "date" && ast[1] != "array") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
 			PushVariable(ast[2], ast[1]);
+
+			if (ast[1] == "array" || ast[1] == "date") {
+				return "if (" + ast[2] + ".constructor.toString().indexOf(" + ast[1].charAt(0).toUpperCase() + ast[1].slice(1) + ") > -1) {" + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+					+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+			}
 
 			return "if (typeof (" + Generate(ast[3]) + ") === " + ast[1] + ") { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
 				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
@@ -172,11 +178,17 @@ var Generate = function(ast) {
 					"' is final and already declared.");
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined"
+					&& ast[1] != "date" && ast[1] != "array") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
 			PushVariable(ast[2], ast[1]);
+
+			if (ast[1] == "array" || ast[1] == "date") {
+				return "if (" + Generate(ast[3]) + ".constructor.toString().indexOf(" + ast[1].charAt(0).toUpperCase() + ast[1].slice(1) + ") > -1) {" + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+					+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+			}
 
 			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") === '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
 				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
@@ -188,11 +200,17 @@ var Generate = function(ast) {
 				finals.push(ast[2]);
 			}
 
-			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined") {
+			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined"
+					&& ast[1] != "date" && ast[1] != "array") {
 				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
 			PushVariable(ast[2], ast[1]);
+
+			if (ast[1] == "array" || ast[1] == "date") {
+				return "if (" + Generate(ast[3]) + ".constructor.toString().indexOf(" + ast[1].charAt(0).toUpperCase() + ast[1].slice(1) + ") > -1) {" + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
+					+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+			}
 
 			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") === '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
 				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
@@ -205,6 +223,11 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
+					if (variablesWithTypes[a].type == "array" || variablesWithTypes[a].type == "date") {
+						return "if (" + Generate(ast[2]) + ".constructor.toString().indexOf(" + variablesWithTypes[a].type.charAt(0).toUpperCase() + variablesWithTypes[a].type.slice(1) + ") > -1) {" + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
+							+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+					}
+
 					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') { " + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
 						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
