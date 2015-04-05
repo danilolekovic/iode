@@ -164,6 +164,10 @@ Block
 Statement
   : SetVar
   | Try
+  | WHERE IDENT ConditionList
+    {{ $$ = ["Where", $3, $2]; }}
+  | WHERE ConditionList
+    {{ $$ = ["WhereUnnamed", $2]; }}
   | IF ConditionList Block
     {{ $$ = ['If', $2, $3]; }}
   | ELSIF ConditionList Block
@@ -217,24 +221,20 @@ Statement
     {{ $$ = ['PrivateFunction', $2, $3, $4]; }}
   | FN IDENT '>>>' IDENT ArgumentList Block
     {{ $$ = ['Prototype', $2, $4, $5, $6]; }}
-  | CallArrayStmt IF ArgumentList
+  | CallArrayStmt IF ConditionList
     {{ $$ = ["CallIf", $1, $3]; }}
-  | CallArrayStmt UNLESS ArgumentList
+  | CallArrayStmt UNLESS ConditionList
     {{ $$ = ["CallUnless", $1, $3]; }}
-  | CallArrayStmt WHILE ArgumentList
+  | CallArrayStmt WHILE ConditionList
     {{ $$ = ["CallWhile", $1, $3]; }}
-  | CallArrayStmt UNTIL ArgumentList
+  | CallArrayStmt UNTIL ConditionList
     {{ $$ = ["CallUntil", $1, $3]; }}
-  | SetVar IF ArgumentList
+  | SetVar IF ConditionList
     {{ $$ = ["SetIf", $1, $3]; }}
-  | SetVar UNLESS ArgumentList
+  | SetVar UNLESS ConditionList
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
-  | WHERE IDENT ConditionList
-    {{ $$ = ["Where", $3, $2]; }}
-  | WHERE ConditionList
-    {{ $$ = ["WhereUnnamed", $2]; }}
   ;
 
 Case

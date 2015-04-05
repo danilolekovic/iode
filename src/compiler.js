@@ -243,6 +243,11 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == Generate(ast[1])) {
+					if (variablesWithTypes[a].type == "array" || variablesWithTypes[a].type == "date") {
+						return "if (" + Generate(ast[1]) + ".constructor.toString().indexOf(" + variablesWithTypes[a].type.charAt(0).toUpperCase() + variablesWithTypes[a].type.slice(1) + ") > -1) {" + Generate(ast[1]) + " = " + Generate(ast[2]) + ";" + "}"
+							+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+					}
+
 					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') { " + Generate(ast[1]) + " = " + Generate(ast[2]) + ";" + "}"
 						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
@@ -263,15 +268,35 @@ var Generate = function(ast) {
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == Generate(ast[1])) {
-					if (type(Generate(ast[3])) != variablesWithTypes[a].type) {
-						throw ("Variable '" + Generate(ast[1]) + "' expects a value that is a " + variablesWithTypes[a].type + ".");
+					if (variablesWithTypes[a].type == "array" || variablesWithTypes[a].type == "date") {
+						return "if (" + Generate(ast[1]) + ".constructor.toString().indexOf(" + variablesWithTypes[a].type.charAt(0).toUpperCase() + variablesWithTypes[a].type.slice(1) + ") > -1) {"
+							+ "if (typeof " + Generate(ast[1]) + " !== 'undefined') { " +
+							Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
+							Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
+							+ "} else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 					}
+
+					return "if (typeof " + Generate(ast[1]) + " === '" + variablesWithTypes[a].type + "') {"
+						+ "if (typeof " + Generate(ast[1]) + " !== 'undefined') { " +
+						Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
+						Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
+						+ "}  throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 
 				if (variablesWithTypes[a].name == Generate(ast[2])) {
-					if (type(Generate(ast[3])) != variablesWithTypes[a].type) {
-						throw ("Variable '" + Generate(ast[2]) + "' expects a value that is a " + variablesWithTypes[a].type + ".");
+					if (variablesWithTypes[a].type == "array" || variablesWithTypes[a].type == "date") {
+						return "if (" + Generate(ast[2]) + ".constructor.toString().indexOf(" + variablesWithTypes[a].type.charAt(0).toUpperCase() + variablesWithTypes[a].type.slice(1) + ") > -1) {"
+							+ "if (typeof " + Generate(ast[2]) + " !== 'undefined') { " +
+							Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
+							Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
+							+ "} else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 					}
+
+					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') {"
+						+ "if (typeof " + Generate(ast[2]) + " !== 'undefined') { " +
+						Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
+						Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
+						+ "}  throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 			}
 
