@@ -1,6 +1,8 @@
 %lex
 %%
 
+\"((?:\\.|[^"\\])*)\" { return 'STRING'; }
+\'((?:\\.|[^'\\])*)\' { return 'SINGLESTRING'; }
 "yes"  { return 'YES'; }
 "no"  { return 'NO'; }
 "nothing"  { return 'NOTHING'; }
@@ -55,8 +57,6 @@
 0[xX][0-9a-fA-F]+ { return 'NUMBER'; }
 [A-Za-z_$][A-Za-z0-9_$]* { return 'IDENT'; }
 [A-Za-z_$] { return 'IDENT'; }
-\"((?:\\.|[^"\\])*)\" { return 'STRING'; }
-\'((?:\\.|[^'\\])*)\' { return 'SINGLESTRING'; }
 ([\#]([^\\#]*)?[\#]) { return 'COMMENT'; }
 \/((?![*+?])(?:[^\r\n\[/\\]|\\.|\[(?:[^\r\n\]\\]|\\.)*\])+)\/((?:g(?:im?|m)?|i(?:gm?|m)?|m(?:gi?|i)?)?) { return 'REGEX'; }
 \s+    { /* whitespace-insignificant */ }

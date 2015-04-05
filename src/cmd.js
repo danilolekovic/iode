@@ -97,7 +97,13 @@ var main = function() {
 		throw "No file specified as first argument.";
 	}
 
-	var loc = process.cwd() + "/" + args[0];
+	args.pop();
+
+	var loc = args.join(" ").trim();
+
+	if (args.join(" ").trim().indexOf("C:") != 0) {
+		loc = process.cwd() + "/" + args.join(" ").trim();
+	}
 
 	code += fs.readFileSync(loc);
 
@@ -117,9 +123,9 @@ var main = function() {
 		target += ".js";
 	}
 
-	if (typeof args[1] == "string") {
+	/*if (typeof args[1] == "string") {
 		target = process.cwd() + "/" + args[1];
-	}
+	}*/
 
 	if (options.ast) {
 		console.log(compiler.getAST(code));
@@ -219,7 +225,9 @@ var main = function() {
 				console.log(err);
 				return;
 			} else {
-				console.log("[Stripes] " + loc + " -> " + target);
+				if (!options.execute) {
+					console.log("[Stripes] " + loc + " -> " + target);
+				}
 			}
 		});
 
@@ -227,7 +235,7 @@ var main = function() {
 
 	if (options.execute) {
 		run_cmd("node", [target], function(text) {
-			console.log(text);
+			console.log("\n" + text);
 		});
 	}
 };
