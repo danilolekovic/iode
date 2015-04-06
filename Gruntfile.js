@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.registerTask('stripes', "compile script", function() {
-		shell.exec('stripes package.son');
+		shell.exec('stripes package.son = package.json');
 	});
 
 	grunt.registerTask('stripes-examples', "compile examples", function() {
