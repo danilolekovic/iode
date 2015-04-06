@@ -100,6 +100,4 @@ var Every = function(arr, func) {
     func(a);
   }
 };
-If(true, function() {
-  console.log("Swag");
-});
+console.log("This is cool");
