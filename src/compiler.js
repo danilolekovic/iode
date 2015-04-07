@@ -424,6 +424,10 @@ var Generate = function(ast) {
 		case "If":
 			var inside = "";
 
+			if (Generate(ast[1]) == "()") {
+				throw "No parameter for if statement.";
+			}
+
 			if (ast[2] == "end") {
 				return "if " + Generate(ast[1]) + " {}";
 			}
@@ -454,6 +458,10 @@ var Generate = function(ast) {
 			break;
 		case "Elsif":
 			var inside = "";
+
+			if (Generate(ast[1]) == "()") {
+				throw "No parameter for elsif statement.";
+			}
 
 			if (ast[2] == "end") {
 				return "else if " + Generate(ast[1]) + " {}";
@@ -556,6 +564,10 @@ var Generate = function(ast) {
 			break;
 		case "Unless":
 			var inside = "";
+
+			if (Generate(ast[1]) == "()") {
+				throw "No parameter for unless statement.";
+			}
 
 			if (ast[2] == "end") {
 				return "if (!" + Generate(ast[1]) + ") {}";
