@@ -665,6 +665,10 @@ var Generate = function(ast) {
 		case "While":
 			var inside = "";
 
+			if (Generate(ast[1]) == "()") {
+				throw "No parameter for while loop.";
+			}
+
 			if (ast[2] == "end") {
 				return "while (" + Generate(ast[1]) + ") {}";
 			}
@@ -683,6 +687,10 @@ var Generate = function(ast) {
 			break;
 		case "DoWhile":
 			var inside = "";
+
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter for do while statement.";
+			}
 
 			if (ast[1] == "end") {
 				return "do {} while (" + Generate(ast[2]) + ");";
@@ -703,6 +711,10 @@ var Generate = function(ast) {
 		case "Until":
 			var inside = "";
 
+			if (Generate(ast[1]) == "()") {
+				throw "No parameter for until statement.";
+			}
+
 			if (ast[2] == "end") {
 				return "while (!(" + Generate(ast[1]) + ")) {}";
 			}
@@ -721,6 +733,10 @@ var Generate = function(ast) {
 			break;
 		case "DoUntil":
 			var inside = "";
+
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter for do until loop.";
+			}
 
 			if (ast[1] == "end") {
 				return "do {} while (!(" + Generate(ast[2]) + "));";
@@ -1088,6 +1104,10 @@ var Generate = function(ast) {
 			var a = [];
 			var b = [];
 
+			if (Generate(ast[1]) == "()" || Generate(ast[2]) == "()") {
+				throw "Empty group for mass variable setting.";
+			}
+
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry)) {
@@ -1134,6 +1154,10 @@ var Generate = function(ast) {
 			var a = [];
 			var b = [];
 
+			if (Generate(ast[1]) == "()" || Generate(ast[2]) == "()") {
+				throw "Empty group for mass variable creation.";
+			}
+
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry)) {
@@ -1172,6 +1196,10 @@ var Generate = function(ast) {
 			break;
 		case "ArrayLetEmpty":
 			var a = [];
+
+			if (Generate(ast[1]) == "()") {
+				throw "Empty group for mass variable declaration without a value.";
+			}
 
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
@@ -1219,6 +1247,10 @@ var Generate = function(ast) {
 			var a = [];
 			var b = [];
 
+			if (Generate(ast[1]) == "()" || Generate(ast[2]) == "()") {
+				throw "Empty group for final mass variable creation.";
+			}
+
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry) || allVariables.contains(entry)) {
@@ -1255,18 +1287,38 @@ var Generate = function(ast) {
 			return f;
 			break;
 		case "CallIf":
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter in call if statement.";
+			}
+
 			return "if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
 			break;
 		case "CallWhile":
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter in call while loop.";
+			}
+
 			return "while " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
 			break;
 		case "CallUnless":
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter in call unless statement.";
+			}
+
 			return "if !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
 		case "CallUntil":
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter in call until loop.";
+			}
+
 			return "while !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
 		case "SetIf":
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter in set variable if statement.";
+			}
+
 			if (ast[1][0] == "DecVar") {
 				ast[1][0] = "SetVar";
 				return "var " + ast[1][1] + ";if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
@@ -1275,6 +1327,10 @@ var Generate = function(ast) {
 			return "if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
 			break;
 		case "SetUnless":
+			if (Generate(ast[2]) == "()") {
+				throw "No parameter in set variable unless statement.";
+			}
+
 			if (ast[1][0] == "DecVar") {
 				ast[1][0] = "SetVar";
 				return "var " + ast[1][1] + ";if !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
