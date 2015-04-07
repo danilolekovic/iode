@@ -3,6 +3,7 @@ var JSON = require("../package.json");
 var beauty = require("js-beautify").js_beautify;
 var compiler = require("./compiler");
 var path = require("path");
+var separator = require("path").sep;
 
 var run_cmd = function(cmd, args, callBack) {
 	var spawn = require('child_process').spawn;
@@ -86,7 +87,7 @@ var main = function() {
 	}
 
 	var code = "";
-	var prelude = fs.readFileSync(path.dirname(__dirname) + '/lib/prelude.stps',
+	var prelude = fs.readFileSync(path.dirname(__dirname) + separator + 'lib' + separator + 'prelude.stps',
 		'utf8');
 
 	if (args[0] == undefined) {
@@ -102,16 +103,16 @@ var main = function() {
 
 	if (loc.indexOf('=') !== -1) {
 		if (args.join(" ").trim().indexOf("C:") != 0) {
-			loc = (process.cwd() + "/" + args.join(" ").trim()).split('=')[0].trim();
-			target = process.cwd() + "/" + args.join("").trim().split('=')[1].trim();
+			loc = (process.cwd() + separator + args.join(" ").trim()).split('=')[0].trim();
+			target = process.cwd() + separator + args.join("").trim().split('=')[1].trim();
 		} else {
 			loc = loc.split('=')[0].trim();
 			target = args.join("").trim().split('=')[1].trim();
 		}
 	} else {
 		if (args.join(" ").trim().indexOf("C:") != 0) {
-			loc = process.cwd() + "/" + args.join(" ").trim();
-			target = process.cwd() + "/" + args.join(" ").trim();
+			loc = process.cwd() + separator + args.join(" ").trim();
+			target = process.cwd() + separator + args.join(" ").trim();
 		}
 	}
 
