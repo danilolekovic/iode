@@ -1,4 +1,7 @@
 var parser = require("./grammar"),
+		fs = require("fs"),
+		path = require("path"),
+		separator = require("path").sep,
 	  version = "0.0.7";
 
 var finals = [];
@@ -1275,6 +1278,23 @@ var Generate = function(ast) {
 			break;
 		case "WhereUnnamed":
 			return "if " + Generate(ast[1]) + " { console.log('Unit Test Passed.'); } else { throw ('Unit Test Failed.'); }";
+			break;
+		case "Using":
+			if (ast[1] == "convert") {
+				return fs.readFileSync(path.dirname(__dirname) + separator + 'lib' + separator + 'convert.stps',
+					'utf8');
+			} else if (ast[1] == "functional") {
+				return fs.readFileSync(path.dirname(__dirname) + separator + 'lib' + separator + 'functional.stps',
+					'utf8');
+			} else if (ast[1] == "all") {
+				return fs.readFileSync(path.dirname(__dirname) + separator + 'lib' + separator + 'convert.stps',
+					'utf8') + fs.readFileSync(path.dirname(__dirname) + separator + 'lib' + separator + 'functional.stps',
+						'utf8');
+			} else {
+				throw ("Attempted to use invalid part of standard library: " + ast[1] + ".");
+			}
+
+			return "/* Using stripes." + ast[1] + " */";
 			break;
 		default:
 			throw "Unknown statement has been located: " + ast[0];

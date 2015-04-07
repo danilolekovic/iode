@@ -4,8 +4,6 @@ var readline = require('readline'),
 var rl = readline.createInterface(process.stdin, process.stdout);
 var generator = require("./compiler");
 var code = "";
-var std = fs.readFileSync(path.dirname(__dirname) + '/lib/prelude.stps',
-  'utf8');
 
 console.log("stripes> STRIPES v" + require("../package.json").version +
   " INTERACTIVE CONSOLE");
@@ -44,7 +42,7 @@ rl.on('line', function(line) {
 
 var repl = function(lib) {
   if (lib) {
-    var js = generator.GenerateStripes(std + code);
+    var js = generator.GenerateStripes(code);
     console.log("\n-> " + eval(js));
   } else {
     var js = generator.GenerateStripes(code);

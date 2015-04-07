@@ -1,0 +1,51 @@
+let While = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  while (cond)
+    func();
+  end;
+end;
+
+let If = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  if (cond)
+    func();
+  end;
+end;
+
+let Until = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  until (cond)
+    func();
+  end;
+end;
+
+let Unless = fn(cond, func)
+  if (cond?) cond = true; end;
+
+  unless (cond)
+    func();
+  end;
+end;
+
+let Repeat = fn(times, func)
+  if (times?) times = 1; end;
+
+  if (func.length == 0)
+    repeat (times:i)
+      func();
+    end;
+  end; else
+    repeat (time:i)
+      func(i);
+    end;
+  end;
+end;
+
+let Every = fn(arr, func)
+  for (a in arr)
+    func(a);
+  end;
+end;

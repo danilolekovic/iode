@@ -3,6 +3,7 @@
 
 \"((?:\\.|[^"\\])*)\" { return 'STRING'; }
 \'((?:\\.|[^'\\])*)\' { return 'SINGLESTRING'; }
+"using"  { return 'USING'; }
 "yes"  { return 'YES'; }
 "no"  { return 'NO'; }
 "nothing"  { return 'NOTHING'; }
@@ -235,6 +236,8 @@ Statement
     {{ $$ = ["SetUnless", $1, $3]; }}
   | ':' Expr
     {{ $$ = ["RunExpr", $2]; }}
+  | USING IDENT
+    {{ $$ = ["Using", $2]; }}
   ;
 
 Case
