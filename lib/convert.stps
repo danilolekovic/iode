@@ -1,8 +1,8 @@
-let CelciusToFahrenheit = fn(c)
+let CelsiusToFahrenheit = fn(c)
   return(c * 1.8 + 32);
 end;
 
-let FahrenheitToCelcius = fn(f)
+let FahrenheitToCelsius = fn(f)
   return((f-32) * 5/9);
 end;
 
