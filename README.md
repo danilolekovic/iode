@@ -2,6 +2,13 @@
 
 Stripes is a featured, whitespace-insignificant programming language that contains optional functional programming and loose variable type checking. It compiles to JavaScript and therefore, can run any where. If you are looking to learn Stripes or just want some quick documentation, [this free book is highly recommended](https://www.gitbook.com/book/danilolekovic/stripes/details).
 
+## Awards
+
+The Stripes programming language has won two awards as of May, 2015.
+
+* University of British Columbia Award of Computer Science (1st place)
+* Silver medal from the GVRSF
+
 # Innovation
 
 Stripes contains a lot of brand-new, modern features.
@@ -60,6 +67,8 @@ To use Stripes in HTML:
   let greeting = "Hello!";
   console.log(greeting);
 </script>
+
+<script type="text/javascript" src="http://danilo.lekoits.com/stripes-cdn/stripes-latest.js"></script>
 ```
 
 # License
