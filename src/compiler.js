@@ -2,7 +2,7 @@ var parser = require("./grammar"),
 		fs = require("fs"),
 		path = require("path"),
 		separator = require("path").sep,
-	  version = "0.0.7";
+	  version = "0.0.8";
 
 var finals = [];
 var allVariables = [];
