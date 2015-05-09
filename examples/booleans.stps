@@ -1,3 +1,6 @@
-let boolean alive = yes;
+#include <stdio.h>
 
-console.log("We're alive!") if (alive);
+int main() {
+  printf("Hello World");
+  return 0;
+}

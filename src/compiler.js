@@ -84,11 +84,12 @@ var Generate = function(ast) {
 			var string = ast[1];
 			string = string.substring(1, string.length - 1);
 
-			string = string.replace(/\\\((.*)\)/g,
-				function(a, b) {
-					return "\" + " + b + " + \""
-				}
-			);
+      var reg = /\\\((.*)\)/g;
+      var matches = [], found;
+
+      while (found = reg.exec(string)) {
+				string.replace(string[0].substring(6, string[0].length - 7), "\"" + string[0].substring(6, string[0].length - 7) + "\"");
+      }
 
 			return "\"" + string + "\"";
 			break;
@@ -97,8 +98,8 @@ var Generate = function(ast) {
 			string = string.substring(1, string.length - 1);
 
 			string = string.replace(/\\\((.*)\)/g,
-				function(a, b) {
-					return "' + " + b + " + '"
+				function(a) {
+					return "' + " + a + " + '"
 				}
 			);
 
