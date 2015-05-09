@@ -2,6 +2,7 @@
   "name": "stripes",
   "description": "Programming language that smoothly compiles to JavaScript.",
   "version": "0.0.7",
+  "license": "GNU Lesser General Public License v3.0",
   "author": "Danilo Lekovic <danilo@lekovic.ca>",
   "keywords": ["stripes", "altjs", "programming", "language", "transcompiler"],
   "dependencies": {

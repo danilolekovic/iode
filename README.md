@@ -72,4 +72,7 @@ To use Stripes in HTML:
 ```
 
 # License
+
+Stripes is open-source software.
+
 See [LICENSE.md](https://github.com/danilolekovic/stripes/blob/master/LICENSE).
