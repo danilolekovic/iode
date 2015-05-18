@@ -12,7 +12,8 @@
     "transcompiler"
   ],
   "dependencies" -> {
-    "js-beautify" -> "*"
+    "js-beautify" -> "*",
+    "colors" -> "*"
   },
   "devDependencies" -> {
     "jison" -> "*",

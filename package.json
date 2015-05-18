@@ -6,7 +6,8 @@
   "author": "Danilo Lekovic <danilo@lekovic.ca>",
   "keywords": ["stripes", "altjs", "programming", "language", "transcompiler"],
   "dependencies": {
-    "js-beautify": "*"
+    "js-beautify": "*",
+    "colors": "*"
   },
   "devDependencies": {
     "jison": "*",

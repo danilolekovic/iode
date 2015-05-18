@@ -4,6 +4,7 @@ var beauty = require("js-beautify").js_beautify;
 var compiler = require("./compiler");
 var path = require("path");
 var separator = require("path").sep;
+var error = require("./errors").err;
 
 var run_cmd = function(cmd, args, callBack) {
 	var spawn = require('child_process').spawn;
@@ -17,6 +18,19 @@ var run_cmd = function(cmd, args, callBack) {
 	child.stdout.on('end', function() {
 		callBack(resp)
 	});
+};
+
+var help = function() {
+	console.log("Stripes v" + JSON.version);
+	console.log("\n	$ stripes [args] <file>");
+	console.log("\nArguments:");
+	console.log("\n	-v, --version		Shows version");
+	console.log("	-h, --help		Shows help");
+	console.log("	-e, --execute		Executes compiled file");
+	console.log("	-s, --strict		Enables strict mode");
+	console.log("	-ast, --tokens		Shows tokens instead of compiling");
+	console.log("\nExample:");
+	console.log("\n	$ stripes -e test.stps");
 };
 
 var main = function() {
@@ -33,23 +47,29 @@ var main = function() {
 	var args = [];
 
 	for (arg in process.argv.slice(2)) {
-		if (process.argv.slice(2)[arg] == "-v" || process.argv.slice(2)[arg] == "--version") {
+		if (process.argv.slice(2)[arg].toString().toLowerCase() == "-v"
+			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--version") {
 			options.version = true;
-		} else if (process.argv.slice(2)[arg] == "-e" || process.argv.slice(2)[arg] == "--version") {
+		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-e"
+			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--version") {
 			options.execute = true;
-		} else if (process.argv.slice(2)[arg] == "-h" || process.argv.slice(2)[arg] == "--help") {
+		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-h"
+			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--help") {
 			options.help = true;
-		} else if (process.argv.slice(2)[arg] == "-s" || process.argv.slice(2)[arg] == "--strict") {
+		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-s"
+			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--strict") {
 			options.strict = true;
-		} else if (process.argv.slice(2)[arg] == "-r" || process.argv.slice(2)[arg] == "--repl") {
+		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-r"
+			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--repl") {
 			options.repl = true;
-		} else if (process.argv.slice(2)[arg] == "-ast" || process.argv.slice(2)[arg] == "--tokens") {
+		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-ast"
+			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--tokens") {
 			options.ast = true;
 			options.strict = false;
 		}
 
 		if (process.argv.slice(2)[arg][0] != '-') {
-			args.push(process.argv.slice(2)[arg]);
+			args.push(process.argv.slice(2)[arg].toString().toLowerCase());
 		}
 	}
 
@@ -64,23 +84,14 @@ var main = function() {
 	}
 
 	if (options.help) {
-		console.log("Stripes v" + JSON.version);
-		console.log("\n	$ stripes [args] <file>");
-		console.log("\nArguments:");
-		console.log("\n	-v, --version		Shows version");
-		console.log("	-h, --help		Shows help");
-		console.log("	-e, --execute		Executes compiled file");
-		console.log("	-s, --strict		Enables strict mode");
-		console.log("	-ast, --tokens		Shows tokens instead of compiling");
-		console.log("\nExample:");
-		console.log("\n	$ stripes -e test.stps");
+		help();
 		return;
 	}
 
 	var code = "";
 
 	if (args[0] == undefined) {
-		throw "No file specified as first argument.";
+		error("No file specified as first argument.");
 	}
 
 	args.pop();
@@ -105,7 +116,11 @@ var main = function() {
 		}
 	}
 
-	code += fs.readFileSync(loc);
+	if (fs.existsSync(loc)) {
+		code += fs.readFileSync(loc);
+	} else {
+		error("File not found: " + loc);
+	}
 
 	if (target.endsWith(".stps")) {
 		target = target.replace(".stps", ".js");
@@ -202,6 +217,5 @@ var main = function() {
 String.prototype.endsWith = function(suffix) {
 	return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
-
 
 main();

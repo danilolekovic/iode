@@ -2,7 +2,8 @@ var parser = require("./grammar"),
 		fs = require("fs"),
 		path = require("path"),
 		separator = require("path").sep,
-	  version = "0.0.8";
+		version = "0.0.8",
+		error = require("./errors").err;;
 
 var finals = [];
 var allVariables = [];
@@ -75,7 +76,7 @@ var Generate = function(ast) {
 			break;
 		case "Ident":
 			if (reserved.contains(ast[1])) {
-				throw ("Illegal identifier discovered: " + ast[1] + ".");
+				error("Illegal identifier discovered: " + ast[1] + ".");
 			}
 
 			return ast[1];
@@ -154,74 +155,74 @@ var Generate = function(ast) {
 			break;
 		case "SetVarType":
 			if (finals.contains(ast[2])) {
-				throw ("Variable '" + ast[2] +
+				error("Variable '" + ast[2] +
 					"' is final and cannot be modified.");
 			}
 
 			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined"
 					&& ast[1] != "date" && ast[1] != "array") {
-				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
+				error("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
 			PushVariable(ast[2], ast[1]);
 
 			if (ast[1] == "array" || ast[1] == "date") {
 				return "if (" + ast[2] + ".constructor.toString().indexOf(" + ast[1].charAt(0).toUpperCase() + ast[1].slice(1) + ") > -1) {" + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
-					+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+					+ "else { error('Expecting a type of " + ast[1] + ".'); }";
 			}
 
 			return "if (typeof (" + Generate(ast[3]) + ") === " + ast[1] + ") { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
-				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+				+ "else { error('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "ArrowFunction":
 			return "function" + Generate(ast[1]) + " { return " + Generate(ast[2]) + "; }";
 			break;
 		case "DecVarType":
 			if (finals.contains(ast[2])) {
-				throw ("Variable '" + ast[2] +
+				error("Variable '" + ast[2] +
 					"' is final and already declared.");
 			}
 
 			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined"
 					&& ast[1] != "date" && ast[1] != "array") {
-				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
+				error("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
 			PushVariable(ast[2], ast[1]);
 
 			if (ast[1] == "array" || ast[1] == "date") {
 				return "if (" + Generate(ast[3]) + ".constructor.toString().indexOf(" + ast[1].charAt(0).toUpperCase() + ast[1].slice(1) + ") > -1) {" + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
-					+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+					+ "else { error('Expecting a type of " + ast[1] + ".'); }";
 			}
 
 			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") === '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
-				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+				+ "else { error('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "FinalVarType":
 			if (finals.contains(ast[2]) || allVariables.contains(ast[2])) {
-				throw ("Variable '" + ast[2] + "' is declared twice.");
+				error("Variable '" + ast[2] + "' is declared twice.");
 			} else {
 				finals.push(ast[2]);
 			}
 
 			if (ast[1] != "string" && ast[1] != "boolean" && ast[1] != "number" && ast[1] != "object" && ast[1] != "function" && ast[1] != "null" && ast[1] != "undefined"
 					&& ast[1] != "date" && ast[1] != "array") {
-				throw ("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
+				error("Unknown type (" + ast[1] + ") specified when setting variable '" + ast[2] + "'.");
 			}
 
 			PushVariable(ast[2], ast[1]);
 
 			if (ast[1] == "array" || ast[1] == "date") {
 				return "if (" + Generate(ast[3]) + ".constructor.toString().indexOf(" + ast[1].charAt(0).toUpperCase() + ast[1].slice(1) + ") > -1) {" + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
-					+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+					+ "else { error('Expecting a type of " + ast[1] + ".'); }";
 			}
 
 			return "var " + ast[2] + ";if (typeof (" + Generate(ast[3]) + ") === '" + ast[1] + "') { " + ast[2] + " = " + Generate(ast[3]) + ";" + "}"
-				+ "else { throw ('Expecting a type of " + ast[1] + ".'); }";
+				+ "else { error('Expecting a type of " + ast[1] + ".'); }";
 			break;
 		case "SetVar":
 			if (finals.contains(ast[1])) {
-				throw ("Variable '" + ast[1] +
+				error("Variable '" + ast[1] +
 					"' is final and cannot be modified.");
 			}
 
@@ -229,11 +230,11 @@ var Generate = function(ast) {
 				if (variablesWithTypes[a].name == ast[1]) {
 					if (variablesWithTypes[a].type == "array" || variablesWithTypes[a].type == "date") {
 						return "if (" + Generate(ast[2]) + ".constructor.toString().indexOf(" + variablesWithTypes[a].type.charAt(0).toUpperCase() + variablesWithTypes[a].type.slice(1) + ") > -1) {" + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
-							+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+							+ "else { error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 					}
 
 					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') { " + ast[1] + " = " + Generate(ast[2]) + ";" + "}"
-						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+						+ "else { error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 			}
 
@@ -241,7 +242,7 @@ var Generate = function(ast) {
 			break;
 		case "SetVarCall":
 			if (finals.contains(Generate(ast[1]))) {
-				throw ("Variable '" + Generate(ast[1]) +
+				error("Variable '" + Generate(ast[1]) +
 					"' is final and cannot be modified.");
 			}
 
@@ -249,11 +250,11 @@ var Generate = function(ast) {
 				if (variablesWithTypes[a].name == Generate(ast[1])) {
 					if (variablesWithTypes[a].type == "array" || variablesWithTypes[a].type == "date") {
 						return "if (" + Generate(ast[1]) + ".constructor.toString().indexOf(" + variablesWithTypes[a].type.charAt(0).toUpperCase() + variablesWithTypes[a].type.slice(1) + ") > -1) {" + Generate(ast[1]) + " = " + Generate(ast[2]) + ";" + "}"
-							+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+							+ "else { error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 					}
 
 					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') { " + Generate(ast[1]) + " = " + Generate(ast[2]) + ";" + "}"
-						+ "else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+						+ "else { error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 			}
 
@@ -261,12 +262,12 @@ var Generate = function(ast) {
 			break;
 		case "SetOr":
 			if (finals.contains(Generate(ast[1]))) {
-				throw ("Variable '" + Generate(ast[1]) +
+				error("Variable '" + Generate(ast[1]) +
 					"' is final and cannot be modified.");
 			}
 
 			if (finals.contains(Generate(ast[2]))) {
-				throw ("Variable '" + Generate(ast[2]) +
+				error("Variable '" + Generate(ast[2]) +
 					"' is final and cannot be modified.");
 			}
 
@@ -277,14 +278,14 @@ var Generate = function(ast) {
 							+ "if (typeof " + Generate(ast[1]) + " !== 'undefined') { " +
 							Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
 							Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
-							+ "} else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+							+ "} else { error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 					}
 
 					return "if (typeof " + Generate(ast[1]) + " === '" + variablesWithTypes[a].type + "') {"
 						+ "if (typeof " + Generate(ast[1]) + " !== 'undefined') { " +
 						Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
 						Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
-						+ "}  throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+						+ "}  error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 
 				if (variablesWithTypes[a].name == Generate(ast[2])) {
@@ -293,14 +294,14 @@ var Generate = function(ast) {
 							+ "if (typeof " + Generate(ast[2]) + " !== 'undefined') { " +
 							Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
 							Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
-							+ "} else { throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+							+ "} else { error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 					}
 
 					return "if (typeof " + Generate(ast[2]) + " === '" + variablesWithTypes[a].type + "') {"
 						+ "if (typeof " + Generate(ast[2]) + " !== 'undefined') { " +
 						Generate(ast[1]) + " = " + Generate(ast[3]) + "; } else { " +
 						Generate(ast[2]) + " = " + Generate(ast[3]) + "; }"
-						+ "}  throw ('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
+						+ "}  error('Expecting a type of " + variablesWithTypes[a].type + ".'); }";
 				}
 			}
 
@@ -313,13 +314,13 @@ var Generate = function(ast) {
 			break;
 		case "DecVar":
 			if (finals.contains(ast[1])) {
-				throw ("Variable '" + ast[1] +
+				error("Variable '" + ast[1] +
 					"' is final and already declared.");
 			}
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					throw ("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
+					error("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
 				}
 			}
 
@@ -327,13 +328,13 @@ var Generate = function(ast) {
 			break;
 		case "ReferableVar":
 			if (finals.contains(Generate(ast[1]))) {
-				throw ("Variable '" + Generate(ast[1]) +
+				error("Variable '" + Generate(ast[1]) +
 					"' is final and already declared.");
 			}
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					throw ("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
+					error("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
 				}
 			}
 
@@ -350,14 +351,14 @@ var Generate = function(ast) {
 			break;
 		case "FinalVar":
 			if (finals.contains(ast[1]) || allVariables.contains(ast[1])) {
-				throw ("Variable '" + ast[1] + "' is declared twice.");
+				error("Variable '" + ast[1] + "' is declared twice.");
 			} else {
 				finals.push(ast[1]);
 			}
 
 			for (a in variablesWithTypes) {
 				if (variablesWithTypes[a].name == ast[1]) {
-					throw ("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
+					error("Cannot re-declare a variable ('" + ast[1] + "') that has already been given a type.");
 				}
 			}
 
@@ -365,7 +366,7 @@ var Generate = function(ast) {
 			break;
 		case "DecVarEmpty":
 			if (finals.contains(ast[1])) {
-				throw ("Variable '" + ast[1] +
+				error("Variable '" + ast[1] +
 					"' is final and already declared.");
 			}
 
@@ -373,12 +374,12 @@ var Generate = function(ast) {
 			break;
 		case "FinalVarEmpty":
 			if (finals.contains(ast[1]) || allVariables.contains(ast[1])) {
-				throw ("Variable '" + ast[1] + "' is declared twice.");
+				error("Variable '" + ast[1] + "' is declared twice.");
 			} else {
 				finals.push(ast[1]);
 			}
 
-			throw ("Final variable '" + ast[1] +
+			error("Final variable '" + ast[1] +
 				"' has been declared without a value.");
 
 			return "var " + ast[1] + ";";
@@ -426,7 +427,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[1]) == "()") {
-				throw "No parameter for if statement.";
+				error("No parameter for if statement.");
 			}
 
 			if (ast[2] == "end") {
@@ -437,7 +438,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in if statement.");
+					error("Final non-global variable declared in if statement.");
 				}
 
 				inside += a;
@@ -461,7 +462,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[1]) == "()") {
-				throw "No parameter for elsif statement.";
+				error("No parameter for elsif statement.");
 			}
 
 			if (ast[2] == "end") {
@@ -472,7 +473,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in elsif statement.");
+					error("Final non-global variable declared in elsif statement.");
 				}
 
 				inside += a;
@@ -491,7 +492,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in else statement.");
+					error("Final non-global variable declared in else statement.");
 				}
 
 				inside += a;
@@ -510,7 +511,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in for each loop.");
+					error("Final non-global variable declared in for each loop.");
 				}
 
 				inside += a;
@@ -531,7 +532,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in for array iteration loop.");
+					error("Final non-global variable declared in for array iteration loop.");
 				}
 
 				inside += a;
@@ -553,7 +554,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in for loop.");
+					error("Final non-global variable declared in for loop.");
 				}
 
 				inside += a;
@@ -567,7 +568,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[1]) == "()") {
-				throw "No parameter for unless statement.";
+				error("No parameter for unless statement.");
 			}
 
 			if (ast[2] == "end") {
@@ -578,7 +579,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in unless statement.");
+					error("Final non-global variable declared in unless statement.");
 				}
 
 				inside += a;
@@ -600,7 +601,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in function.");
+					error("Final non-global variable declared in function.");
 				}
 
 				inside += a;
@@ -623,7 +624,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in private function.");
+					error("Final non-global variable declared in private function.");
 				}
 
 				inside += a;
@@ -647,7 +648,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in prototype.");
+					error("Final non-global variable declared in prototype.");
 				}
 
 				inside += a;
@@ -667,7 +668,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[1]) == "()") {
-				throw "No parameter for while loop.";
+				error("No parameter for while loop.");
 			}
 
 			if (ast[2] == "end") {
@@ -678,7 +679,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in while loop.");
+					error("Final non-global variable declared in while loop.");
 				}
 
 				inside += a;
@@ -690,7 +691,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter for do while statement.";
+				error("No parameter for do while statement.");
 			}
 
 			if (ast[1] == "end") {
@@ -701,7 +702,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in do while loop.");
+					error("Final non-global variable declared in do while loop.");
 				}
 
 				inside += a;
@@ -713,7 +714,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[1]) == "()") {
-				throw "No parameter for until statement.";
+				error("No parameter for until statement.");
 			}
 
 			if (ast[2] == "end") {
@@ -724,7 +725,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in until loop.");
+					error("Final non-global variable declared in until loop.");
 				}
 
 				inside += a;
@@ -736,7 +737,7 @@ var Generate = function(ast) {
 			var inside = "";
 
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter for do until loop.";
+				error("No parameter for do until loop.");
 			}
 
 			if (ast[1] == "end") {
@@ -747,7 +748,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in do until loop.");
+					error("Final non-global variable declared in do until loop.");
 				}
 
 				inside += a;
@@ -768,7 +769,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in repeat loop.");
+					error("Final non-global variable declared in repeat loop.");
 				}
 
 				inside += a;
@@ -789,7 +790,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in try statement.");
+					error("Final non-global variable declared in try statement.");
 				}
 
 				inside += a;
@@ -809,7 +810,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in catch statement.");
+					error("Final non-global variable declared in catch statement.");
 				}
 
 				inside += a;
@@ -828,7 +829,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in do statement.");
+					error("Final non-global variable declared in do statement.");
 				}
 
 				inside += a;
@@ -992,7 +993,7 @@ var Generate = function(ast) {
 			break;
 		case "Class":
 			if (finals.contains(ast[1])) {
-				throw ("Class '" + ast[1] +
+				error("Class '" + ast[1] +
 					"' is final and already declared.");
 			}
 
@@ -1031,7 +1032,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in case.");
+					error("Final non-global variable declared in case.");
 				}
 
 				inside += a;
@@ -1050,7 +1051,7 @@ var Generate = function(ast) {
 				var a = Generate(entry);
 
 				if (entry.contains("FinalVar") || entry.contains("FinalVarType" || entry.contains("FinalVarEmpty"))) {
-					throw ("Final non-global variable declared in default within a case statement.");
+					error("Final non-global variable declared in default within a case statement.");
 				}
 
 				inside += a;
@@ -1106,13 +1107,13 @@ var Generate = function(ast) {
 			var b = [];
 
 			if (Generate(ast[1]) == "()" || Generate(ast[2]) == "()") {
-				throw "Empty group for mass variable setting.";
+				error("Empty group for mass variable setting.");
 			}
 
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry)) {
-						throw ("Variable '" + entry +
+						error("Variable '" + entry +
 							"' is final and cannot be modified.");
 					}
 					a.push(entry);
@@ -1124,7 +1125,7 @@ var Generate = function(ast) {
 				});
 
 			if (a.length != b.length) {
-				throw ("Insufficient parameters. " + a +
+				error("Insufficient parameters. " + a +
 					" is not the same length as " + b + ".");
 			}
 
@@ -1137,7 +1138,7 @@ var Generate = function(ast) {
 						if (variablesWithTypes[z].name == a[i]) {
 							found = true;
 							final += "if (typeof (" + b[i] + ") == '" + variablesWithTypes[z].type + "') { " + a[i] + " = " + b[i] + "; }"
-								+ "else { throw ('Expecting a type of " + variablesWithTypes[z].type + ".'); }";
+								+ "else { error('Expecting a type of " + variablesWithTypes[z].type + ".'); }";
 						}
 					}
 
@@ -1156,19 +1157,19 @@ var Generate = function(ast) {
 			var b = [];
 
 			if (Generate(ast[1]) == "()" || Generate(ast[2]) == "()") {
-				throw "Empty group for mass variable creation.";
+				error("Empty group for mass variable creation.");
 			}
 
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry)) {
-						throw ("Variable '" + entry +
+						error("Variable '" + entry +
 							"' is final and already declared.");
 					}
 
 					for (z in variablesWithTypes) {
 						if (variablesWithTypes[z].name == entry) {
-							throw ("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
+							error("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
 						}
 					}
 
@@ -1181,7 +1182,7 @@ var Generate = function(ast) {
 				});
 
 			if (a.length != b.length) {
-				throw ("Insufficient parameters. " + a +
+				error("Insufficient parameters. " + a +
 					" is not the same length as " + b + ".");
 			}
 
@@ -1199,18 +1200,18 @@ var Generate = function(ast) {
 			var a = [];
 
 			if (Generate(ast[1]) == "()") {
-				throw "Empty group for mass variable declaration without a value.";
+				error("Empty group for mass variable declaration without a value.");
 			}
 
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry)) {
-						throw ("Variable '" + entry +
+						error("Variable '" + entry +
 							"' is final and already declared.");
 					}
 					for (z in variablesWithTypes) {
 						if (variablesWithTypes[z].name == entry) {
-							throw ("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
+							error("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
 						}
 					}
 					a.push(entry);
@@ -1249,19 +1250,19 @@ var Generate = function(ast) {
 			var b = [];
 
 			if (Generate(ast[1]) == "()" || Generate(ast[2]) == "()") {
-				throw "Empty group for final mass variable creation.";
+				error("Empty group for final mass variable creation.");
 			}
 
 			Generate(ast[1]).substring(1, Generate(ast[1]).length - 1).split(', ').forEach(
 				function(entry) {
 					if (finals.contains(entry) || allVariables.contains(entry)) {
-						throw ("Variable '" + entry + "' is declared twice.");
+						error("Variable '" + entry + "' is declared twice.");
 					} else {
 						finals.push(entry);
 					}
 					for (z in variablesWithTypes) {
 						if (variablesWithTypes[z].name == entry) {
-							throw ("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
+							error("Cannot re-declare a variable ('" + entry + "') that has already been given a type.");
 						}
 					}
 					a.push(entry);
@@ -1273,7 +1274,7 @@ var Generate = function(ast) {
 				});
 
 			if (a.length != b.length) {
-				throw ("Insufficient parameters. " + a +
+				error("Insufficient parameters. " + a +
 					" is not the same length as " + b + ".");
 			}
 
@@ -1289,35 +1290,35 @@ var Generate = function(ast) {
 			break;
 		case "CallIf":
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter in call if statement.";
+				error("No parameter in call if statement.");
 			}
 
 			return "if " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
 			break;
 		case "CallWhile":
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter in call while loop.";
+				error("No parameter in call while loop.");
 			}
 
 			return "while " + Generate(ast[2]) + " {" + Generate(ast[1]) + "}";
 			break;
 		case "CallUnless":
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter in call unless statement.";
+				error("No parameter in call unless statement.");
 			}
 
 			return "if !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
 		case "CallUntil":
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter in call until loop.";
+				error("No parameter in call until loop.");
 			}
 
 			return "while !(" + Generate(ast[2]) + ") {" + Generate(ast[1]) + "}";
 			break;
 		case "SetIf":
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter in set variable if statement.";
+				error("No parameter in set variable if statement.");
 			}
 
 			if (ast[1][0] == "DecVar") {
@@ -1329,7 +1330,7 @@ var Generate = function(ast) {
 			break;
 		case "SetUnless":
 			if (Generate(ast[2]) == "()") {
-				throw "No parameter in set variable unless statement.";
+				error("No parameter in set variable unless statement.");
 			}
 
 			if (ast[1][0] == "DecVar") {
@@ -1343,10 +1344,10 @@ var Generate = function(ast) {
 			return Generate(ast[1]) + ";";
 			break;
 		case "Where":
-			return "if " + Generate(ast[1]) + " { console.log('Unit Test (" + ast[2] + ") Passed.'); } else { throw ('Unit Test (" + ast[2] + ") Failed.'); }";
+			return "if " + Generate(ast[1]) + " { console.log('Unit Test (" + ast[2] + ") Passed.'); } else { error('Unit Test (" + ast[2] + ") Failed.'); }";
 			break;
 		case "WhereUnnamed":
-			return "if " + Generate(ast[1]) + " { console.log('Unit Test Passed.'); } else { throw ('Unit Test Failed.'); }";
+			return "if " + Generate(ast[1]) + " { console.log('Unit Test Passed.'); } else { error('Unit Test Failed.'); }";
 			break;
 		case "Using":
 			if (ast[1] == "convert") {
@@ -1360,13 +1361,13 @@ var Generate = function(ast) {
 					'utf8') + fs.readFileSync(path.dirname(__dirname) + separator + 'lib' + separator + 'functional.stps',
 						'utf8');
 			} else {
-				throw ("Attempted to use invalid part of standard library: " + ast[1] + ".");
+				error("Attempted to use invalid part of standard library: " + ast[1] + ".");
 			}
 
 			return "/* Using stripes." + ast[1] + " */";
 			break;
 		default:
-			throw "Unknown statement has been located: " + ast[0];
+			error("Unknown statement has been located: " + ast[0]);
 	}
 }
 
