@@ -1,8 +1,8 @@
 %lex
 %%
 
-\"((?:\\.|[^"\\])*)\" { return 'STRING'; }
-\'((?:\\.|[^'\\])*)\' { return 'SINGLESTRING'; }
+\"(.*)?\" { return 'STRING'; }
+\'(.*)?\' { return 'SINGLESTRING'; }
 "using"  { return 'USING'; }
 "yes"  { return 'YES'; }
 "no"  { return 'NO'; }

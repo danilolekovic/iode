@@ -44,34 +44,47 @@ var main = function() {
 		repl: false
 	};
 
-	var args = [];
+	var fileName = "";
 
-	for (arg in process.argv.slice(2)) {
-		if (process.argv.slice(2)[arg].toString().toLowerCase() == "-v"
-			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--version") {
-			options.version = true;
-		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-e"
-			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--version") {
-			options.execute = true;
-		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-h"
-			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--help") {
-			options.help = true;
-		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-s"
-			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--strict") {
-			options.strict = true;
-		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-r"
-			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--repl") {
-			options.repl = true;
-		} else if (process.argv.slice(2)[arg].toString().toLowerCase() == "-ast"
-			|| process.argv.slice(2)[arg].toString().toLowerCase() == "--tokens") {
-			options.ast = true;
-			options.strict = false;
-		}
+	process.argv.slice(2).forEach(function(arg) {
+        var argument = arg.toString().toLowerCase();
 
-		if (process.argv.slice(2)[arg][0] != '-') {
-			args.push(process.argv.slice(2)[arg].toString().toLowerCase());
-		}
-	}
+        switch (argument) {
+        	case "-v":
+        	case "--version":
+        		options.version = true;
+        		break;
+        	case "-e":
+        	case "--execute":
+        		options.execute = true;
+        		break;
+        	case "-h":
+        	case "--help":
+        		options.help = true;
+        		break;
+        	case "-s":
+        	case "--strict":
+        		options.strict = true;
+        		break;
+        	case "-r":
+        	case "--repl":
+        		options.repl = true;
+        		break;
+        	case "-ast":
+        	case "--tokens":
+        		options.ast = true;
+        		options.strict = false;
+        		break;
+        	default:
+        		if (arg[0] == '-') {
+        			throw "Unknown argument: " + argument;
+        		}
+        		else
+        		{
+        			fileName = path.normalize(arg);
+        		}
+        }
+    });
 
 	if (options.version) {
 		console.log("Stripes v" + JSON.version);
@@ -90,30 +103,16 @@ var main = function() {
 
 	var code = "";
 
-	if (args[0] == undefined) {
-		error("No file specified as first argument.");
+	if (fileName == "") {
+		error("No file specified.");
 	}
 
-	args.pop();
+	var loc = process.cwd() + separator + fileName;
+	var target = process.cwd() + separator + fileName;
 
-	var loc = args.join(" ").trim();
-
-	var target = loc;
-	var equals = false;
-
-	if (loc.indexOf('=') !== -1) {
-		if (args.join(" ").trim().indexOf("C:") != 0) {
-			loc = (process.cwd() + separator + args.join(" ").trim()).split('=')[0].trim();
-			target = process.cwd() + separator + args.join("").trim().split('=')[1].trim();
-		} else {
-			loc = loc.split('=')[0].trim();
-			target = args.join("").trim().split('=')[1].trim();
-		}
-	} else {
-		if (args.join(" ").trim().indexOf("C:") != 0) {
-			loc = process.cwd() + separator + args.join(" ").trim();
-			target = process.cwd() + separator + args.join(" ").trim();
-		}
+	if (fileName.indexOf('=') !== -1) {
+		loc = target = process.cwd() + separator + path.normalize(fileName.trim().split('=')[0].trim());;
+		target = process.cwd() + separator + path.normalize(fileName.trim().split('=')[1].trim());
 	}
 
 	if (fs.existsSync(loc)) {

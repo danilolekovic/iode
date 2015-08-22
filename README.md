@@ -75,4 +75,4 @@ To use Stripes in HTML:
 
 Stripes is open-source software.
 
-See [LICENSE.md](https://github.com/danilolekovic/stripes/blob/master/LICENSE).
+See [LICENSE](https://github.com/danilolekovic/stripes/blob/master/LICENSE).
