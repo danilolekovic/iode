@@ -1,7 +1,7 @@
 {
   "name": "stripes",
   "description": "Programming language that smoothly compiles to JavaScript.",
-  "version": "0.0.9",
+  "version": "0.0.82",
   "license": "MIT",
   "author": "Danilo Lekovic <danilo@lekovic.ca>",
   "keywords": ["stripes", "altjs", "programming", "language", "transcompiler"],

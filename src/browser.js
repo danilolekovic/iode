@@ -17,11 +17,11 @@ for (var i = 0; i < elements.length; i++) {
       if (elements[i].hasAttribute("src")) {
         src += httpGet(elements[i].src);
         eval(GenerateStripes(src + previousCode));
-        elements[i].innerHTML = "/* Compiled by Stripes v0.0.9 */\n" + GenerateStripes(src + previousCode);
+        elements[i].innerHTML = "/* Compiled by Stripes v0.0.82 */\n" + GenerateStripes(src + previousCode);
         elements[i].type = "text/javascript";
       } else {
         eval(GenerateStripes(previousCode));
-        elements[i].innerHTML = "/* Compiled by Stripes v0.0.9 */\n" + GenerateStripes(previousCode);
+        elements[i].innerHTML = "/* Compiled by Stripes v0.0.82 */\n" + GenerateStripes(previousCode);
         elements[i].type = "text/javascript";
       }
     } else if (elements[i].type == "text/litstripes") {
@@ -37,11 +37,11 @@ for (var i = 0; i < elements.length; i++) {
       if (elements[i].hasAttribute("src")) {
         src += httpGet(elements[i].src);
         eval(GenerateStripes(src + matches.join("")));
-        elements[i].innerHTML = "/* Compiled by Stripes v0.0.9 */\n" + GenerateStripes(src + matches.join(""));
+        elements[i].innerHTML = "/* Compiled by Stripes v0.0.82 */\n" + GenerateStripes(src + matches.join(""));
         elements[i].type = "text/javascript";
       } else {
         eval(GenerateStripes(matches.join("")));
-        elements[i].innerHTML = "/* Compiled by Stripes v0.0.9 */\n" + GenerateStripes(matches.join(""));
+        elements[i].innerHTML = "/* Compiled by Stripes v0.0.82 */\n" + GenerateStripes(matches.join(""));
         elements[i].type = "text/javascript";
       }
     } else if (elements[i].type == "text/sast") {
@@ -50,11 +50,11 @@ for (var i = 0; i < elements.length; i++) {
       if (elements[i].hasAttribute("src")) {
         src += httpGet(elements[i].src);
         eval(Generate(eval(previousCode)));
-        elements[i].innerHTML = "/* Compiled by Stripes v0.0.9 */\n" + Generate(eval(src + previousCode));
+        elements[i].innerHTML = "/* Compiled by Stripes v0.0.82 */\n" + Generate(eval(src + previousCode));
         elements[i].type = "text/javascript";
       } else {
         eval(Generate(eval(previousCode)));
-        elements[i].innerHTML = "/* Compiled by Stripes v0.0.9 */\n" + Generate(eval(src + previousCode));
+        elements[i].innerHTML = "/* Compiled by Stripes v0.0.82 */\n" + Generate(eval(src + previousCode));
         elements[i].type = "text/javascript";
       }
     }

@@ -2,7 +2,7 @@ var parser = require("./grammar"),
 		fs = require("fs"),
 		path = require("path"),
 		separator = require("path").sep,
-		version = "0.0.9",
+		version = "0.0.82",
 		error = require("./errors").err;;
 
 var finals = [];
