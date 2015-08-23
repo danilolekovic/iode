@@ -1,4 +1,4 @@
-# Welcome to Stripes
+# [Welcome to Stripes](http://danilo.lekoits.com/stripes/)
 
 Stripes is a featured, whitespace-insignificant programming language that contains optional functional programming and loose variable type checking. It compiles to JavaScript and therefore, can run any where. If you are looking to learn Stripes or just want some quick documentation, [this free book is highly recommended](https://www.gitbook.com/book/danilolekovic/stripes/details).
 
@@ -70,6 +70,10 @@ To use Stripes in HTML:
 
 <script type="text/javascript" src="http://danilo.lekoits.com/stripes-cdn/stripes-latest.js"></script>
 ```
+
+# Try Stripes
+
+Stripes v0.0.6 can be tested out <a href="http://danilo.lekoits.com/stripes/try/">here</a>.
 
 # License
 
