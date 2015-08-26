@@ -203,25 +203,27 @@ name = "Bill"; # Error #;
 
 In Stripes, operators are very dynamic.
 
-|          Name         | JavaScript |          Stripes         |
-|:---------------------:|:----------:|:------------------------:|
-|        Equal To       |     ===    |   ```==``` or ```is```   |
-|      Not Equal To     |     !==    |  ```!=``` or ```isnt```  |
-|          Not          |      !     |   ```!``` or ```not```   |
-| Greater Than Equal To |     >=     |         ```>=```         |
-|   Less Than Equal To  |     <=     |         ```<=```         |
-|      Greater Than     |      >     |  ```>``` or ```bigger``` |
-|       Less Than       |      <     | ```<``` or ```smaller``` |
-|        Validity       |    None    |          ```?```         |
-|        Instance       | instanceof |         ```~=```         |
-|          Add          |      +     |          ```+```         |
-|          Sub          |      -     |          ```-```         |
-|          Mul          |      *     |          ```*```         |
-|          Div          |      /     |          ```/```         |
-|          Mod          |      %     |          ```%```         |
-|       Increment       |     ++     |         ```++```         |
-|       Decrement       |     --     |         ```--```         |
-|        Exponent       |      ^     |          ```^```         |
-|         Random        |    None    |         ```@?```         |
-|          And          |     &&     |   ```&&``` or ```and```  |
-|           Or          |     [2 Verticle Bars](http://en.wikipedia.org/wiki/Vertical_bar)    |   [2 Verticle Bars](http://en.wikipedia.org/wiki/Vertical_bar) or ```or```   |
+|          Name         |       JavaScript      |               Stripes               |
+|:---------------------:|:---------------------:|:-----------------------------------:|
+|        Equal To       |          `===`        |            `==` or `is`             |
+|      Not Equal To     |          `!==`        |            `!=` or `isnt`           |
+|          Not          |           `!`         |             `!` or `not`            |
+| Greater Than Equal To |          `>=`         |                `>=`                 |
+|   Less Than Equal To  |          `<=`         |                `<=`                 |
+|      Greater Than     |           `>`         |             `>` or `bigger`         |
+|       Less Than       |           `<`         |             `<` or `smaller`        |
+|        Validity       |         `None`        |                 `?`                 |
+|        Instance       |      `instanceof`     |                `~=`                 |
+|          Add          |           `+`         |                 `+`                 |
+|          Sub          |           `-`         |                 `-`                 |
+|          Mul          |           `*`         |                 `*`                 |
+|          Div          |           `/`         |                 `/`                 |
+|          Mod          |           `%`         |                 `%`                 |
+|       Increment       |          `++`         |                `++`                 |
+|       Decrement       |          `--`         |                `--`                 |
+|        Exponent       |           `^`         |                 `^`                 |
+|         Random        |         `None`        |                `@?`                 |
+|          And          |          `&&`         |            `&&` or `and`            |
+|           Or          | [2 Vertical Bars][1]  |    [2 Vertical Bars][1] or `or`     |
+
+[1]: http://en.wikipedia.org/wiki/Vertical_bar
