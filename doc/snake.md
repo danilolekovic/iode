@@ -212,7 +212,7 @@ In Stripes, operators are very dynamic.
 |   Less Than Equal To  |          `<=`         |                `<=`                 |
 |      Greater Than     |           `>`         |             `>` or `bigger`         |
 |       Less Than       |           `<`         |             `<` or `smaller`        |
-|        Validity       |         `None`        |                 `?`                 |
+|        Validity       |          None         |                 `?`                 |
 |        Instance       |      `instanceof`     |                `~=`                 |
 |          Add          |           `+`         |                 `+`                 |
 |          Sub          |           `-`         |                 `-`                 |
@@ -222,7 +222,7 @@ In Stripes, operators are very dynamic.
 |       Increment       |          `++`         |                `++`                 |
 |       Decrement       |          `--`         |                `--`                 |
 |        Exponent       |           `^`         |                 `^`                 |
-|         Random        |         `None`        |                `@?`                 |
+|         Random        |          None         |                `@?`                 |
 |          And          |          `&&`         |            `&&` or `and`            |
 |           Or          | [2 Vertical Bars][1]  |    [2 Vertical Bars][1] or `or`     |
 
