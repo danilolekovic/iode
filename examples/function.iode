@@ -1,0 +1,3 @@
+var hello = fn {
+	console.log("Cool!")	
+}

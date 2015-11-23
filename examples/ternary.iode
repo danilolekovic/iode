@@ -1,0 +1,7 @@
+fn alive bool {
+	return bool
+}
+
+var msg = alive(true) ? "awesome!" : "aww.."
+
+console.log(msg)

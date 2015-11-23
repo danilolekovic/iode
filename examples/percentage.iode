@@ -1,0 +1,2 @@
+var percent = 10% # swag #
+console.log(percent)

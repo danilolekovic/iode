@@ -1,0 +1,5 @@
+var times = 5
+
+repeat 5 {
+  console.log("Cool!")
+}

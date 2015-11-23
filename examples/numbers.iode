@@ -1,0 +1,2 @@
+var age = 1_000_000
+var otherAge = 1.2

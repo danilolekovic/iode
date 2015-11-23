@@ -1,0 +1,19 @@
+{
+  "name": "iode",
+  "description": "A fast, empirical, useful programming language.",
+  "version": "0.0.1",
+  "author": "Danilo Lekovic <danilo@lekovic.ca>",
+  "license": "MIT",
+  "preferGlobal": true,
+  "dependencies": {
+    "commander": "~2.8.1",
+    "js-beautify": "~1.5.10"
+  },
+  "bin": {
+    "iode": "./src/iode.js"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0"
+  }
+}

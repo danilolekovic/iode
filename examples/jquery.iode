@@ -1,0 +1,5 @@
+$(document).ready(fn {
+    $("a").click(fn (event) {
+        alert("Thanks for visiting!")
+    })
+})
