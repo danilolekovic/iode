@@ -1,4 +1,4 @@
-# Iode
+# [![Iode](https://raw.githubusercontent.com/iode-lang/Graphics/master/Logos/Clean%2C%20Thin.png)](http://iode-lang.github.io/)
 
 Iode is a fast and empirical programming language, inspired by Swift. Contributions are welcome!
 
