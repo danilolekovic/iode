@@ -1,0 +1,5 @@
+var json = {
+  name: "Bill",
+  age: 23,
+  job: "Builder"
+}

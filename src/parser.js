@@ -41,6 +41,7 @@ var Lexer = require('./lexer').Lexer,
 	IodePercentage = require('./ast').IodePercentage,
 	IodeRepeat = require('./ast').IodeRepeat,
 	IodePattern = require('./ast').IodePattern,
+	IodeJSON = require('./ast').IodeJSON,
 	IodeVariableSetting = require('./ast').IodeVariableSetting;
 
 var Parser = function(code, cdir) {
@@ -142,7 +143,7 @@ var Parser = function(code, cdir) {
 
 			op = this.nextToken().value;
 			this.skipNewline();
-			right = this.parseNext();
+			right = this.parseNextLiteral();
 			this.skipNewline();
 		}
 
@@ -152,7 +153,7 @@ var Parser = function(code, cdir) {
 			while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 				op = this.nextToken().value;
 				this.skipNewline();
-				right = this.parseNext();
+				right = this.parseNextLiteral();
 				this.skipNewline();
 				num = new IodeBinaryOp(num, op, right);
 			}
@@ -183,7 +184,7 @@ var Parser = function(code, cdir) {
 			op = this.nextToken().value;
 
 			this.skipNewline();
-			right = this.parseNext();
+			right = this.parseNextLiteral();
 			this.skipNewline();
 		}
 
@@ -193,7 +194,7 @@ var Parser = function(code, cdir) {
 			while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 				op = this.nextToken().value;
 				this.skipNewline();
-				right = this.parseNext();
+				right = this.parseNextLiteral();
 				this.skipNewline();
 				num = new IodeBinaryOp(num, op, right);
 			}
@@ -216,7 +217,7 @@ var Parser = function(code, cdir) {
 		while (this.peekCheck(TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
 			op = this.nextToken().value;
 			this.skipNewline();
-			right = this.parseNext();
+			right = this.parseNextLiteral();
 			this.skipNewline();
 		}
 
@@ -226,7 +227,7 @@ var Parser = function(code, cdir) {
 			while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 				op = this.nextToken().value;
 				this.skipNewline();
-				right = this.parseNext();
+				right = this.parseNextLiteral();
 				this.skipNewline();
 				num = new IodeBinaryOp(num, op, right);
 			}
@@ -257,7 +258,7 @@ var Parser = function(code, cdir) {
 
 				op = this.nextToken().value;
 				this.skipNewline();
-				right = this.parseNext();
+				right = this.parseNextLiteral();
 				this.skipNewline();
 			}
 
@@ -267,7 +268,7 @@ var Parser = function(code, cdir) {
 				while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 					op = this.nextToken().value;
 					this.skipNewline();
-					right = this.parseNext();
+					right = this.parseNextLiteral();
 					this.skipNewline();
 					num = new IodeBinaryOp(num, op, right);
 				}
@@ -287,12 +288,12 @@ var Parser = function(code, cdir) {
 			var ident = new IodeIdentifier(this.nextToken().value);
 			this.skipNewline();
 			this.nextToken();
-			var expr1 = this.parseNext();
+			var expr1 = this.parseNextLiteral();
 
 			if (this.peekCheck(TokenType.COLON)) {
 				this.skipNewline();
 				this.nextToken();
-				var expr2 = this.parseNext();
+				var expr2 = this.parseNextLiteral();
 				return new IodeIdentNotary(ident, expr1, expr2);
 			} else {
 				this.error('Expected \':\' after first expression');
@@ -301,7 +302,7 @@ var Parser = function(code, cdir) {
 			var ident = new IodeIdentifier(this.nextToken().value);
 			this.skipNewline();
 			this.nextToken();
-			var expr = this.parseNext();
+			var expr = this.parseNextLiteral();
 			this.skipNewline();
 
 			if (this.peekCheck(TokenType.RBRACK)) {
@@ -350,7 +351,7 @@ var Parser = function(code, cdir) {
 				while (this.peekCheck(TokenType.DOT)) {
 					this.nextToken();
 					this.skipNewline();
-					calls.push(this.parseNext().val);
+					calls.push(this.parseNextLiteral().val);
 				}
 
 				var call = new IodeCallList(calls);
@@ -374,7 +375,7 @@ var Parser = function(code, cdir) {
 
 						op = this.nextToken().value;
 						this.skipNewline();
-						right = this.parseNext();
+						right = this.parseNextLiteral();
 						this.skipNewline();
 					}
 
@@ -384,7 +385,7 @@ var Parser = function(code, cdir) {
 						while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 							op = this.nextToken().value;
 							this.skipNewline();
-							right = this.parseNext();
+							right = this.parseNextLiteral();
 							this.skipNewline();
 							call = new IodeBinaryOp(call, op, right);
 						}
@@ -397,12 +398,12 @@ var Parser = function(code, cdir) {
 						} else if (this.peekCheck(TokenType.QUESTION)) {
 							this.nextToken();
 
-							var expr1 = this.parseNext();
+							var expr1 = this.parseNextLiteral();
 
 							if (this.peekCheck(TokenType.COLON)) {
 								this.skipNewline();
 								this.nextToken();
-								var expr2 = this.parseNext();
+								var expr2 = this.parseNextLiteral();
 								call = new IodeIdentNotary(call, expr1, expr2);
 							} else {
 								this.error('Expected \':\' after first expression');
@@ -411,7 +412,7 @@ var Parser = function(code, cdir) {
 							var ident = new IodeIdentifier(this.nextToken().value);
 							this.skipNewline();
 							this.nextToken();
-							var expr = this.parseNext();
+							var expr = this.parseNextLiteral();
 							this.skipNewline();
 
 							if (this.peekCheck(TokenType.RBRACK)) {
@@ -426,7 +427,7 @@ var Parser = function(code, cdir) {
 							while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 								op = this.nextToken().value;
 								this.skipNewline();
-								right = this.parseNext();
+								right = this.parseNextLiteral();
 								this.skipNewline();
 							}
 
@@ -466,7 +467,7 @@ var Parser = function(code, cdir) {
 
 						op = this.nextToken().value;
 						this.skipNewline();
-						right = this.parseNext();
+						right = this.parseNextLiteral();
 						this.skipNewline();
 					}
 
@@ -476,7 +477,7 @@ var Parser = function(code, cdir) {
 						while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 							op = this.nextToken().value;
 							this.skipNewline();
-							right = this.parseNext();
+							right = this.parseNextLiteral();
 							this.skipNewline();
 							call_ = new IodeBinaryOp(call_, op, right);
 						}
@@ -484,12 +485,12 @@ var Parser = function(code, cdir) {
 				} else if (this.peekCheck(TokenType.QUESTION)) {
 					this.nextToken();
 
-					var expr1 = this.parseNext();
+					var expr1 = this.parseNextLiteral();
 
 					if (this.peekCheck(TokenType.COLON)) {
 						this.skipNewline();
 						this.nextToken();
-						var expr2 = this.parseNext();
+						var expr2 = this.parseNextLiteral();
 						call_ = new IodeIdentNotary(call_, expr1, expr2);
 					} else {
 						this.error('Expected \':\' after first expression');
@@ -498,7 +499,7 @@ var Parser = function(code, cdir) {
 					var ident = new IodeIdentifier(this.nextToken().value);
 					this.skipNewline();
 					this.nextToken();
-					var expr = this.parseNext();
+					var expr = this.parseNextLiteral();
 					this.skipNewline();
 
 					if (this.peekCheck(TokenType.RBRACK)) {
@@ -519,7 +520,7 @@ var Parser = function(code, cdir) {
 				while (this.peekCheck(TokenType.DOT)) {
 					this.nextToken();
 					this.skipNewline();
-					calls.push(this.parseNext().val);
+					calls.push(this.parseNextLiteral().val);
 				}
 
 				ident = new IodeCallList(calls);
@@ -531,7 +532,7 @@ var Parser = function(code, cdir) {
 				while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 					op = this.nextToken().value;
 					this.skipNewline();
-					right = this.parseNext();
+					right = this.parseNextLiteral();
 					this.skipNewline();
 					num = new IodeBinaryOp(num, op, right);
 				}
@@ -562,7 +563,7 @@ var Parser = function(code, cdir) {
 				this.skipNewline();
 				var oldLine = this.line;
 
-				var val = this.parseNext();
+				var val = this.parseNextLiteral();
 
 				if (this.peekCheck(TokenType.NEWLINE)) {
 					this.nextToken();
@@ -609,7 +610,7 @@ var Parser = function(code, cdir) {
 				this.skipNewline();
 				var oldLine = this.line;
 
-				var val = this.parseNext();
+				var val = this.parseNextLiteral();
 
 				if (this.peekCheck(TokenType.NEWLINE)) {
 					this.nextToken();
@@ -648,7 +649,7 @@ var Parser = function(code, cdir) {
 			this.skipNewline();
 			var oldLine = this.line;
 
-			var val = this.parseNext();
+			var val = this.parseNextLiteral();
 
 			if (this.peekCheck(TokenType.NEWLINE)) {
 				this.nextToken();
@@ -677,7 +678,7 @@ var Parser = function(code, cdir) {
 			var body = [];
 
 			while (!(this.peekCheck(TokenType.LBRACE))) {
-				var arg = this.parseNext().val;
+				var arg = this.parseNextLiteral().val;
 				this.skipNewline();
 
 				if (arg.charAt(arg.length - 1) == ';') {
@@ -741,7 +742,7 @@ var Parser = function(code, cdir) {
 				}
 
 				while (!(this.peekCheck(TokenType.RPAREN))) {
-					var arg = this.parseNext().val;
+					var arg = this.parseNextLiteral().val;
 					this.skipNewline();
 
 					if (arg.charAt(arg.length - 1) == ';') {
@@ -813,7 +814,7 @@ var Parser = function(code, cdir) {
 			var body = [];
 
 			while (!(this.peekCheck(TokenType.LBRACE))) {
-				var arg = this.parseNext().val;
+				var arg = this.parseNextLiteral().val;
 				this.skipNewline();
 
 				if (arg.charAt(arg.length - 1) == ';') {
@@ -880,7 +881,7 @@ var Parser = function(code, cdir) {
 	this.parseParenthesis = function() {
 		this.nextToken();
 		this.skipNewline();
-		var val = this.parseNext();
+		var val = this.parseNextLiteral();
 		this.skipNewline();
 
 		if (!(this.peekCheck(TokenType.RPAREN))) {
@@ -910,7 +911,7 @@ var Parser = function(code, cdir) {
 
 			op = this.nextToken().value;
 			this.skipNewline();
-			right = this.parseNext();
+			right = this.parseNextLiteral();
 			this.skipNewline();
 		}
 
@@ -918,7 +919,7 @@ var Parser = function(code, cdir) {
 			while (this.peekCheck(TokenType.AND) || this.peekCheck(TokenType.OR)) {
 				op = this.nextToken().value;
 				this.skipNewline();
-				var right = this.parseNext();
+				var right = this.parseNextLiteral();
 				this.skipNewline();
 			}
 
@@ -932,7 +933,7 @@ var Parser = function(code, cdir) {
 		this.nextToken();
 		this.skipNewline();
 		var body = [];
-		var args = this.parseNext();
+		var args = this.parseNextLiteral();
 		this.skipNewline();
 
 		if (this.peekCheck(TokenType.LBRACE)) {
@@ -990,7 +991,7 @@ var Parser = function(code, cdir) {
 				var args_ = null;
 
 				if (!Else) {
-					args_ = this.parseNext();
+					args_ = this.parseNextLiteral();
 				}
 
 				this.skipNewline();
@@ -1042,7 +1043,7 @@ var Parser = function(code, cdir) {
 		this.nextToken();
 		this.skipNewline();
 		var body = [];
-		var args = this.parseNext();
+		var args = this.parseNextLiteral();
 		this.skipNewline();
 
 		if (this.peekCheck(TokenType.LBRACE)) {
@@ -1082,7 +1083,7 @@ var Parser = function(code, cdir) {
 		this.nextToken();
 		this.skipNewline();
 		var body = [];
-		var args = this.parseNext();
+		var args = this.parseNextLiteral();
 		this.skipNewline();
 
 		if (this.peekCheck(TokenType.LBRACE)) {
@@ -1122,7 +1123,7 @@ var Parser = function(code, cdir) {
 		this.nextToken();
 		this.skipNewline();
 		var body = [];
-		var args = this.parseNext();
+		var args = this.parseNextLiteral();
 		this.skipNewline();
 
 		if (this.peekCheck(TokenType.LBRACE)) {
@@ -1165,9 +1166,9 @@ var Parser = function(code, cdir) {
 		var val, arr;
 
 		if (this.peekSpecificCheck(TokenType.IN, 2)) {
-			val = this.parseNext();
+			val = this.parseNextLiteral();
 			this.nextToken();
-			arr = this.parseNext();
+			arr = this.parseNextLiteral();
 		}
 
 		this.skipNewline();
@@ -1212,7 +1213,7 @@ var Parser = function(code, cdir) {
 			return new IodeReturn(null);
 		} else {
 			this.skipNewline();
-			return new IodeReturn(this.parseNext());
+			return new IodeReturn(this.parseNextLiteral());
 		}
 	};
 
@@ -1223,7 +1224,7 @@ var Parser = function(code, cdir) {
 			return new IodeContinue(null);
 		} else {
 			this.skipNewline();
-			return new IodeContinue(this.parseNext());
+			return new IodeContinue(this.parseNextLiteral());
 		}
 	};
 
@@ -1235,14 +1236,14 @@ var Parser = function(code, cdir) {
 			return null;
 		} else {
 			this.skipNewline();
-			return new IodeThrow(this.parseNext());
+			return new IodeThrow(this.parseNextLiteral());
 		}
 	};
 
 	this.parseNot = function() {
 		this.nextToken();
 		this.skipNewline();
-		var ret = new IodeNot(this.parseNext());
+		var ret = new IodeNot(this.parseNextLiteral());
 		this.skipNewline();
 		return ret;
 	};
@@ -1250,7 +1251,7 @@ var Parser = function(code, cdir) {
 	this.parseNew = function() {
 		this.nextToken();
 		this.skipNewline();
-		var ret = new IodeNew(this.parseNext());
+		var ret = new IodeNew(this.parseNextLiteral());
 		this.skipNewline();
 		return ret;
 	};
@@ -1307,11 +1308,11 @@ var Parser = function(code, cdir) {
 		this.skipNewline();
 
 		if (this.peekSpecificCheck(TokenType.TWODOTS, 2)) {
-			var num1 = this.parseNext();
+			var num1 = this.parseNextLiteral();
 			this.skipNewline();
 			this.nextToken();
 			this.skipNewline();
-			var num2 = this.parseNext();
+			var num2 = this.parseNextLiteral();
 			this.skipNewline();
 
 			if (this.peekCheck(TokenType.RBRACK)) {
@@ -1326,7 +1327,7 @@ var Parser = function(code, cdir) {
 			var args = [];
 
 			while (!(this.peekCheck(TokenType.RBRACK))) {
-				var arg = this.parseNext().val;
+				var arg = this.parseNextLiteral().val;
 				this.skipNewline();
 
 				if (arg.charAt(arg.length - 1) == ';') {
@@ -1419,11 +1420,11 @@ var Parser = function(code, cdir) {
 		var args = [];
 
 		if (this.peekCheck(TokenType.IDENTIFIER)) {
-			var name = this.nextToken().value;
+			var name = this.parseNextLiteral().value;
 			this.skipNewline();
 
 			while (!(this.peekCheck(TokenType.LBRACE))) {
-				var arg = this.parseNext().val;
+				var arg = this.parseNextLiteral().val;
 				this.skipNewline();
 
 				if (arg.charAt(arg.length - 1) == ';') {
@@ -1490,19 +1491,19 @@ var Parser = function(code, cdir) {
 
 				if (this.peekCheck(TokenType.EQUALS)) {
 					this.nextToken();
-					var val = this.parseNext();
+					var val = this.parseNextLiteral();
 
 					if (this.peekCheck(TokenType.COMMA)) {
 						this.skipNewline();
 						this.nextToken();
 						this.skipNewline();
-						var cond = this.parseNext();
+						var cond = this.parseNextLiteral();
 						this.skipNewline();
 
 						if (this.peekCheck(TokenType.COMMA)) {
 							this.nextToken();
 							this.skipNewline();
-							var iter = this.parseNext();
+							var iter = this.parseNextLiteral();
 							this.skipNewline();
 
 							if (this.peekCheck(TokenType.RPAREN)) {
@@ -1573,6 +1574,54 @@ var Parser = function(code, cdir) {
 		return new IodePattern(pattern);
 	};
 
+	this.parseJSON = function() {
+		this.nextToken();
+		this.skipNewline();
+
+		var elements = [];
+
+		while (!this.peekCheck(TokenType.RBRACE)) {
+			if (this.peekCheck(TokenType.STRING) || this.peekCheck(TokenType.IDENTIFIER)) {
+				var a = this.parseNextLiteral().val;
+				this.skipNewline();
+
+				if (this.peekCheck(TokenType.COLON)) {
+					this.nextToken();
+					this.skipNewline();
+
+					var b = this.parseNextLiteral().val;
+
+					if (this.peekCheck(TokenType.COMMA)) {
+						this.nextToken();
+						this.skipNewline();
+					} else if (this.peekCheck(TokenType.NEWLINE)) {
+						this.skipNewline();
+					} else if (this.peekCheck(TokenType.RBRACE)) {
+						elements.push({left: a, right: b});
+						this.nextToken();
+						this.skipNewline();
+						break;
+					} else {
+						this.error('Expected a comma or a newline');
+					}
+
+					elements.push({left: a, right: b});
+				} else {
+					this.error('Expected \':\'');
+				}
+			} else {
+				this.error('Expected string or identifier before a \':\' in a JSON element');
+			}
+		}
+
+		if (this.peekCheck(TokenType.RBRACE)) {
+			this.nextToken();
+			this.skipNewline();
+		}
+
+		return new IodeJSON(elements);
+	};
+
 	this.parseNextClass = function() {
 		try {
 			var tok = this.peekToken();
@@ -1593,11 +1642,51 @@ var Parser = function(code, cdir) {
 		}
 	};
 
+	this.parseNextLiteral = function() {
+		try {
+			var tok = this.peekToken();
+
+			switch (tok.type) {
+				case TokenType.LBRACE:
+					return this.parseJSON();
+				case TokenType.IDENTIFIER:
+					return this.parseIdentifier();
+				case TokenType.NUMBER:
+					return this.parseNumber();
+				case TokenType.LBRACK:
+					return this.parseArray(false);
+				case TokenType.BOOLEAN:
+					return this.parseBoolean();
+				case TokenType.STRING:
+					return this.parseString();
+				case TokenType.FUNCTION:
+					return this.parseFunction();
+				case TokenType.LPAREN:
+					return this.parseParenthesis();
+				case TokenType.EXCLAMATION:
+					return this.parseNot();
+				case TokenType.PATTERN:
+					return this.parsePattern();
+				case TokenType.NEW:
+					return this.parseNew();
+				default:
+					this.error('Could not parse expression \'' + tok.type.toLowerCase() + '\'');
+					return null;
+			}
+		} catch (e) {
+			throw e;
+			this.error('Could not parse next expression. ' + e);
+			return null;
+		}
+	};
+
 	this.parseNext = function() {
 		try {
 			var tok = this.peekToken();
 
 			switch (tok.type) {
+				case TokenType.LBRACE:
+					return this.parseJSON();
 				case TokenType.IDENTIFIER:
 					return this.parseIdentifier();
 				case TokenType.CLASS:

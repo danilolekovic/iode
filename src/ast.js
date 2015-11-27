@@ -643,6 +643,24 @@ var getIPatternValue = function(pattern) {
 	return pattern;
 };
 
+var IodeJSON = function(elements) {
+	this.type = 'JSON';
+	this.elements = elements;
+	this.val = getIJSONValue(elements);
+};
+
+var getIJSONValue = function(elements) {
+	var builder = '{';
+
+	for (element in elements) {
+		builder += '\n' + elements[element].left + ':' + elements[element].right + ',';
+	}
+
+	builder = builder.substring(0, builder.length - 1) + '}';
+
+	return builder;
+};
+
 var IodeNewline = function() {
 	this.type = 'Newline';
 	this.val = '';
@@ -688,3 +706,4 @@ exports.IodePercentage = IodePercentage;
 exports.IodeClass = IodeClass;
 exports.IodeRepeat = IodeRepeat;
 exports.IodePattern = IodePattern;
+exports.IodeJSON = IodeJSON;
