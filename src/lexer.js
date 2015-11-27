@@ -334,6 +334,10 @@ var Lexer = function(code) {
 						pos++;
 
 						while (code[pos] != '#') {
+							if (code[pos] == '\n') {
+								throw '[lexer] Expected a # to end the comment on line #' + line + '.'; 
+							}
+
 							pos++;
 						}
 
