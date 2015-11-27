@@ -1,2 +1,3 @@
-var name = "Bill"
-# test
+# comment! #
+
+var # anywhere # name = "Bill"

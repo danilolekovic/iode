@@ -5,6 +5,7 @@ var Lexer = function(code) {
 	this.code = code;
 	this.index = -1;
 	this.tokens = [];
+	this.line = 1;
 
 	this.peekToken = function() {
 		return this.tokens[this.index + 1];
@@ -54,11 +55,17 @@ var Lexer = function(code) {
 		return char == 32 || char == 9 || char == 11;
 	};
 
+	this.error = function(msg) {
+		console.log();
+		console.log('[x] ' + msg + ' on line #' + this.line + '.');
+		console.log();
+		process.exit(1);
+	};
+
 	this.tokenize = function() {
 		var pos = 0;
 		var code = this.code;
 		var output = [];
-		var line = 1;
 
 		while (pos < code.length) {
 			var str = '';
@@ -141,8 +148,7 @@ var Lexer = function(code) {
 				}
 
 				if (str.charAt(str.length - 1) == '.') {
-					throw '[lexer] Float/decimal cannot end with a decimal on line #' + line
-						+ '.';
+					this.error('Float/decimal cannot end with a decimal');
 				}
 
 				output.push(new Token(TokenType.NUMBER, str));
@@ -171,8 +177,7 @@ var Lexer = function(code) {
 							output.push(new Token(TokenType.AND, '&&'));
 							pos++;
 						} else {
-							throw '[lexer] Unknown symbol: \'' + code[pos] + '\' on line #' + line +
-								'.';
+							this.error('Unknown symbol: \'' + code[pos] + '\'');
 						}
 						break;
 					case '|':
@@ -182,8 +187,7 @@ var Lexer = function(code) {
 							output.push(new Token(TokenType.OR, '||'));
 							pos++;
 						} else {
-							throw '[lexer] Unknown symbol: \'' + code[pos] + '\' on line #' + line +
-								'.';
+							this.error('Unknown symbol: \'' + code[pos] + '\'');
 						}
 						break;
 					case '(':
@@ -335,7 +339,7 @@ var Lexer = function(code) {
 
 						while (code[pos] != '#') {
 							if (code[pos] == '\n') {
-								throw '[lexer] Expected a # to end the comment on line #' + line + '.'; 
+								this.error('Expected a \'#\' to end the comment');
 							}
 
 							pos++;
@@ -344,18 +348,17 @@ var Lexer = function(code) {
 						pos++;
 						break;
 					default:
-						throw '[lexer] Unknown symbol: \'' + code[pos] + '\' on line #' + line +
-							'.';
+						this.error('Unknown symbol: \'' + code[pos] + '\'');
+						return;
 				}
 			} else if (this.isNewLine(code.charCodeAt(pos))) {
 				output.push(new Token(TokenType.NEWLINE, '\n'));
-				line++;
+				this.line++;
 				pos++;
 			} else if (this.isWhiteSpace(code.charCodeAt(pos)) || code.charCodeAt(pos) == 13) {
 				pos++;
 			} else {
-				throw '[lexer] Unknown symbol: \'' + code[pos] + '\' on line #' + line +
-					'.';
+				this.error('Unknown symbol: \'' + code[pos] + '\'');
 			}
 		}
 
