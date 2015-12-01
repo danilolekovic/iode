@@ -57,7 +57,8 @@ var TokenType = {
 	CLASS: 'CLASS',
 	ARROW: 'ARROW',
 	REPEAT: 'REPEAT',
-	PATTERN: 'PATTERN'
+	PATTERN: 'PATTERN',
+	NAMESPACE: 'NAMESPACE'
 };
 
 exports.Token = Token;

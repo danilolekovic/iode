@@ -117,6 +117,8 @@ var Lexer = function(code) {
 					output.push(new Token(TokenType.CLASS, str));
 				} else if (str == 'repeat') {
 					output.push(new Token(TokenType.REPEAT, str));
+				} else if (str == 'namespace') {
+					output.push(new Token(TokenType.NAMESPACE, str));
 				} else {
 					output.push(new Token(TokenType.IDENTIFIER, str));
 				}

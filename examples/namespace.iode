@@ -1,0 +1,9 @@
+namespace Main {
+  class Greeter name, age {
+    this.name = "John"
+
+    fn hello {
+      console.log("Cool! Hey #{name}! You're #{age}!")
+    }
+  }
+}

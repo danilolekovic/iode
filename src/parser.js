@@ -42,6 +42,7 @@ var Lexer = require('./lexer').Lexer,
 	IodeRepeat = require('./ast').IodeRepeat,
 	IodePattern = require('./ast').IodePattern,
 	IodeJSON = require('./ast').IodeJSON,
+	IodeNamespace = require('./ast').IodeNamespace,
 	IodeVariableSetting = require('./ast').IodeVariableSetting;
 
 var Parser = function(code, cdir) {
@@ -1633,6 +1634,50 @@ var Parser = function(code, cdir) {
 		return new IodeJSON(elements);
 	};
 
+	this.parseNamespace = function() {
+		this.skipNewline();
+		this.nextToken();
+		this.skipNewline();
+		var name = '';
+
+		if (this.peekCheck(TokenType.IDENTIFIER)) {
+			name = this.nextToken().value;
+			this.skipNewline();
+		} else {
+			this.error('Expected a name');
+		}
+
+		if (this.peekCheck(TokenType.LBRACE)) {
+			this.nextToken();
+			this.skipNewline();
+		} else {
+			this.error('Expected a \'{\'');
+		}
+
+		var body = [];
+
+		while (!this.peekCheck(TokenType.RBRACE)) {
+			var block = this.parseNextNamespace();
+			this.skipNewline();
+
+			if (block === null) {
+				this.error('Namespaces may consist of functions, classes and global variables');
+			}
+
+			this.skipNewline();
+			body.push(block);
+		}
+
+		if (this.peekCheck(TokenType.RBRACE)) {
+			this.nextToken();
+			this.skipNewline();
+		} else {
+			this.error('Expected a \'}\'');
+		}
+
+		return new IodeNamespace(name, body);
+	};
+
 	this.parseNextClass = function() {
 		try {
 			var tok = this.peekToken();
@@ -1642,6 +1687,28 @@ var Parser = function(code, cdir) {
 					return this.parseFunction();
 				case TokenType.IDENTIFIER:
 					return this.parseIdentifier();
+				case TokenType.NEWLINE:
+					return this.parseNewline();
+				default:
+					return null;
+			}
+		} catch (e) {
+			this.error(e);
+			return null;
+		}
+	};
+
+	this.parseNextNamespace = function() {
+		try {
+			var tok = this.peekToken();
+
+			switch (tok.type) {
+				case TokenType.FUNCTION:
+					return this.parseFunction();
+				case TokenType.IDENTIFIER:
+					return this.parseIdentifier();
+				case TokenType.CLASS:
+					return this.parseClass();
 				case TokenType.NEWLINE:
 					return this.parseNewline();
 				default:
@@ -1698,6 +1765,8 @@ var Parser = function(code, cdir) {
 			switch (tok.type) {
 				case TokenType.LBRACE:
 					return this.parseJSON();
+				case TokenType.NAMESPACE:
+					return this.parseNamespace();
 				case TokenType.IDENTIFIER:
 					return this.parseIdentifier();
 				case TokenType.CLASS:

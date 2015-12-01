@@ -335,6 +335,36 @@ var getIClassValue = function(name, constructor, body) {
 	return compile;
 };
 
+var IodeNamespace = function(name, body) {
+	this.type = 'IodeNamespace';
+	this.name = name;
+	this.body = body;
+	this.val = getINamespaceValue(name, body);
+};
+
+var getINamespaceValue = function(name, body) {
+	var compile = 'var ' + name + ';\n(function(' + name + ') {\n';
+	var names = [];
+
+	for (f in body) {
+		names.push(body[f].name);
+
+		if (body[f].valAlt != undefined) {
+			compile += body[f].valAlt;
+		} else {
+			compile += body[f].val;
+		}
+	}
+
+	for (n in names) {
+		compile += '\n' + name + '.' + names[n] + ' = ' + names[n] + ';';
+	}
+
+	compile += '\n})(' + name + ' || (' + name + ' = {}));';
+
+	return compile;
+};
+
 var IodeCallList = function(calls) {
 	this.type = 'Call List';
 	this.calls = calls;
@@ -728,3 +758,4 @@ exports.IodeClass = IodeClass;
 exports.IodeRepeat = IodeRepeat;
 exports.IodePattern = IodePattern;
 exports.IodeJSON = IodeJSON;
+exports.IodeNamespace = IodeNamespace;
