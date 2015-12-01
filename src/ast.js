@@ -86,6 +86,10 @@ var getIBOValue = function(left, op, right) {
 		rhs = rhs.substring(0, rhs.length - 1);
 	}
 
+	if (op == '**') {
+		return 'Math.pow(' + lhs + ', ' + rhs + ')';
+	}
+
 	return lhs + ' ' + op + ' ' + rhs;
 };
 

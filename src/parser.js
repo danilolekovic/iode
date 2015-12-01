@@ -127,7 +127,7 @@ var Parser = function(code, cdir) {
 		}
 
 		if (!(this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 					TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 					TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 					TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.SUBSUB)
@@ -137,7 +137,7 @@ var Parser = function(code, cdir) {
 		}
 
 		while (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-			this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+			this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 				TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(TokenType
 				.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 				TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
@@ -252,7 +252,7 @@ var Parser = function(code, cdir) {
 			var right;
 
 			while (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 					TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 					TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 					TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
@@ -358,7 +358,7 @@ var Parser = function(code, cdir) {
 				var call = new IodeCallList(calls);
 
 				if (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-					this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+					this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 						TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 						TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 						TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(
@@ -369,7 +369,7 @@ var Parser = function(code, cdir) {
 					var right;
 
 					while (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-						this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+						this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 							TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 							TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 							TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
@@ -450,7 +450,7 @@ var Parser = function(code, cdir) {
 				var call_ = new IodeCall(name, args);
 
 				if (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-					this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+					this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 						TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 						TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 						TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(
@@ -461,7 +461,7 @@ var Parser = function(code, cdir) {
 					var right;
 
 					while (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-						this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+						this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 							TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 							TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 							TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
@@ -907,7 +907,7 @@ var Parser = function(code, cdir) {
 		var right;
 
 		if (!(this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 					TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 					TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 					TokenType.IS) || this.peekCheck(TokenType.NEQUALS))) {
@@ -916,7 +916,7 @@ var Parser = function(code, cdir) {
 		}
 
 		while (this.peekCheck(TokenType.ADD) || this.peekCheck(TokenType.SUB) ||
-			this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(
+			this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 				TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(TokenType
 				.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
 				TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {

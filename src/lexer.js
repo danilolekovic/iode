@@ -201,8 +201,14 @@ var Lexer = function(code) {
 						pos++;
 						break;
 					case '*':
-						output.push(new Token(TokenType.MUL, '*'));
 						pos++;
+
+						if (code[pos] == '*') {
+							pos++;
+							output.push(new Token(TokenType.EXP, '**'));
+						} else {
+							output.push(new Token(TokenType.MUL, '*'));
+						}
 						break;
 					case '+':
 						pos++;
