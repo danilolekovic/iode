@@ -155,26 +155,35 @@ var generateBody = function(body) {
 	}
 };
 
-var IodeFunction = function(name, args, body) {
+var IodeFunction = function(name, args, body, defaults) {
 	this.type = 'Function';
 	this.name = name;
 	this.args = args;
 	this.body = body;
-	this.val = getIFValue(name, args, body);
+	this.defaults = defaults;
+	this.val = getIFValue(name, args, body, defaults);
 	this.valAlt = getIFValueAlt(name, args, body);
 };
 
-var getIFValue = function(name, args, body) {
+var getIFValue = function(name, args, body, defaults) {
 	var a = '';
 
 	if (args.length != 0) {
 		a = args.join(', ');
 	}
 
+	var builder = '';
+
+	if (defaults != null) {
+		for (item in defaults) {
+			builder += 'if (' + defaults[item].name + ' == null) { ' + defaults[item].name + ' = ' + defaults[item].value + '; }\n';
+		}
+	}
+
 	if (generateBody(body).trim() == ';') {
-		return 'function ' + name + '(' + a + ') { };';
+		return 'function ' + name + '(' + a + ') {' + builder + '};';
 	} else {
-		return 'function ' + name + '(' + a + ') {\n' + generateBody(body) + '};';
+		return 'function ' + name + '(' + a + ') {\n' + builder + generateBody(body) + '};';
 	}
 };
 
@@ -186,9 +195,9 @@ var getIFValueAlt = function(name, args, body) {
 	}
 
 	if (generateBody(body).trim() == ';') {
-		return 'this.' + name + ' = function(' + a + ') { };';
+		return '.prototype.' + name + ' = function(' + a + ') { };';
 	} else {
-		return 'this.' + name + ' = function(' + a + ') {\n' + generateBody(body) + '};';
+		return '.prototype.' + name + ' = function(' + a + ') {\n' + generateBody(body) + '};';
 	}
 };
 
@@ -288,14 +297,20 @@ var getIClassValue = function(name, constructor, body) {
 	}
 
 	if (constructor == null || constructor.length == 0) {
-		compile += 'function ' + name + '() {';
+		compile += 'var ' + name + ' = (function() {';
 
 		for (f in body) {
 			compile += f.valAlt;
 		}
 	} else {
-		compile += 'function ' + name + '(' + a + ') {';
+		compile += 'var ' + name + ' = (function() {\n';
+		compile += 'function ' + name + '('
 
+		for (a in constructor) {
+			compile += constructor[a] + ', ';
+		}
+
+		compile = compile.substring(0, compile.length - 2) + ') {';
 		for (a in constructor) {
 			compile += 'this.' + constructor[a] + ' = ' + constructor[a] + ';';
 		}
@@ -303,13 +318,19 @@ var getIClassValue = function(name, constructor, body) {
 		for (f in body) {
 			if (body[f].valAlt == undefined) {
 				compile += body[f].val;
-			} else {
-				compile += body[f].valAlt;
+			}
+		}
+
+		compile += '\n}';
+
+		for (f in body) {
+			if (body[f].valAlt != undefined) {
+				compile += (name + body[f].valAlt);
 			}
 		}
 	}
 
-	compile += '};';
+	compile += '\breturn ' + name + ';\n})();';
 
 	return compile;
 };

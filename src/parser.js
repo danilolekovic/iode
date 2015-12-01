@@ -675,10 +675,17 @@ var Parser = function(code, cdir) {
 			var name = this.nextToken().value;
 			this.skipNewline();
 			var args = [];
+			var defaults = [];
 			var body = [];
 
 			while (!(this.peekCheck(TokenType.LBRACE))) {
-				var arg = this.parseNextLiteral().val;
+				var arg = this.parseNext();
+
+				if (arg.type == 'Variable Declaration') {
+					defaults.push({name: arg.name, value: arg.value});
+				}
+
+				arg = arg.name;
 				this.skipNewline();
 
 				if (arg.charAt(arg.length - 1) == ';') {
@@ -728,7 +735,11 @@ var Parser = function(code, cdir) {
 				this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
 			}
 
-			return new IodeFunction(name, args, body);
+			if (defaults != []) {
+				return new IodeFunction(name, args, body, defaults);
+			}
+
+			return new IodeFunction(name, args, body, null);
 		} else if (this.peekCheck(TokenType.ARROW)) {
 				this.nextToken();
 				this.skipNewline();
@@ -1420,7 +1431,7 @@ var Parser = function(code, cdir) {
 		var args = [];
 
 		if (this.peekCheck(TokenType.IDENTIFIER)) {
-			var name = this.parseNextLiteral().value;
+			var name = this.parseNextLiteral().val;
 			this.skipNewline();
 
 			while (!(this.peekCheck(TokenType.LBRACE))) {
