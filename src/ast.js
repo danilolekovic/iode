@@ -169,18 +169,34 @@ var IodeFunction = function(name, args, body, defaults) {
 	this.valAlt = getIFValueAlt(name, args, body);
 };
 
-var getIFValue = function(name, args, body, defaults) {
+var getIFValue = function(name, args, body) {
 	var a = '';
+	var formatted = [];
+	var defaults = [];
 
 	if (args.length != 0) {
-		a = args.join(', ');
+		for (arg in args) {
+			if (args[arg].val.charAt(args[arg].val.length - 1) == ';') {
+				args[arg].val = args[arg].val.substring(0, args[arg].val.length - 1);
+			}
+
+			if (args[arg].type == 'Variable Setting') {
+				formatted.push(args[arg].name);
+				defaults.push({name: args[arg].name, value: args[arg].val});
+				continue;
+			}
+
+			formatted.push(args[arg].val);
+		}
+
+		a = formatted.join(', ');
 	}
 
 	var builder = '';
 
-	if (defaults != null) {
+	if (defaults.length != 0) {
 		for (item in defaults) {
-			builder += 'if (' + defaults[item].name + ' == null) { ' + defaults[item].name + ' = ' + defaults[item].value + '; }\n';
+			builder += 'if (' + defaults[item].name + ' == null || ' + defaults[item].name + ' == undefined) { ' + defaults[item].value + '; }\n';
 		}
 	}
 

@@ -1,3 +1,5 @@
-var hello = fn name = "John" {
-	console.log(name)
+fn hello(name, age = 99) {
+	console.log("My name is #{name}! I'm #{age} years old!")
 }
+
+hello("John", nil)
