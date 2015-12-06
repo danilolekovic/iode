@@ -119,6 +119,10 @@ var Lexer = function(code) {
 					output.push(new Token(TokenType.REPEAT, str));
 				} else if (str == 'namespace') {
 					output.push(new Token(TokenType.NAMESPACE, str));
+				} else if (str == 'try') {
+					output.push(new Token(TokenType.TRY, str));
+				} else if (str == 'catch') {
+					output.push(new Token(TokenType.CATCH, str));
 				} else {
 					output.push(new Token(TokenType.IDENTIFIER, str));
 				}
@@ -237,7 +241,27 @@ var Lexer = function(code) {
 					case '-':
 						pos++;
 
-						if (code[pos] == '-') {
+						if (this.isNumber(code.charCodeAt(pos))) {
+							str = code[pos];
+							pos++;
+
+							while (this.isNumberUnder(code.charCodeAt(pos)) || code[pos] == '.') {
+								if (code[pos] == '.' && code[pos + 1] == '.') {
+									break;
+								} else {
+									str += code[pos];
+									pos++;
+								}
+							}
+
+							if (str.charAt(str.length - 1) == '.') {
+								this.error('Float/decimal cannot end with a decimal');
+							}
+
+							output.push(new Token(TokenType.NUMBER, '-' + str));
+
+							str = '';
+						} else if (code[pos] == '-') {
 							pos++;
 							output.push(new Token(TokenType.SUBSUB, '--'));
 						} else if (code[pos] == '=') {
