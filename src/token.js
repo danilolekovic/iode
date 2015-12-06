@@ -60,7 +60,8 @@ var TokenType = {
 	PATTERN: 'PATTERN',
 	NAMESPACE: 'NAMESPACE',
 	TRY: 'TRY',
-	CATCH: 'CATCH'
+	CATCH: 'CATCH',
+	EMBEDDED: 'EMBEDDED'
 };
 
 exports.Token = Token;

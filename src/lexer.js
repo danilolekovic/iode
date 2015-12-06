@@ -40,7 +40,7 @@ var Lexer = function(code) {
 	this.isSymbol = function(char) {
 		return char == 33 || (char >= 37 && char <= 38) || (char >= 40 && char <=
 			47) || char == 58 || (char >= 60 && char <= 62) || (char >= 123 && char <=
-			125) || char == 35 || char == 63 || char == 91 || char == 93;
+			125) || char == 35 || char == 63 || char == 91 || char == 93 || char == 96;
 	};
 
 	this.isQuote = function(char) {
@@ -354,6 +354,19 @@ var Lexer = function(code) {
 						}
 
 						pos++;
+						break;
+					case '`':
+						pos++;
+						var str = "";
+
+						while (code[pos] != '`') {
+							str += code[pos];
+							pos++;
+						}
+
+						pos++;
+
+						output.push(new Token(TokenType.EMBEDDED, str));
 						break;
 					default:
 						this.error('Unknown symbol: \'' + code[pos] + '\'');
