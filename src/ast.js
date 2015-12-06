@@ -90,6 +90,10 @@ var getIBOValue = function(left, op, right) {
 		return 'Math.pow(' + lhs + ', ' + rhs + ')';
 	}
 
+	if (op == '%%') {
+		op = '%';
+	}
+
 	return lhs + ' ' + op + ' ' + rhs;
 };
 

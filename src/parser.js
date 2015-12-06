@@ -147,7 +147,7 @@ var Parser = function(code, cdir) {
 				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 					TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 					TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-					TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.SUBSUB)
+					TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS) || this.peekCheck(TokenType.SUBSUB)
 					|| TokenType.PLUSPLUS)) {
 
 			return num;
@@ -157,7 +157,7 @@ var Parser = function(code, cdir) {
 			this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 				TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(TokenType
 				.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-				TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
+				TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS)) {
 
 			op = this.nextToken().value;
 			this.skipNewline();
@@ -228,11 +228,11 @@ var Parser = function(code, cdir) {
 		var op;
 		var right;
 
-		if (!(this.peekCheck(TokenType.IS) || this.peekCheck(TokenType.NEQUALS))) {
+		if (!(this.peekCheck(TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS))) {
 			return bool;
 		}
 
-		while (this.peekCheck(TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
+		while (this.peekCheck(TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS)) {
 			op = this.nextToken().value;
 			this.skipNewline();
 			right = this.parseNextLiteral();
@@ -261,7 +261,7 @@ var Parser = function(code, cdir) {
 				TokenType.DIV, 2) || this.peekSpecificCheck(TokenType.GT, 2) || this.peekSpecificCheck(
 				TokenType.LT, 2) || this.peekSpecificCheck(TokenType.GTEQUALS, 2) || this
 			.peekSpecificCheck(TokenType.LTEQUALS, 2) || this.peekSpecificCheck(
-				TokenType.IS, 2) || this.peekSpecificCheck(TokenType.NEQUALS, 2)) {
+				TokenType.IS, 2) || this.peekSpecificCheck(TokenType.NEQUALS, 2) || this.peekSpecificCheck(TokenType.MODULUS, 2)) {
 
 			var ident = new IodeIdentifier(this.nextToken().value);
 			this.skipNewline();
@@ -272,7 +272,7 @@ var Parser = function(code, cdir) {
 				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 					TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 					TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-					TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
+					TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS)) {
 
 				op = this.nextToken().value;
 				this.skipNewline();
@@ -374,7 +374,7 @@ var Parser = function(code, cdir) {
 					this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 						TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 						TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-						TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(
+						TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS) || this.peekCheck(
 						TokenType.SIS)) {
 
 					this.skipNewline();
@@ -385,7 +385,7 @@ var Parser = function(code, cdir) {
 						this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 							TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 							TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-							TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
+							TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS)) {
 
 						op = this.nextToken().value;
 						this.skipNewline();
@@ -466,7 +466,7 @@ var Parser = function(code, cdir) {
 					this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 						TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 						TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-						TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(
+						TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS) || this.peekCheck(
 						TokenType.SIS)) {
 
 					this.skipNewline();
@@ -477,7 +477,7 @@ var Parser = function(code, cdir) {
 						this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 							TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 							TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-							TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
+							TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS)) {
 
 						op = this.nextToken().value;
 						this.skipNewline();
@@ -893,7 +893,7 @@ var Parser = function(code, cdir) {
 				this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 					TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(
 					TokenType.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-					TokenType.IS) || this.peekCheck(TokenType.NEQUALS))) {
+					TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS))) {
 
 			return paren;
 		}
@@ -902,7 +902,7 @@ var Parser = function(code, cdir) {
 			this.peekCheck(TokenType.MUL) || this.peekCheck(TokenType.DIV) || this.peekCheck(TokenType.EXP) || this.peekCheck(
 				TokenType.GT) || this.peekCheck(TokenType.LT) || this.peekCheck(TokenType
 				.GTEQUALS) || this.peekCheck(TokenType.LTEQUALS) || this.peekCheck(
-				TokenType.IS) || this.peekCheck(TokenType.NEQUALS)) {
+				TokenType.IS) || this.peekCheck(TokenType.NEQUALS) || this.peekCheck(TokenType.MODULUS)) {
 
 			op = this.nextToken().value;
 			this.skipNewline();

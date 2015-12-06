@@ -61,7 +61,8 @@ var TokenType = {
 	NAMESPACE: 'NAMESPACE',
 	TRY: 'TRY',
 	CATCH: 'CATCH',
-	EMBEDDED: 'EMBEDDED'
+	EMBEDDED: 'EMBEDDED',
+	MODULUS: 'MODULUS'
 };
 
 exports.Token = Token;

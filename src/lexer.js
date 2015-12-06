@@ -169,8 +169,14 @@ var Lexer = function(code) {
 						}
 						break;
 					case '%':
-						output.push(new Token(TokenType.PERCENT, '%'));
 						pos++;
+
+						if (code[pos] == '%') {
+							pos++;
+							output.push(new Token(TokenType.MODULUS, '%%'));
+						} else {
+							output.push(new Token(TokenType.PERCENT, '%'));
+						}
 						break;
 					case '&':
 						pos++;
