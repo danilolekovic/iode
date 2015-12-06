@@ -43,6 +43,7 @@ var Lexer = require('./lexer').Lexer,
 	IodePattern = require('./ast').IodePattern,
 	IodeJSON = require('./ast').IodeJSON,
 	IodeNamespace = require('./ast').IodeNamespace,
+	IodeTry = require('./ast').IodeTry,
 	IodeVariableSetting = require('./ast').IodeVariableSetting;
 
 var Parser = function(code, cdir) {
@@ -1565,6 +1566,77 @@ var Parser = function(code, cdir) {
 		return new IodeJSON(elements);
 	};
 
+	this.parseTry = function() {
+    this.nextTokenNewline();
+		var body = [];
+
+		if (this.peekCheck(TokenType.LBRACE)) {
+      this.nextTokenNewline();
+		} else {
+			this.error('Expected a \'{\', got \'' + this.peekToken().value + '\'');
+		}
+
+		while (!(this.peekCheck(TokenType.RBRACE))) {
+			var stmt = this.parseNext();
+			this.skipNewline();
+
+			body.push(stmt);
+
+			if (this.peekCheck(TokenType.NEWLINE)) {
+	      this.nextTokenNewline();
+				this.error('Expected a newline, got \'' + this.peekToken().value +
+					'\'');
+			} else if (this.peekCheck(TokenType.RBRACE)) {
+				break;
+			}
+		}
+
+		if (this.peekCheck(TokenType.RBRACE)) {
+      this.nextTokenNewline();
+		} else {
+			this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
+		}
+
+		if (this.peekCheck(TokenType.CATCH)) {
+			this.nextTokenNewline();
+		} else {
+			this.error('Expected a \'catch\' statement');
+		}
+
+		var catchBody = [];
+		var catchArgs = this.nextToken().value;
+		this.skipNewline();
+
+		if (this.peekCheck(TokenType.LBRACE)) {
+      this.nextTokenNewline();
+		} else {
+			this.error('Expected a \'{\', got \'' + this.peekToken().value + '\'');
+		}
+
+		while (!(this.peekCheck(TokenType.RBRACE))) {
+			var stmt = this.parseNext();
+			this.skipNewline();
+
+			catchBody.push(stmt);
+
+			if (this.peekCheck(TokenType.NEWLINE)) {
+	      this.nextTokenNewline();
+				this.error('Expected a newline, got \'' + this.peekToken().value +
+					'\'');
+			} else if (this.peekCheck(TokenType.RBRACE)) {
+				break;
+			}
+		}
+
+		if (this.peekCheck(TokenType.RBRACE)) {
+      this.nextTokenNewline();
+		} else {
+			this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
+		}
+
+		return new IodeTry(body, catchArgs, catchBody);
+	};
+
 	this.parseNamespace = function() {
 		this.skipNewline();
     this.nextTokenNewline();
@@ -1691,8 +1763,6 @@ var Parser = function(code, cdir) {
 			var tok = this.peekToken();
 
 			switch (tok.type) {
-				case TokenType.LBRACE:
-					return this.parseJSON();
 				case TokenType.NAMESPACE:
 					return this.parseNamespace();
 				case TokenType.IDENTIFIER:
@@ -1743,6 +1813,10 @@ var Parser = function(code, cdir) {
 					return this.parseNew();
 				case TokenType.FOR:
 					return this.parseFor();
+				case TokenType.TRY:
+					return this.parseTry();
+				case TokenType.LBRACE:
+					return this.parseJSON();
 				default:
 					this.error('Could not parse expression \'' + tok.type.toLowerCase() + '\'');
 					return null;

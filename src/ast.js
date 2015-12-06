@@ -446,6 +446,18 @@ var getIAIValue = function(ident, index) {
 	return ident.val + '[' + index.val + ']';
 };
 
+var IodeTry = function(body, catchArgs, catchBody) {
+	this.type = 'Try';
+	this.body = body;
+	this.catchArgs = catchArgs;
+	this.catchBody = catchBody;
+	this.val = getITryValue(body, catchArgs, catchBody);
+};
+
+var getITryValue = function(body, catchArgs, catchBody) {
+	return 'try {\n' + generateBody(body) + '} catch (' + catchArgs + ') {\n ' + generateBody(catchBody) + '}';
+};
+
 var IodeWhile = function(args, body) {
 	this.type = 'While';
 	this.args = args;
@@ -779,3 +791,4 @@ exports.IodeRepeat = IodeRepeat;
 exports.IodePattern = IodePattern;
 exports.IodeJSON = IodeJSON;
 exports.IodeNamespace = IodeNamespace;
+exports.IodeTry = IodeTry;

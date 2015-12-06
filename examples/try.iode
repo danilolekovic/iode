@@ -1,0 +1,5 @@
+try {
+  console.log("Cool!")
+} catch e {
+  throw e
+}
