@@ -1,0 +1,3 @@
+var grade = 96%
+
+`function showReportCard() { console.log(grade); }`

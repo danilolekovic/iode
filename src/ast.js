@@ -744,6 +744,12 @@ var getIJSONValue = function(elements) {
 	return builder;
 };
 
+var IodeEmbedded = function(js) {
+	this.type = 'Embedded JavaScript';
+	this.js = js;
+	this.val = js;
+};
+
 var IodeNewline = function() {
 	this.type = 'Newline';
 	this.val = '';
@@ -792,3 +798,4 @@ exports.IodePattern = IodePattern;
 exports.IodeJSON = IodeJSON;
 exports.IodeNamespace = IodeNamespace;
 exports.IodeTry = IodeTry;
+exports.IodeEmbedded = IodeEmbedded;

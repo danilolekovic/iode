@@ -360,6 +360,10 @@ var Lexer = function(code) {
 						var str = "";
 
 						while (code[pos] != '`') {
+							if (code[pos] == '\n') {
+								this.error('Expected a \'`\' to end the embedded JavaScript');
+							}
+
 							str += code[pos];
 							pos++;
 						}

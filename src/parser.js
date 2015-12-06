@@ -44,6 +44,7 @@ var Lexer = require('./lexer').Lexer,
 	IodeJSON = require('./ast').IodeJSON,
 	IodeNamespace = require('./ast').IodeNamespace,
 	IodeTry = require('./ast').IodeTry,
+	IodeEmbedded = require('./ast').IodeEmbedded,
 	IodeVariableSetting = require('./ast').IodeVariableSetting;
 
 var Parser = function(code, cdir) {
@@ -1637,6 +1638,10 @@ var Parser = function(code, cdir) {
 		return new IodeTry(body, catchArgs, catchBody);
 	};
 
+	this.parseJavaScript = function() {
+		return new IodeEmbedded(this.nextToken().value);
+	};
+
 	this.parseNamespace = function() {
 		this.skipNewline();
     this.nextTokenNewline();
@@ -1747,6 +1752,8 @@ var Parser = function(code, cdir) {
 					return this.parsePattern();
 				case TokenType.NEW:
 					return this.parseNew();
+				case TokenType.EMBEDDED:
+					return this.parseJavaScript();
 				default:
 					this.error('Could not parse expression \'' + tok.type.toLowerCase() + '\'');
 					return null;
@@ -1817,6 +1824,8 @@ var Parser = function(code, cdir) {
 					return this.parseTry();
 				case TokenType.LBRACE:
 					return this.parseJSON();
+				case TokenType.EMBEDDED:
+					return this.parseJavaScript();
 				default:
 					this.error('Could not parse expression \'' + tok.type.toLowerCase() + '\'');
 					return null;
