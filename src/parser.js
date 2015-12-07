@@ -111,6 +111,12 @@ var Parser = function(code, cdir) {
 		return tok;
 	};
 
+	this.isValidType = function(type) {
+		return type == "number" || type == "string" ||
+					 type == "boolean" || type == "undefined" ||
+					 type == "object" || type == "function";
+	};
+
 	this.error = function(msg) {
 		console.log();
 		console.log('[x] ' + msg + ' on line #' + this.line + '.');
