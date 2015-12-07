@@ -9,6 +9,7 @@ var Lexer = require('./lexer').Lexer,
 	IodeBoolean = require('./ast').IodeBoolean,
 	IodeString = require('./ast').IodeString,
 	IodeFunction = require('./ast').IodeFunction,
+	IodePrototype = require('./ast').IodePrototype,
 	IodeParenthesis = require('./ast').IodeParenthesis,
 	IodeCall = require('./ast').IodeCall,
 	IodeCallList = require('./ast').IodeCallList,
@@ -712,34 +713,71 @@ var Parser = function(code, cdir) {
 				this.error('Expected a \')\' or a \'{\', got \'' + this.peekToken().value + '\'');
 			}
 
-			if (this.peekCheck(TokenType.LBRACE)) {
-	      this.nextTokenNewline();
-			} else {
-				this.error('Expected a \'{\', got \'' + this.peekToken().value + '\'');
-			}
-
-			while (!(this.peekCheck(TokenType.RBRACE))) {
-				var stmt = this.parseNext();
+			if (this.peekCheck(TokenType.COLON)) {
+				this.nextToken();
 				this.skipNewline();
 
-				body.push(stmt);
+				if (this.peekCheck(TokenType.IDENTIFIER)) {
+					var proto = this.nextToken().value;
+					this.skipNewline();
 
-				if (this.peekCheck(TokenType.NEWLINE)) {
-          this.nextTokenNewline();
-					this.error('Expected a newline, got \'' + this.peekToken().value +
-						'\'');
-				} else if (this.peekCheck(TokenType.RBRACE)) {
-					break;
+					if (this.peekCheck(TokenType.LBRACE)) {
+						this.nextTokenNewline();
+					} else {
+						this.error('Expected a \'{\'');
+					}
+
+					while (!(this.peekCheck(TokenType.RBRACE))) {
+						var stmt = this.parseNext();
+						this.skipNewline();
+
+						body.push(stmt);
+
+						if (this.peekCheck(TokenType.NEWLINE)) {
+		          this.nextTokenNewline();
+						} else if (this.peekCheck(TokenType.RBRACE)) {
+							break;
+						}
+					}
+
+					if (this.peekCheck(TokenType.RBRACE)) {
+			      this.nextTokenNewline();
+					} else {
+						this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
+					}
+
+					return new IodePrototype(name, proto, args, body);
+				} else {
+					this.error('Expected an identifier, got \'' + this.peekToken().value + '\'');
 				}
-			}
-
-			if (this.peekCheck(TokenType.RBRACE)) {
+			} else if (this.peekCheck(TokenType.LBRACE)) {
 	      this.nextTokenNewline();
-			} else {
-				this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
-			}
 
-			return new IodeFunction(name, args, body);
+				while (!(this.peekCheck(TokenType.RBRACE))) {
+					var stmt = this.parseNext();
+					this.skipNewline();
+
+					body.push(stmt);
+
+					if (this.peekCheck(TokenType.NEWLINE)) {
+	          this.nextTokenNewline();
+						this.error('Expected a newline, got \'' + this.peekToken().value +
+							'\'');
+					} else if (this.peekCheck(TokenType.RBRACE)) {
+						break;
+					}
+				}
+
+				if (this.peekCheck(TokenType.RBRACE)) {
+		      this.nextTokenNewline();
+				} else {
+					this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
+				}
+
+				return new IodeFunction(name, args, body);
+			} else {
+				this.error('Expected a \'{\' or a \'::\', got \'' + this.peekToken().value + '\'');
+			}
 		} else if (this.peekCheck(TokenType.ARROW)) {
 	      this.nextTokenNewline();
 				var args = [];
@@ -774,7 +812,7 @@ var Parser = function(code, cdir) {
           this.nextTokenNewline();
 				}
 
-				var body = [new IodeReturn(this.parseNext())];
+				var body = [new IodeReturn(this.parseNextLiteral())];
 
 				if (this.peekCheck(TokenType.NEWLINE)) {
           this.nextTokenNewline();

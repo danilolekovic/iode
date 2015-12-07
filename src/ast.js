@@ -78,6 +78,7 @@ var getIBOValue = function(left, op, right) {
 		op = '===';
 	}
 
+
 	if (lhs.charAt(lhs.length - 1) == ';') {
 		lhs = lhs.substring(0, lhs.length - 1);
 	}
@@ -163,13 +164,59 @@ var generateBody = function(body) {
 	}
 };
 
-var IodeFunction = function(name, args, body, defaults) {
+var IodePrototype = function(name, proto, args, body) {
+	this.type = 'Prototype';
+	this.name = name;
+	this.proto = proto;
+	this.args = args;
+	this.body = body;
+	this.val = getIProtoValue(name, proto, args, body);
+};
+
+var getIProtoValue = function(name, proto, args, body) {
+	var a = '';
+	var formatted = [];
+	var defaults = [];
+
+	if (args.length != 0) {
+		for (arg in args) {
+			if (args[arg].val.charAt(args[arg].val.length - 1) == ';') {
+				args[arg].val = args[arg].val.substring(0, args[arg].val.length - 1);
+			}
+
+			if (args[arg].type == 'Variable Setting') {
+				formatted.push(args[arg].name);
+				defaults.push({name: args[arg].name, value: args[arg].val});
+				continue;
+			}
+
+			formatted.push(args[arg].val);
+		}
+
+		a = formatted.join(', ');
+	}
+
+	var builder = '';
+
+	if (defaults.length != 0) {
+		for (item in defaults) {
+			builder += 'if (' + defaults[item].name + ' == null || ' + defaults[item].name + ' == undefined) { ' + defaults[item].value + '; }\n';
+		}
+	}
+
+	if (generateBody(body).trim() == ';') {
+		return proto + '.prototype.' + name + ' = function (' + a + ') {' + builder + '};';
+	} else {
+		return proto + '.prototype.' + name + ' = function (' + a + ') {\n' + builder + generateBody(body) + '};';
+	}
+};
+
+var IodeFunction = function(name, args, body) {
 	this.type = 'Function';
 	this.name = name;
 	this.args = args;
 	this.body = body;
-	this.defaults = defaults;
-	this.val = getIFValue(name, args, body, defaults);
+	this.val = getIFValue(name, args, body);
 	this.valAlt = getIFValueAlt(name, args, body);
 };
 
@@ -708,7 +755,7 @@ var getIForValue = function(name, val, cond, iter, body) {
 };
 
 var IodeNumberPlusMinus = function(num, op) {
-	this.type = 'Number Append/Depend 1';
+	this.type = 'Number Append/Depend';
 	this.num = num;
 	this.op = op;
 	this.val = num.val + op;
@@ -803,3 +850,4 @@ exports.IodeJSON = IodeJSON;
 exports.IodeNamespace = IodeNamespace;
 exports.IodeTry = IodeTry;
 exports.IodeEmbedded = IodeEmbedded;
+exports.IodePrototype = IodePrototype;
