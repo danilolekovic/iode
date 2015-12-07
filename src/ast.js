@@ -104,21 +104,35 @@ var IodeParenthesis = function(value) {
 	this.val = '(' + this.value.val + ')';
 };
 
-var IodeVariableDeclaration = function(name, value) {
+var IodeVariableDeclaration = function(name, value, expectedType) {
 	this.type = 'Variable Declaration';
 	this.name = name;
 	this.value = value;
-	this.val = getIVDValue(name, value.val);
+	this.expectedType = expectedType;
+	this.val = getIVDValue(name, value.val, expectedType);
 };
 
-var getIVDValue = function(name, value) {
-	if (value == null) {
-		return 'var ' + name + ';';
-	} else {
-		if (value.charAt(value.length - 1) == ';') {
-			return 'var ' + name + ' = ' + value;
+var getIVDValue = function(name, value, expectedType) {
+	if (expectedType == null) {
+		if (value == null) {
+			return 'var ' + name + ';';
 		} else {
-			return 'var ' + name + ' = ' + value + ';';
+			if (value.charAt(value.length - 1) == ';') {
+				return 'var ' + name + ' = ' + value;
+			} else {
+				return 'var ' + name + ' = ' + value + ';';
+			}
+		}
+	} else {
+		if (value == null) {
+			return 'var ' + name + ';';
+		} else {
+			if (value.charAt(value.length - 1) == ';') {
+				value = value.substring(0, value.length - 1);
+				return 'var ' + name + ';\n\nif (typeof(' + value + ') === \"' + expectedType + '\") { ' + name + ' = ' + value + '; }';
+			} else {
+				return 'var ' + name + ';\n\nif (typeof(' + value + ') === \"' + expectedType + '\") { ' + name + ' = ' + value + '; }';
+			}
 		}
 	}
 };

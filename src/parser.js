@@ -567,6 +567,7 @@ var Parser = function(code, cdir) {
 	// var ident '=' expr
 	this.parseVariableDeclaration = function() {
     this.nextTokenNewline();
+		var expectedType = null;
 
 		if (this.peekCheck(TokenType.IDENTIFIER)) {
 			var name = this.nextToken().value;
@@ -574,6 +575,20 @@ var Parser = function(code, cdir) {
 			if (this.constants.indexOf(name) > -1) {
 				this.warning('\'' + name +
 					'\' is already defined as a constant and the value won\'t be changed');
+			}
+
+			if (this.peekCheck(TokenType.COLON)) {
+				this.nextTokenNewline();
+
+				if (this.peekCheck(TokenType.IDENTIFIER)) {
+					var type = this.nextToken().value;
+
+					if (this.isValidType(type.toLowerCase())) {
+						expectedType = type.toLowerCase();
+					} else {
+						this.error('Unknown type: \'' + type.value + '\'');
+					}
+				}
 			}
 
 			if (this.peekCheck(TokenType.EQUALS)) {
@@ -586,12 +601,12 @@ var Parser = function(code, cdir) {
 				if (this.peekCheck(TokenType.NEWLINE)) {
           this.nextTokenNewline();
 				} else if (this.line > oldLine) {
-					return new IodeVariableDeclaration(name, val);
+					return new IodeVariableDeclaration(name, val, expectedType);
 				} else {
 					this.error('Expected a newline');
 				}
 
-				return new IodeVariableDeclaration(name, val);
+				return new IodeVariableDeclaration(name, val, expectedType);
 			} else if (this.peekCheck(TokenType.NEWLINE)) {
 	      this.nextTokenNewline();
 				return new IodeEmptyVariable(name);
