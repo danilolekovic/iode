@@ -709,9 +709,25 @@ var Parser = function(code, cdir) {
 
 				while (!(this.peekCheck(TokenType.RPAREN))) {
 					var arg = this.parseNext();
+					var expectedType = null;
 					this.skipNewline();
 
-					args.push(arg);
+					if (this.peekCheck(TokenType.COLON)) {
+						this.nextTokenNewline();
+
+						if (this.peekCheck(TokenType.IDENTIFIER)) {
+							var type = this.nextToken().value;
+							this.skipNewline();
+
+							if (this.isValidType(type.toLowerCase())) {
+								expectedType = type.toLowerCase();
+							} else {
+								this.error('Unknown type: \'' + type.value + '\'');
+							}
+						}
+					}
+
+					args.push({ it: arg, expecting: expectedType });
 
 					if (!(this.peekCheck(TokenType.COMMA) || this.peekCheck(TokenType.RPAREN))) {
 						this.error('Expected a \',\' or \'{\', got \'' + this.peekToken().value +

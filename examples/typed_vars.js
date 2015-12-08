@@ -4,4 +4,6 @@ var name;
 
 if (typeof("John") === "string") {
   name = "John";
+} else {
+  throw "Expected type of string for var name";
 }

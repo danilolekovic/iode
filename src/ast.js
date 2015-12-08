@@ -129,9 +129,12 @@ var getIVDValue = function(name, value, expectedType) {
 		} else {
 			if (value.charAt(value.length - 1) == ';') {
 				value = value.substring(0, value.length - 1);
-				return 'var ' + name + ';\n\nif (typeof(' + value + ') === \"' + expectedType + '\") { ' + name + ' = ' + value + '; }';
+
+				return 'var ' + name + ';\n\nif (typeof(' + value + ') === \"' + expectedType + '\") { ' + name + ' = ' + value + '; } else {' +
+					'throw "Expected type of ' + expectedType + ' for var ' + name + '."; }';
 			} else {
-				return 'var ' + name + ';\n\nif (typeof(' + value + ') === \"' + expectedType + '\") { ' + name + ' = ' + value + '; }';
+				return 'var ' + name + ';\n\nif (typeof(' + value + ') === \"' + expectedType + '\") { ' + name + ' = ' + value + '; } else {' +
+					'throw "Expected type of ' + expectedType + ' for var ' + name + '."; }';
 			}
 		}
 	}
@@ -238,20 +241,25 @@ var getIFValue = function(name, args, body) {
 	var a = '';
 	var formatted = [];
 	var defaults = [];
+	var checks = [];
 
 	if (args.length != 0) {
 		for (arg in args) {
-			if (args[arg].val.charAt(args[arg].val.length - 1) == ';') {
-				args[arg].val = args[arg].val.substring(0, args[arg].val.length - 1);
+			if (args[arg].it.val.charAt(args[arg].it.val.length - 1) == ';') {
+				args[arg].it.val = args[arg].it.val.substring(0, args[arg].it.val.length - 1);
 			}
 
-			if (args[arg].type == 'Variable Setting') {
-				formatted.push(args[arg].name);
-				defaults.push({name: args[arg].name, value: args[arg].val});
+			if (args[arg].it.type == 'Variable Setting') {
+				formatted.push(args[arg].it.name);
+				defaults.push({name: args[arg].it.name, value: args[arg].it.val});
 				continue;
 			}
 
-			formatted.push(args[arg].val);
+			if (args[arg].expecting != null) {
+				checks.push({name: args[arg].it.val, expecting: args[arg].expecting});
+			}
+
+			formatted.push(args[arg].it.val);
 		}
 
 		a = formatted.join(', ');
@@ -261,12 +269,18 @@ var getIFValue = function(name, args, body) {
 
 	if (defaults.length != 0) {
 		for (item in defaults) {
-			builder += 'if (' + defaults[item].name + ' == null || ' + defaults[item].name + ' == undefined) { ' + defaults[item].value + '; }\n';
+			builder += 'if (' + defaults[item].name + ' === null || ' + defaults[item].name + ' === undefined) { ' + defaults[item].name + ' = ' + defaults[item].value + '; }\n';
+		}
+	}
+
+	if (checks.length != 0) {
+		for (item in checks) {
+			builder += 'if (!(typeof(' + checks[item].name + ') === \"' + checks[item].expecting + '\")) { throw \'Expected type of \"' + checks[item].expecting + '\" for var \"' + checks[item].name + '\"\'; }\n';
 		}
 	}
 
 	if (generateBody(body).trim() == ';') {
-		return 'function ' + name + '(' + a + ') {' + builder + '};';
+		return 'function ' + name + '(' + a + ') {\ns' + builder + '};';
 	} else {
 		return 'function ' + name + '(' + a + ') {\n' + builder + generateBody(body) + '};';
 	}
