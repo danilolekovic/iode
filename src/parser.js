@@ -702,6 +702,7 @@ var Parser = function(code, cdir) {
 			var name = this.nextToken().value;
 			this.skipNewline();
 			var args = [];
+			var originalArgs = [];
 			var body = [];
 
 			if (this.peekCheck(TokenType.LPAREN)) {
@@ -727,6 +728,7 @@ var Parser = function(code, cdir) {
 						}
 					}
 
+					originalArgs.push(arg);
 					args.push({ it: arg, expecting: expectedType });
 
 					if (!(this.peekCheck(TokenType.COMMA) || this.peekCheck(TokenType.RPAREN))) {
@@ -783,7 +785,7 @@ var Parser = function(code, cdir) {
 						this.error('Expected a \'}\', got \'' + this.peekToken().value + '\'');
 					}
 
-					return new IodePrototype(name, proto, args, body);
+					return new IodePrototype(name, proto, originalArgs, body);
 				} else {
 					this.error('Expected an identifier, got \'' + this.peekToken().value + '\'');
 				}

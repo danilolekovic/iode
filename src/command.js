@@ -14,6 +14,20 @@ program
 	.option('-t, --tokens', 'outputs AST tokens, not lexer tokens')
 	.parse(process.argv);
 
+	var run_cmd = function(cmd, args, callBack) {
+		var spawn = require('child_process').spawn;
+		var child = spawn(cmd, args);
+		var resp = "";
+
+		child.stdout.on('data', function(buffer) {
+			resp += buffer.toString()
+		});
+
+		child.stdout.on('end', function() {
+			callBack(resp)
+		});
+	};
+
 if (program.args.length >= 0) {
 	var fileNames = [];
 
@@ -56,7 +70,9 @@ if (program.args.length >= 0) {
 		}
 
 		if (program.run) {
-			eval(outputCode); // replace with `$ node <file-path>`
+			run_cmd("node", [outputCode], function(text) {
+				console.log("\n" + text);
+			});
 		}
 
 		if (program.dev) {
