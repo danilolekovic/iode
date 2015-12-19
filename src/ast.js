@@ -10,7 +10,7 @@ var IodeNumber = function(val) {
 
 var IodePercentage = function(val) {
 	this.type = 'Number with Percent';
-	this.val = '0.' + val.replace(/_/g, '');
+	this.val = '(' + val.replace(/_/g, '') + ' / 100)';
 };
 
 var IodeString = function(val) {
