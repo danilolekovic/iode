@@ -124,6 +124,8 @@ var Lexer = function(code) {
 					output.push(new Token(TokenType.TRY, str));
 				} else if (str == 'catch') {
 					output.push(new Token(TokenType.CATCH, str));
+				} else if (str == 'extends') {
+					output.push(new Token(TokenType.EXTENDS, str));
 				} else {
 					output.push(new Token(TokenType.IDENTIFIER, str));
 				}

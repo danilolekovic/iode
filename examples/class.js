@@ -7,7 +7,30 @@ var Greeter = (function() {
     this.name = "John";
   }
   Greeter.prototype.hello = function() {
-    console.log("Cool! Hey " + name + "! You're " + age + "!");
-  };
+    console.log("Cool! Hey " + this.name + "! You're " + this.age + "!");
+  };
   return Greeter;
 })();
+
+function extend(target, source) {
+  Object.getOwnPropertyNames(source).forEach(function(propName) {
+    Object.defineProperty(target, propName, Object.getOwnPropertyDescriptor(source, propName));
+  });
+  return target;
+}
+
+var Tweeter = (function() {
+  function Tweeter(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+  Tweeter.prototype.tweet = function() {
+    console.log("This is a tweet!");
+  };
+  return Tweeter;
+})();
+
+extend(Tweeter.prototype, Greeter.prototype);
+
+var twt = new Tweeter("Bill", 5);
+twt.hello();

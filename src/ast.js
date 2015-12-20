@@ -379,15 +379,16 @@ var getICValue = function(name, args) {
 	return name + '(' + a + ');';
 };
 
-var IodeClass = function(name, constructor, body) {
+var IodeClass = function(name, constructor, body, extended) {
 	this.type = 'Class';
 	this.name = name;
 	this.constructor = constructor;
 	this.body = body;
-	this.val = getIClassValue(name, constructor, body);
+	this.extended = extended;
+	this.val = getIClassValue(name, constructor, body, extended);
 };
 
-var getIClassValue = function(name, constructor, body) {
+var getIClassValue = function(name, constructor, body, extended) {
 	var compile = '';
 	var a = '';
 
@@ -395,8 +396,13 @@ var getIClassValue = function(name, constructor, body) {
 		a = constructor.join(', ');
 	}
 
+	if (extended != null) {
+		compile += 'function extend(target, source) {Object.getOwnPropertyNames(source).forEach(function(propName) {Object.defineProperty(target, propName,Object.getOwnPropertyDescriptor(source, propName));});return target;}';
+		compile += '\n\n';
+	}
+
 	if (constructor == null || constructor.length == 0) {
-		compile += 'var ' + name + ' = (function() {';
+		compile += 'var ' + name + ' = (function() {\n';
 
 		for (f in body) {
 			compile += f.valAlt;
@@ -429,7 +435,11 @@ var getIClassValue = function(name, constructor, body) {
 		}
 	}
 
-	compile += '\breturn ' + name + ';\n})();';
+	compile += '\nreturn ' + name + ';\n})();';
+
+	if (extended != null) {
+		compile += '\n\nextend(' + name + '.prototype, ' + extended + '.prototype);';
+	}
 
 	return compile;
 };

@@ -2,6 +2,15 @@ class Greeter name, age {
   this.name = "John"
 
   fn hello {
-    console.log("Cool! Hey #{name}! You're #{age}!")
+    console.log("Cool! Hey #{this.name}! You're #{this.age}!")
   }
 }
+
+class Tweeter name, age extends Greeter {
+  fn tweet {
+    console.log("This is a tweet!")
+  }
+}
+
+var twt = new Tweeter("Bill", 5)
+twt.hello()

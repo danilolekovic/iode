@@ -63,7 +63,8 @@ var TokenType = {
 	CATCH: 'CATCH',
 	EMBEDDED: 'EMBEDDED',
 	MODULUS: 'MODULUS',
-	EXP: 'EXP'
+	EXP: 'EXP',
+	EXTENDS: 'EXTENDS'
 };
 
 exports.Token = Token;

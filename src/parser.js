@@ -697,6 +697,7 @@ var Parser = function(code, cdir) {
 	// fn name (expr?)* { ... }
 	this.parseFunction = function() {
     this.nextTokenNewline();
+		var lbrace = false;
 
 		if (this.peekCheck(TokenType.IDENTIFIER)) {
 			var name = this.nextToken().value;
@@ -740,16 +741,21 @@ var Parser = function(code, cdir) {
 						this.nextTokenNewline();
 					}
 				}
+			} else if (this.peekCheck(TokenType.LBRACE)) {
+				lbrace = true;
+				this.nextTokenNewline();
 			} else {
-				this.error("Expected a \"(\", got \"" + this.peekToken().value + "\"");
+				this.error("Expected a \"(\" or a \"{\", got \"" + this.peekToken().value + "\"");
 			}
 
-			if (this.peekCheck(TokenType.RPAREN)) {
-	      this.nextTokenNewline();
-			} else if (this.peekCheck(TokenType.LBRACE)) {
-	      this.nextTokenNewline();
-			} else {
-				this.error("Expected a \")\" or a \"{\", got \"" + this.peekToken().value + "\"");
+			if (!lbrace) {
+				if (this.peekCheck(TokenType.RPAREN) || lbrace) {
+		      this.nextTokenNewline();
+				} else if (this.peekCheck(TokenType.LBRACE) || lbrace) {
+		      this.nextTokenNewline();
+				} else {
+					this.error("Expected a \")\" or a \"{\", got \"" + this.peekToken().value + "\"");
+				}
 			}
 
 			if (this.peekCheck(TokenType.COLON)) {
@@ -789,8 +795,10 @@ var Parser = function(code, cdir) {
 				} else {
 					this.error("Expected an identifier, got \"" + this.peekToken().value + "\"");
 				}
-			} else if (this.peekCheck(TokenType.LBRACE)) {
-	      this.nextTokenNewline();
+			} else if (this.peekCheck(TokenType.LBRACE) || lbrace) {
+				if (!lbrace) {
+					this.nextTokenNewline();
+				}
 
 				while (!(this.peekCheck(TokenType.RBRACE))) {
 					var stmt = this.parseNext();
@@ -1467,14 +1475,22 @@ var Parser = function(code, cdir) {
 
 				args.push(arg);
 
-				if (!(this.peekCheck(TokenType.COMMA) || this.peekCheck(TokenType.LBRACE))) {
+				if (!(this.peekCheck(TokenType.COMMA) || this.peekCheck(TokenType.LBRACE) || this.peekCheck(TokenType.EXTENDS))) {
 					this.error("Expected a \",\" or \")\", got \"" + this.peekToken().value +
 						"\"");
-				} else if (this.peekCheck(TokenType.LBRACE)) {
+				} else if (this.peekCheck(TokenType.LBRACE) || this.peekCheck(TokenType.EXTENDS)) {
 					break;
 				} else {
           this.nextTokenNewline();
 				}
+			}
+
+			var extended = null;
+
+			if (this.peekCheck(TokenType.EXTENDS)) {
+				this.nextTokenNewline();
+				extended = this.nextToken().value;
+				this.skipNewline();
 			}
 
 			if (this.peekCheck(TokenType.LBRACE)) {
@@ -1498,8 +1514,8 @@ var Parser = function(code, cdir) {
 				} else {
 					this.error("Expected a \"}\"");
 				}
-
-				return new IodeClass(name, args, body);
+				
+				return new IodeClass(name, args, body, extended);
 			} else {
 				this.error("Expected \"{\"");
 			}
