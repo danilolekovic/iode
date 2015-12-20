@@ -70,9 +70,11 @@ if (program.args.length >= 0) {
 		}
 
 		if (program.run) {
-			run_cmd("node", [outputCode], function(text) {
-				console.log("\n" + text);
-			});
+			for (file in fileNames) {
+				run_cmd("node", [fileNames[file]], function(text) {
+					console.log("\n[" + file + "] " + text);
+				});
+			}
 		}
 
 		if (program.dev) {
