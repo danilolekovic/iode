@@ -6,7 +6,6 @@ var Lexer = function(code) {
 	this.index = -1;
 	this.tokens = [];
 	this.line = 1;
-	this.starWars = false;
 
 	this.peekToken = function() {
 		return this.tokens[this.index + 1];
@@ -386,10 +385,6 @@ var Lexer = function(code) {
 
 							str += code[pos];
 							pos++;
-						}
-
-						if (str.trim().toLowerCase() == 'the force is strong in my family') {
-							this.starWars = true;
 						}
 
 						pos++;

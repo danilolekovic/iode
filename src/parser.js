@@ -1933,27 +1933,6 @@ var Parser = function(code, cdir) {
 	this.parse = function() {
 		var exprs = [];
 
-		if (this.lexer.starWars) {
-			var ascii = "/*\n";
-			ascii += "                  ________________.  ___     .______  \n";
-			ascii += "                 /                | /   \\    |   _  \\ \n";
-			ascii += "                |   (-----|  |----`/  ^  \\   |  |_)  |\ \n";
-			ascii += "                 \\   \\    |  |    /  /_\\  \\  |      / \ \n";
-			ascii += "            .-----)   |   |  |   /  _____  \\ |  |\\  \\-------.\n";
-			ascii += "            |________/    |__|  /__/     \\__\\| _| `.________|\n";
-			ascii += "             ____    __    ____  ___     .______    ________.\n";
-			ascii += "             \\   \\  /  \\  /   / /   \\    |   _  \\  /        |\n";
-			ascii += "              \\   \\/    \\/   / /  ^  \\   |  |_)  ||   (-----`\n";
-			ascii += "               \\            / /  /_\\  \\  |      /  \\   \\ \n";
-			ascii += "                \\    /\\    / /  _____  \\ |  |\\  \\---)   |\n";
-			ascii += "                 \\__/  \\__/ /__/     \\__\\|__| `._______/ \n";
-			ascii += "\n";
-			ascii += "                   May the force be with you. Always.\n";
-			ascii += "*/";
-
-			exprs.push({type: "Star Wars", val: ascii});
-		}
-
 		while (this.pos < this.totalTokens) {
 			exprs.push(this.parseNext());
 		}
